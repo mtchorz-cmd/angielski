@@ -1,0 +1,589 @@
+<title>Milionerzy — angielskie idiomy biznesowe</title>
+<style>
+  :root{
+    --bg:#eef1f4;
+    --surface:#ffffff;
+    --surface-muted:#f4f6f8;
+    --border:#dde2e8;
+    --border-strong:#c7cfd9;
+    --text:#20242d;
+    --text-muted:#6b7280;
+    --text-dim:#9aa2b1;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --blue-soft:#e8f0fe;
+    --success:#1f9d55;
+    --success-soft:#e6f7ec;
+    --danger:#dc3b30;
+    --danger-soft:#fdecea;
+  }
+  *{box-sizing:border-box;}
+  .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;}
+
+  .stage{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    padding:40px 20px 50px;
+    border-radius:16px;
+  }
+
+  @keyframes cardIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes plateCorrect{ 0%{transform:scale(1);} 50%{transform:scale(1.03);} 100%{transform:scale(1);} }
+  @keyframes plateWrong{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-4px);} 75%{transform:translateX(4px);} }
+  @keyframes progressFill{ from{width:0%;} to{width:100%;} }
+  @keyframes bump{ 0%{transform:scale(1);} 50%{transform:scale(1.16); color:var(--blue);} 100%{transform:scale(1);} }
+  @media (prefers-reduced-motion: reduce){
+    .card-enter{animation:none;}
+    .answer-plate.correct, .answer-plate.wrong{animation:none;}
+    .progress-fill{animation:none; width:100%;}
+    .status-value.bump{animation:none;}
+  }
+
+  .show-header{text-align:center; margin-bottom:22px;}
+  .show-title{font-size:26px; font-weight:700; margin:0; color:var(--text);}
+  .show-subtitle{margin:6px 0 0; font-size:14px; color:var(--text-muted);}
+
+  .status-strip{
+    display:flex; justify-content:center; gap:36px; flex-wrap:wrap;
+    margin:0 auto 30px; padding:10px 24px; max-width:640px;
+    background:var(--surface); border:1px solid var(--border); border-radius:999px;
+    box-shadow:0 1px 3px rgba(15,23,42,0.05);
+  }
+  .status-item{display:flex; flex-direction:column; align-items:center; gap:2px;}
+  .status-label{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim);}
+  .status-value{font-size:16px; font-weight:700; font-variant-numeric:tabular-nums; color:var(--text); display:inline-block;}
+  .status-value.small{font-size:13px; font-weight:600; color:var(--blue);}
+  .status-value.bump{animation:bump .45s ease;}
+
+  .floor{display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap-reverse; max-width:900px; margin:0 auto;}
+  .podium{flex:2; min-width:320px;}
+  .ladder-col{flex:1; min-width:200px;}
+
+  .question-card{
+    background:var(--surface); border:1px solid var(--border); border-top:3px solid var(--blue);
+    border-radius:14px; padding:26px 26px 22px;
+    box-shadow:0 1px 3px rgba(15,23,42,0.05);
+  }
+  .question-card.card-enter{animation:cardIn .4s ease;}
+  .q-meta{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px;}
+  .q-number{font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim);}
+  .q-value{font-size:17px; font-weight:700; color:var(--blue); font-variant-numeric:tabular-nums;}
+  .q-text{font-size:18px; line-height:1.55; font-weight:500; margin:0 0 22px; text-wrap:balance;}
+  .q-text b{font-weight:500;}
+  .final-card b{font-weight:500;}
+
+  .options{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .answer-plate{
+    display:flex; align-items:center; gap:10px;
+    padding:12px 16px; background:var(--surface-muted); border:1px solid var(--border);
+    border-radius:8px; cursor:pointer; text-align:left; font-size:14px; color:var(--text);
+    transition:background .15s, border-color .15s;
+  }
+  .answer-plate:hover:not(:disabled){border-color:var(--blue); background:var(--blue-soft);}
+  .answer-plate:disabled{cursor:default;}
+  .answer-plate .letter{
+    flex:none; width:22px; height:22px; border-radius:50%; border:2px solid var(--blue);
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--blue);
+  }
+  .answer-plate.selected{background:var(--blue-soft); border-color:var(--blue);}
+  .answer-plate.selected .letter{background:var(--blue); border-color:var(--blue); color:#fff;}
+  .answer-plate.correct{background:var(--success-soft); border-color:var(--success); animation:plateCorrect .4s ease;}
+  .answer-plate.correct .letter{border-color:var(--success); color:var(--success); background:none;}
+  .answer-plate.wrong{background:var(--danger-soft); border-color:var(--danger); animation:plateWrong .4s ease;}
+  .answer-plate.wrong .letter{border-color:var(--danger); color:var(--danger); background:none;}
+  .answer-plate.hidden{visibility:hidden;}
+
+  .confirm-row{display:flex; justify-content:center; margin-top:16px;}
+  .confirm-btn{padding:11px 26px; border:none; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; background:var(--blue); color:#fff;}
+  .confirm-btn:hover:not(:disabled){background:var(--blue-dark);}
+  .confirm-btn:disabled{background:var(--border); color:var(--text-dim); cursor:not-allowed;}
+
+  .transition-banner{
+    margin-top:18px; padding:12px 16px; border-radius:10px;
+    background:var(--success-soft); border-left:3px solid var(--success);
+    color:var(--success); font-size:13px; font-weight:700; text-align:center;
+    animation:cardIn .25s ease;
+  }
+  .progress-track{height:4px; border-radius:2px; margin-top:10px; background:rgba(31,157,85,0.18); overflow:hidden;}
+  .progress-fill{height:100%; background:var(--success); width:0%; animation:progressFill 1.4s linear forwards;}
+
+  .lifelines{display:flex; justify-content:center; gap:22px; margin-top:26px;}
+  .lifeline{display:flex; flex-direction:column; align-items:center; gap:6px; background:none; border:none; cursor:pointer; color:var(--text-muted);}
+  .lifeline-badge{
+    width:46px; height:46px; border-radius:50%; border:1.5px solid var(--blue);
+    display:flex; align-items:center; justify-content:center; color:var(--blue);
+    transition:background .15s;
+  }
+  .lifeline:hover:not(:disabled) .lifeline-badge{background:var(--blue-soft);}
+  .lifeline:disabled{opacity:.35; cursor:not-allowed;}
+  .lifeline span.label{font-size:11px; letter-spacing:0.02em;}
+
+  .hint-box{margin-top:18px; padding:14px 16px; border-radius:10px; background:var(--surface-muted); border-left:3px solid var(--blue);}
+  .hint-box b{display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.07em; color:var(--blue); margin-bottom:6px;}
+  .hint-box .voice{font-family:Georgia,"Iowan Old Style",serif; font-style:italic; font-size:14px; color:var(--text); line-height:1.6;}
+
+  .audience-row{display:flex; align-items:center; gap:8px; margin:5px 0; font-size:12px;}
+  .audience-label{width:16px; font-weight:700; color:var(--text-muted);}
+  .audience-track{flex:1; background:var(--border); border-radius:4px; height:12px; overflow:hidden;}
+  .audience-fill{height:100%; background:var(--blue);}
+  .audience-pct{width:34px; text-align:right; color:var(--text-muted); font-variant-numeric:tabular-nums;}
+
+  .action-btn{margin-top:18px; padding:11px 22px; background:var(--blue); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px; font-weight:700;}
+  .action-btn:hover{background:var(--blue-dark);}
+
+  .ladder{display:flex; flex-direction:column-reverse; gap:3px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:10px; box-shadow:0 1px 3px rgba(15,23,42,0.05);}
+  .ladder-row{display:flex; justify-content:space-between; padding:8px 12px; border-radius:8px; font-size:13px; color:var(--text-dim); font-variant-numeric:tabular-nums;}
+  .ladder-row.reached{color:var(--text-muted);}
+  .ladder-row.current{background:var(--blue-soft); color:var(--blue-dark); font-weight:700; box-shadow:inset 0 0 0 1px var(--blue);}
+  .ladder-row.checkpoint .n::after{content:" *"; color:var(--text-dim);}
+
+  .final-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:44px 24px; text-align:center; max-width:520px; margin:0 auto;
+    box-shadow:0 1px 3px rgba(15,23,42,0.05);
+  }
+  .final-card .amount{font-size:40px; font-weight:700; margin:14px 0 8px; font-variant-numeric:tabular-nums;}
+  .final-card.win .amount{color:var(--blue);}
+  .final-card.lose .amount{color:var(--danger);}
+  .final-card p{color:var(--text-muted); font-size:14px; line-height:1.6; margin:4px 0;}
+  .final-card p.correct-answer{color:var(--text); margin-bottom:18px;}
+  .final-card p.correct-answer b{color:var(--success);}
+
+  .stage-note{text-align:center; font-size:12px; color:var(--text-dim); margin:20px 0 0;}
+
+  @media (max-width:700px){
+    .options{grid-template-columns:1fr;}
+  }
+</style>
+
+<div class="stage">
+  <h2 class="sr-only">Interaktywna gra teleturniejowa Milionerzy o angielskich idiomach biznesowych, 12 pytań, trzy koła ratunkowe</h2>
+
+  <div class="show-header">
+    <h1 class="show-title">Milionerzy</h1>
+    <p class="show-subtitle">Angielskie idiomy biznesowe</p>
+  </div>
+
+  <div class="status-strip">
+    <div class="status-item">
+      <span class="status-label">W grze</span>
+      <span class="status-value" id="status-money">0 zł</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">Progi gwarantowane</span>
+      <span class="status-value small">1 000 zł · 40 000 zł</span>
+    </div>
+  </div>
+
+  <div class="floor" id="game"></div>
+
+  <p class="stage-note">* próg gwarantowany — tej kwoty nie stracisz, nawet jeśli odpowiesz błędnie później</p>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    value: 500, checkpoint:false,
+    q: 'Twój kolega pisze w wiadomości: 📞 „<b>Let\'s touch base tomorrow.</b>” Czego chce?',
+    options: [
+      'chce podpisać umowę jutro',
+      'chce się krótko skontaktować / zamienić kilka słów jutro',
+      'chce przełożyć spotkanie na później',
+      'chce zakończyć współpracę'
+    ],
+    correct: 1
+  },
+  {
+    value: 700, checkpoint:false,
+    q: 'Po długim dniu pracy szefowa mówi zespołowi: 🌙 „<b>Let\'s call it a day.</b>” Co proponuje?',
+    options: [
+      'zorganizować spotkanie integracyjne',
+      'przełożyć projekt na jutro rano',
+      'zakończyć pracę na dziś',
+      'podsumować wyniki kwartału'
+    ],
+    correct: 2
+  },
+  {
+    value: 850, checkpoint:false,
+    q: 'Menedżer chwali pracownicę słowami: 🏃 „<b>She always goes the extra mile for our clients.</b>” Co ma na myśli?',
+    options: [
+      'zawsze przychodzi do pracy wcześniej niż inni',
+      'najlepiej biega ze wszystkich w firmie',
+      'mieszka najdalej od biura',
+      'zawsze robi więcej, niż się od niej oczekuje, dla dobra klienta'
+    ],
+    correct: 3
+  },
+  {
+    value: 1000, checkpoint:true,
+    q: 'Nowy pracownik mówi po pierwszym tygodniu: 🪢 „<b>I\'m still learning the ropes.</b>” Co ma na myśli?',
+    options: [
+      'wciąż nie ma podpisanej umowy',
+      'wciąż uczy się podstaw nowej pracy',
+      'wciąż szuka biurka w open space',
+      'wciąż czeka na sprzęt służbowy'
+    ],
+    correct: 1
+  },
+  {
+    value: 2500, checkpoint:false,
+    q: 'Audytor podsumowuje kontrolę słowami: 📕 „<b>This department always does everything by the book.</b>” Co to oznacza?',
+    options: [
+      'dział zawsze przekracza budżet',
+      'dział nie prowadzi żadnej dokumentacji',
+      'dział zawsze działa ściśle według procedur i przepisów',
+      'dział pracuje wyłącznie z dokumentami papierowymi'
+    ],
+    correct: 2
+  },
+  {
+    value: 7500, checkpoint:false,
+    q: 'Po negocjacjach kontrahent pisze: 🎾 „<b>The ball is in your court now.</b>” Co ma na myśli?',
+    options: [
+      'teraz to ty musisz podjąć decyzję / zrobić kolejny ruch',
+      'transakcja została już sfinalizowana',
+      'poczeka na rozwój sytuacji jeszcze miesiąc',
+      'negocjacje zostały ostatecznie zerwane'
+    ],
+    correct: 0
+  },
+  {
+    value: 40000, checkpoint:true,
+    q: 'Po odrzuceniu projektu przez zarząd zespół mówi: 🔲 „<b>We\'re back to square one.</b>” Co to oznacza?',
+    options: [
+      'awansują na wyższy poziom projektu',
+      'dostają dodatkowy budżet na testy',
+      'przechodzą do kolejnego etapu wdrożenia',
+      'wracają do punktu wyjścia, muszą zacząć od nowa'
+    ],
+    correct: 3
+  },
+  {
+    value: 75000, checkpoint:false,
+    q: 'Kierownik informuje zespół: 🪨 „<b>The deadline isn\'t set in stone yet.</b>” Co to oznacza?',
+    options: [
+      'termin jest już całkowicie niezmienny',
+      'termin nie jest jeszcze ostateczny i może się zmienić',
+      'firma zrezygnowała z wyznaczania terminów',
+      'termin zostanie ustalony dopiero za rok'
+    ],
+    correct: 1
+  },
+  {
+    value: 125000, checkpoint:false,
+    q: 'Przed premierą produktu programista mówi: 🕯️ „<b>I\'ve been burning the midnight oil all week.</b>” Co robił?',
+    options: [
+      'spalił dokumentację projektu przez pomyłkę',
+      'brał urlop przez cały tydzień',
+      'pracował do późna w nocy przez cały tydzień',
+      'pracował wyłącznie w nocnych zmianach na produkcji'
+    ],
+    correct: 2
+  },
+  {
+    value: 250000, checkpoint:false,
+    q: 'Dyrektor marketingu pyta na spotkaniu: 📈 „<b>Will this campaign actually move the needle?</b>” O co pyta?',
+    options: [
+      'czy kampania realnie wpłynie na wyniki firmy',
+      'czy kampania zmieści się w budżecie',
+      'czy zespół zdąży przygotować kampanię na czas',
+      'czy trzeba będzie zatrudnić agencję zewnętrzną'
+    ],
+    correct: 0
+  },
+  {
+    value: 500000, checkpoint:false,
+    q: 'Nowy inwestor deklaruje na zebraniu zarządu: 🕹️ „<b>From now on, I call the shots.</b>” Co to oznacza?',
+    options: [
+      'to on będzie odpowiadał za obsługę klienta',
+      'to on będzie prowadził szkolenia dla zespołu',
+      'to on będzie tylko obserwatorem bez wpływu na firmę',
+      'to on będzie podejmował kluczowe decyzje'
+    ],
+    correct: 3
+  },
+  {
+    value: 1000000, checkpoint:false,
+    q: 'Analityk finansowy ostrzega inwestorów: 📐 „<b>This company is trying to corner the market.</b>” Co robi ta firma?',
+    options: [
+      'próbuje wejść na nowy rynek zagraniczny',
+      'próbuje zdobyć dominującą pozycję/monopol na rynku',
+      'próbuje obniżyć ceny poniżej kosztów produkcji',
+      'próbuje połączyć się z konkurencyjną firmą'
+    ],
+    correct: 1
+  }
+];
+
+const LETTERS = ['A','B','C','D'];
+
+const ICONS = {
+  fifty: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M8 5.5A2.5 2.5 0 1 1 8 10.5 2.5 2.5 0 0 1 8 5.5zM16 13.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5z"/></svg>',
+  phone: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 5 5L14 13l5 2v3a2 2 0 0 1-2 2C10.5 20 4 13.5 4 6a2 2 0 0 1 1-2z"/></svg>',
+  audience: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="2.6"/><circle cx="16" cy="8" r="2.6"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5M11 19c0-3 2.5-5 5-5s5 2 5 5"/></svg>'
+};
+
+let state = {
+  idx: 0,
+  money: 0,
+  lifelines: { fifty:false, phone:false, audience:false },
+  hiddenOptions: [],
+  selected: null,
+  answered: false,
+  finished: false
+};
+
+function guaranteedAmount(correctlyAnsweredCount){
+  if (correctlyAnsweredCount >= 7) return 40000;
+  if (correctlyAnsweredCount >= 4) return 1000;
+  return 0;
+}
+
+function fmt(n){
+  return n.toLocaleString('pl-PL') + ' zł';
+}
+
+function renderLadder(){
+  let rows = '';
+  for (let i = QUESTIONS.length - 1; i >= 0; i--){
+    const q = QUESTIONS[i];
+    let cls = 'ladder-row';
+    if (i === state.idx && !state.finished) cls += ' current';
+    else if (i < state.idx) cls += ' reached';
+    if (q.checkpoint) cls += ' checkpoint';
+    rows += `<div class="${cls}"><span class="n">${i+1}</span><span>${fmt(q.value)}</span></div>`;
+  }
+  return `<div class="ladder">${rows}</div>`;
+}
+
+function renderStatus(){
+  const el = document.getElementById('status-money');
+  el.textContent = fmt(state.money);
+  if (state.money !== renderStatus.last){
+    renderStatus.last = state.money;
+    el.classList.remove('bump');
+    void el.offsetWidth;
+    el.classList.add('bump');
+  }
+}
+renderStatus.last = 0;
+
+function audiencePercentages(qIndex, correctIndex){
+  const difficultyFactor = qIndex / (QUESTIONS.length - 1);
+  const correctShare = Math.round(70 - difficultyFactor * 35 + (Math.random()*10 - 5));
+  const remaining = 100 - correctShare;
+  let parts = [0,0,0];
+  let left = remaining;
+  for (let i = 0; i < 2; i++){
+    const p = Math.round(Math.random() * left / (2 - i) * (0.6 + Math.random()*0.8));
+    parts[i] = Math.min(p, left - (1 - i));
+    left -= parts[i];
+  }
+  parts[2] = left;
+  const result = [0,0,0,0];
+  let wp = 0;
+  for (let i = 0; i < 4; i++){
+    if (i === correctIndex) result[i] = correctShare;
+    else result[i] = parts[wp++];
+  }
+  return result;
+}
+
+function friendHint(qIndex, correctIndex){
+  const letter = LETTERS[correctIndex];
+  if (qIndex <= 3){
+    return `To akurat proste — jestem niemal pewny, że to ${letter}.`;
+  } else if (qIndex <= 7){
+    return `Kojarzę ten idiom z pracy... obstawiałbym ${letter}, ale sprawdź kontekst zdania jeszcze raz.`;
+  } else {
+    return `Trudne pytanie, nie jestem w stu procentach pewien, ale gdybym miał obstawiać jedną opcję, wybrałbym ${letter}.`;
+  }
+}
+
+function useLifeline(name){
+  if (state.answered || state.finished) return;
+  const q = QUESTIONS[state.idx];
+
+  if (name === 'fifty' && !state.lifelines.fifty){
+    state.lifelines.fifty = true;
+    const wrongIndices = [0,1,2,3].filter(i => i !== q.correct);
+    for (let i = wrongIndices.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [wrongIndices[i], wrongIndices[j]] = [wrongIndices[j], wrongIndices[i]];
+    }
+    state.hiddenOptions = wrongIndices.slice(0, 2);
+    if (state.hiddenOptions.includes(state.selected)) state.selected = null;
+  }
+
+  if (name === 'phone' && !state.lifelines.phone){
+    state.lifelines.phone = true;
+    state.hintText = { title: 'Telefon do przyjaciela', body: friendHint(state.idx, q.correct) };
+  }
+
+  if (name === 'audience' && !state.lifelines.audience){
+    state.lifelines.audience = true;
+    state.audienceData = audiencePercentages(state.idx, q.correct);
+  }
+
+  render();
+}
+
+const ADVANCE_DELAY = 1400;
+
+function selectOption(i){
+  if (state.answered || state.finished) return;
+  if (state.hiddenOptions.includes(i)) return;
+  state.selected = i;
+  render();
+}
+
+function confirmAnswer(){
+  if (state.answered || state.finished) return;
+  if (state.selected === null) return;
+  state.answered = true;
+  const selectedIndex = state.selected;
+  const q = QUESTIONS[state.idx];
+  const isCorrect = selectedIndex === q.correct;
+
+  render(selectedIndex);
+
+  setTimeout(() => {
+    if (isCorrect){
+      state.money = q.value;
+      if (state.idx === QUESTIONS.length - 1){
+        state.finished = true;
+        state.won = true;
+        render();
+      } else {
+        state.transitioning = true;
+        render(selectedIndex);
+        setTimeout(nextQuestion, ADVANCE_DELAY);
+      }
+    } else {
+      state.finished = true;
+      state.won = false;
+      state.finalPayout = guaranteedAmount(state.idx);
+      state.correctIndex = q.correct;
+      render();
+    }
+  }, 1100);
+}
+
+function nextQuestion(){
+  state.idx++;
+  state.answered = false;
+  state.transitioning = false;
+  state.hiddenOptions = [];
+  state.selected = null;
+  state.hintText = null;
+  state.audienceData = null;
+  render(undefined, true);
+}
+
+function restart(){
+  state = { idx:0, money:0, lifelines:{fifty:false,phone:false,audience:false}, hiddenOptions:[], selected:null, answered:false, finished:false };
+  renderStatus.last = 0;
+  render(undefined, true);
+}
+
+function render(revealSelected, fresh){
+  renderStatus();
+  const game = document.getElementById('game');
+
+  if (state.finished){
+    if (state.won){
+      game.innerHTML = `
+        <div class="final-card win" style="margin:0 auto;">
+          <p>Gratulacje! Odpowiedziałeś poprawnie na wszystkie 12 pytań.</p>
+          <div class="amount">1 000 000 zł</div>
+          <button class="action-btn" onclick="restart()">Zagraj ponownie</button>
+        </div>`;
+    } else {
+      const q = QUESTIONS[state.idx];
+      game.innerHTML = `
+        <div class="final-card lose" style="margin:0 auto;">
+          <p>Niestety, to była błędna odpowiedź.</p>
+          <p class="correct-answer">Poprawna odpowiedź to <b>${LETTERS[q.correct]}) ${q.options[q.correct]}</b></p>
+          <div class="amount">${fmt(state.finalPayout)}</div>
+          <p>To Twoja gwarantowana wygrana za dotychczasowe postępy.</p>
+          <button class="action-btn" onclick="restart()">Zagraj ponownie</button>
+        </div>`;
+    }
+    return;
+  }
+
+  const q = QUESTIONS[state.idx];
+  let optionsHtml = '';
+  for (let i = 0; i < 4; i++){
+    let cls = 'answer-plate';
+    if (state.hiddenOptions.includes(i)) cls += ' hidden';
+    if (!state.answered && i === state.selected) cls += ' selected';
+    if (state.answered){
+      if (i === q.correct) cls += ' correct';
+      else if (i === revealSelected) cls += ' wrong';
+    }
+    const disabled = state.answered ? 'disabled' : '';
+    optionsHtml += `<button type="button" class="${cls}" ${disabled} onclick="selectOption(${i})"><span class="letter">${LETTERS[i]}</span><span>${q.options[i]}</span></button>`;
+  }
+
+  const confirmHtml = state.answered ? '' : `
+    <div class="confirm-row">
+      <button class="confirm-btn" ${state.selected === null ? 'disabled' : ''} onclick="confirmAnswer()">Zaznacz ostatecznie</button>
+    </div>`;
+
+  let hintHtml = '';
+  if (state.hintText){
+    hintHtml += `<div class="hint-box"><b>${state.hintText.title}</b><span class="voice">"${state.hintText.body}"</span></div>`;
+  }
+  if (state.audienceData){
+    let rows = '';
+    state.audienceData.forEach((pct, i) => {
+      rows += `<div class="audience-row"><span class="audience-label">${LETTERS[i]}</span><div class="audience-track"><div class="audience-fill" style="width:${pct}%;"></div></div><span class="audience-pct">${pct}%</span></div>`;
+    });
+    hintHtml += `<div class="hint-box"><b>Pytanie do publiczności</b>${rows}</div>`;
+  }
+
+  let transitionHtml = '';
+  if (state.transitioning){
+    const isLast = state.idx === QUESTIONS.length - 1;
+    const nextLabel = isLast ? 'Ostatnie pytanie!' : `Przechodzimy do pytania ${state.idx+2} z ${QUESTIONS.length}…`;
+    transitionHtml = `
+      <div class="transition-banner">
+        Poprawna odpowiedź! ${nextLabel}
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      </div>`;
+  }
+
+  game.innerHTML = `
+    <div class="podium">
+      <div class="question-card${fresh ? ' card-enter' : ''}">
+        <div class="q-meta">
+          <span class="q-number">Pytanie ${state.idx+1} z ${QUESTIONS.length}</span>
+          <span class="q-value">${fmt(q.value)}</span>
+        </div>
+        <p class="q-text">${q.q}</p>
+        <div class="options">${optionsHtml}</div>
+        ${confirmHtml}
+        ${hintHtml}
+        ${transitionHtml}
+        <div class="lifelines">
+          <button class="lifeline" ${state.lifelines.fifty || state.answered ? 'disabled' : ''} onclick="useLifeline('fifty')">
+            <span class="lifeline-badge">${ICONS.fifty}</span><span class="label">50:50</span>
+          </button>
+          <button class="lifeline" ${state.lifelines.phone || state.answered ? 'disabled' : ''} onclick="useLifeline('phone')">
+            <span class="lifeline-badge">${ICONS.phone}</span><span class="label">Telefon</span>
+          </button>
+          <button class="lifeline" ${state.lifelines.audience || state.answered ? 'disabled' : ''} onclick="useLifeline('audience')">
+            <span class="lifeline-badge">${ICONS.audience}</span><span class="label">Publiczność</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="ladder-col">${renderLadder()}</div>
+  `;
+}
+
+render(undefined, true);
+</script>
