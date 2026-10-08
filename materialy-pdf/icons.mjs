@@ -386,3 +386,14 @@ export function iconSvg(name, opts = {}) {
   const dim = size ? ` width="${size}" height="${size}"` : '';
   return `<svg class="${cls}" viewBox="-4 -4 108 108"${dim} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${iconPaths(name, opts)}</svg>`;
 }
+
+// Odręczny kształt (np. ramka lub gałąź mapy myśli) jako ścieżki SVG,
+// w tym samym stylu kreski co ikony.
+export function sketch(type, args, { seed = 1, stroke = INK, fill, strokeWidth = 0.45, roughness = 0.9 } = {}) {
+  const opts = { seed, stroke, strokeWidth, roughness, bowing: 1, disableMultiStroke: true };
+  if (fill) Object.assign(opts, { fill, fillStyle: 'solid' });
+  return gen
+    .toPaths(gen[type](...args, opts))
+    .map((p) => `<path d="${p.d}" fill="${p.fill && p.fill !== 'none' ? p.fill : 'none'}" stroke="${p.stroke}" stroke-width="${p.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`)
+    .join('');
+}

@@ -17,7 +17,7 @@ Wspólne ustawienia w `style.css`: `--ex-ic` (rozmiar ikon w ćwiczeniach) i `--
 7. Ćw. 6 Krzyżówka ze zdaniami z luką (siatka w SVG)
 8. Ćw. 7 Co powiesz? Sytuacje i zwroty
 9. Ćw. 8 Dialog z lukami · Ćw. 9 Pytania o siebie
-10. Ćw. 10 Gra słowna (karty: wpisz 3 owoce, 2 napoje…)
+10. Ćw. 10 Odręczna mapa myśli: kategorie i linie na słowa
 11. Odpowiedzi i „Well done”
 
 Polecenia są po polsku. Ćwiczenia korzystają tylko ze słownictwa ze stron 2–3, a każde

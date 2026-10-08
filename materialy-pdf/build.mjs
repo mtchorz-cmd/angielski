@@ -6,7 +6,7 @@ import { execSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { iconSvg } from './icons.mjs';
+import { iconSvg, iconPaths, sketch } from './icons.mjs';
 import { wordSearch, crossword, rng } from './puzzles.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -252,20 +252,48 @@ function dialogPage() {
     </div>`);
 }
 
-// ---------- Ćw. 10: gra słowna ----------
+// ---------- Ćw. 10: mapa myśli (odręczna, SVG w milimetrach) ----------
+// Środek „Food.” → gałęzie do kategorii (ikona, liczba słów, nazwa) → gałązki do linii na słowa.
+// Kategorie lewej kolumny rozgałęziają się w lewo, prawej w prawo; środek zostaje wolny.
 function gamePage() {
-  const total = T.game.cards.reduce((a, c) => a + c[0], 0);
-  const cards = T.game.cards
-    .map(([count, label, ic]) => `<div class="gm-card">
-        <div class="gm-top">${iconSvg(ic, { cls: 'gm-ic' })}<p><b class="gm-count">${count}</b> ${esc(label)}</p></div>
-        <div class="gm-lines">${Array.from({ length: count }, () => '<span class="line"></span>').join('')}</div>
-      </div>`)
-    .join('');
+  const W = 176, H = 200;
+  const C = { x: 88, y: 104, w: 46, h: 22 };
+  const rows = [8, 58, 124, 174];
+  let branches = '', nodes = '';
+  T.game.cards.forEach(([count, label, ic], i) => {
+    const left = i % 2 === 0;
+    const ny = rows[Math.floor(i / 2)];
+    const icX = left ? 4 : W - 15;                 // ikona 11×11 mm
+    const bubX = left ? 20 : W - 20;               // kółko z liczbą
+    const textX = left ? 24.5 : W - 24.5;
+    const labelW = [...label].length * 2.1;      // szacowana szerokość nazwy (Onest 600, 3,7 mm)
+    const joinX = left ? textX + labelW + 2 : textX - labelW - 2; // gałąź dochodzi do końca nazwy
+    const lineA = left ? 22 : W - 62, lineB = left ? 62 : W - 22;
+    // gałąź główna: od środka do kategorii
+    // krzywa wychodzi pionowo ze środka i dochodzi do nazwy poziomo (nie przecina napisu)
+    const endX = joinX + (left ? 1.5 : -1.5);
+    const cp2X = endX + (left ? 16 : -16);
+    branches += sketch('path', [`M ${C.x} ${C.y} C ${C.x} ${(C.y + ny) / 2}, ${cp2X} ${ny + 1.4}, ${endX} ${ny + 1.4}`], { seed: 40 + i, stroke: '#2663EB', strokeWidth: 0.55 });
+    nodes += `<svg x="${icX}" y="${ny - 4}" width="11" height="11" viewBox="-4 -4 108 108">${iconPaths(ic)}</svg>`;
+    nodes += `<circle cx="${bubX}" cy="${ny + 1.4}" r="2.9" fill="#F2F6FE" stroke="#C4D4F8" stroke-width="0.3"/>`;
+    nodes += `<text x="${bubX}" y="${ny + 2.6}" class="mm-count">${count}</text>`;
+    nodes += `<text x="${textX}" y="${ny + 2.8}" class="mm-label" text-anchor="${left ? 'start' : 'end'}">${esc(label)}</text>`;
+    // gałązki do linii na słowa
+    const icCX = icX + 5.5;
+    for (let k = 0; k < count; k++) {
+      const ly = ny + 15 + k * 9.5;
+      const start = left ? lineA : lineB;
+      branches += sketch('path', [`M ${icCX} ${ny + 7} Q ${icCX} ${ly} ${start} ${ly}`], { seed: 90 + i * 5 + k, strokeWidth: 0.35, roughness: 0.6 });
+      nodes += `<line x1="${lineA}" y1="${ly}" x2="${lineB}" y2="${ly}" stroke="#C9C6C0" stroke-width="0.3" stroke-dasharray="0.8 1.2"/>`;
+    }
+  });
+  const center =
+    sketch('ellipse', [C.x, C.y, C.w, C.h], { seed: 9, fill: '#F2F6FE', stroke: '#2663EB', strokeWidth: 0.55 }) +
+    `<text x="${C.x}" y="${C.y + 2.6}" class="mm-center">${esc(T.title)}<tspan fill="#2663EB">.</tspan></text>`;
   return page(`
     <div class="ex ex-fill">
-      ${exHead(`Gra słowna. Masz ${T.game.minutes} minuty! Wpisz po angielsku tyle słów, ile podaje każda karta.`)}
-      <div class="gm-grid">${cards}</div>
-      <div class="gm-score">Mój wynik: <span class="gm-box"></span> / ${total}</div>
+      ${exHead('Uzupełnij mapę myśli. Wpisz słowa w każdej kategorii.')}
+      <svg class="mm" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm" xmlns="http://www.w3.org/2000/svg">${branches}${nodes}${center}</svg>
     </div>`);
 }
 

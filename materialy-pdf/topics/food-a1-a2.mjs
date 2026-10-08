@@ -152,18 +152,17 @@ export default {
     ['What do you usually order in a café?', 'I usually order … and …'],
   ],
 
-  // Ćw. 10 — gra słowna: [ile słów, karta, ikona]
+  // Ćw. 10 — mapa myśli: [ile słów, kategoria, ikona]
   game: {
-    minutes: 3,
     cards: [
       [3, 'owoce', 'apple'],
       [3, 'warzywa', 'carrot'],
       [2, 'napoje', 'juice'],
       [2, 'słodycze', 'icecream'],
-      [2, 'przymiotniki, które opisują jedzenie', 'pepper'],
-      [2, 'rzeczy, które leżą na stole', 'plate'],
-      [1, 'posiłek, który jesz rano', 'breakfast'],
-      [1, 'zwrot, którym zamówisz kawę', 'coffee'],
+      [2, 'przymiotniki', 'pepper'],
+      [2, 'na stole', 'plate'],
+      [1, 'posiłek rano', 'breakfast'],
+      [1, 'zamów kawę', 'coffee'],
     ],
     examples: [
       'apple, banana, lemon', 'carrot, onion, potato', 'water, tea', 'cake, chocolate',
