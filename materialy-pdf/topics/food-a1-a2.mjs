@@ -83,9 +83,9 @@ export default {
 
   // Ćw. 4 — przymiotniki w zdaniach
   adjectivesGap: [
-    ["There's too much salt in this soup. It's very {salty}."],
+    ['This soup is too {salty} for me.'],
     ['I love chocolate cake because it is so {sweet}.'],
-    ['Be careful! The tea is very {hot}.'],
+    ['Be careful, the plate is {hot}.'],
     ["It's 30°C today. Can I have a {cold} drink, please?"],
     ["There's a lot of chilli in this chicken. It's really {spicy}!"],
   ],
@@ -97,16 +97,16 @@ export default {
   crossword: {
     seed: 5,
     clues: {
-      breakfast: 'I always have ______ at 7 a.m. before work.',
-      lunch: 'At 1 p.m. I have ______ with my colleagues.',
+      breakfast: 'Do you have ______ in bed on Saturdays?',
+      lunch: "We're meeting Ann for ______. Do you want to join us?",
       dinner: 'In the evening we have ______ together at home.',
-      snack: 'The children have a ______ during the morning.',
+      snack: "He doesn't eat much for lunch – just a light ______.",
       chicken: 'My favourite meat is roast ______.',
       bread: 'Can I have some ______ and butter, please?',
-      carrot: 'A ______ is a long, thin, orange vegetable.',
-      lemon: 'She drinks her tea with ______, not milk.',
+      carrot: "I'll have a piece of ______ cake and some tea, please.",
+      lemon: 'Would you like ice and ______ in your drink?',
       coffee: "I drink a cup of ______ every morning. I don't like tea.",
-      chocolate: "I'd like a bar of milk ______, please.",
+      chocolate: 'I ate a bar of milk ______ yesterday.',
     },
   },
 

@@ -204,7 +204,7 @@ function crosswordPage() {
     CW.items
       .filter((i) => i.dir === dir)
       .sort((a, b) => a.n - b.n)
-      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[i.word.toLowerCase()]).replace(/_+/, '<span class="cgap"></span>')}</span></li>`)
+      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[i.word.toLowerCase()]).replace(/(\S+) _+([.,?!]?)/, '<span class="nw">$1 <span class="cgap"></span>$2</span>')}</span></li>`)
       .join('');
   const cell = Math.min(10.5, 150 / CW.rows, 172 / CW.cols);
   return page(`
