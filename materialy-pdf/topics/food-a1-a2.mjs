@@ -21,7 +21,7 @@ export default {
       ],
     },
     food: {
-      level: 'A1', en: 'Everyday food', pl: 'codzienne jedzenie',
+      level: 'A1', en: 'Food & dishes', pl: 'produkty i dania',
       words: [
         ['bread', 'chleb', 'bread'], ['butter', 'masło', 'butter'], ['cheese', 'ser', 'cheese'],
         ['egg', 'jajko', 'egg'], ['sandwich', 'kanapka', 'sandwich'], ['salad', 'sałatka', 'salad'],
@@ -43,7 +43,7 @@ export default {
     },
     table: {
       level: 'A2', en: 'At the table', pl: 'przy stole',
-      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['glass', 'szklanka', 'glass'], ['bill', 'rachunek', 'bill']],
+      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['glass', 'szklanka', 'glass'], ['bowl', 'miska', 'bowl'], ['napkin', 'serwetka', 'napkin']],
     },
     adjectives: {
       level: 'A2', en: 'Describing food', pl: 'opisujemy jedzenie',
@@ -79,7 +79,7 @@ export default {
   ],
 
   // Ćw. 3 — brakujące litery (ukryte samogłoski)
-  missingLetters: ['plate', 'fork', 'cheese', 'onion', 'juice', 'salad', 'potato', 'banana'],
+  missingLetters: ['plate', 'fork', 'bowl', 'napkin', 'cheese', 'onion', 'juice', 'salad'],
 
   // Ćw. 4 — przymiotniki w zdaniach
   adjectivesGap: [
@@ -125,7 +125,7 @@ export default {
   // Ćw. 8 — dialog z lukami
   gapFill: {
     title: 'At the restaurant',
-    bank: ['hungry', 'fresh', 'Anything else', "that's all", 'Enjoy your meal', 'sugar'],
+    bank: ['hungry', 'fresh', 'Anything else', "that's all", 'Enjoy your meal', 'bill'],
     lines: [
       ['Waiter', 'Good evening! Are you ready to order?'],
       ['Tom', "Yes, please. I'm very {hungry}! I'd like the fish with {fresh} vegetables."],
@@ -138,7 +138,7 @@ export default {
       ['Waiter', 'How was your meal?'],
       ['Tom', 'It was delicious, thank you.'],
       ['Waiter', 'Would you like anything for dessert?'],
-      ['Tom', 'Yes, please. The chocolate cake and a coffee with no {sugar}.'],
+      ['Tom', "No, thank you. I'm full. Can I have the {bill}, please?"],
     ],
   },
 

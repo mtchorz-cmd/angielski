@@ -50,7 +50,7 @@ b { font-weight: 700; }
 .hint i { color: var(--ink); }
 
 .bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5mm 6mm; padding: 3.6mm 6mm; background: var(--brand-soft); border-radius: 12px; font-weight: 600; font-size: var(--task); }
-.bank-fit { align-self: center; padding: 3.2mm 6mm; gap: 1.5mm 5mm; }
+.bank-fit { align-self: center; padding: 3.4mm 9mm; gap: 1.5mm 10mm; }
 .box { width: 4.2mm; height: 4.2mm; border: 1.2px solid var(--brand-line); border-radius: 1.2mm; display: inline-block; flex: none; background: var(--brand-soft); }
 .line { display: block; border-bottom: 1px solid var(--line2); height: 7mm; }
 .gap { display: inline-flex; align-items: center; width: 30mm; height: 6.4mm; vertical-align: middle; background: var(--brand-soft); border-bottom: 1.2px solid var(--brand-line); border-radius: 3px 3px 0 0; margin: 0 .8mm; padding-left: 1.4mm; }
