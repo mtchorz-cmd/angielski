@@ -32,7 +32,7 @@ const shuffle = (arr, seed) => {
   return a;
 };
 const letter = (i) => String.fromCharCode(97 + i);
-const bank = (words) => `<div class="bank">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
+const bank = (words, cls = '') => `<div class="bank ${cls}">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
 // Luka w tekście: blady box z niebieskim numerem w środku
 const gapBox = (n, cls = '') => `<span class="gap ${cls}">${n ? `<i>${n}</i>` : ''}</span>`;
 
@@ -133,7 +133,7 @@ function picturesPage() {
     <div class="ex">
       ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
       <div class="oo">${odd}</div>
-      <p class="hint">Wyjaśnij swój wybór po angielsku, np. <i>Carrot isn’t a fruit.</i></p>
+      <p class="hint">Wyjaśnij swój wybór po angielsku, np. <i>A carrot isn’t a fruit.</i></p>
     </div>`);
 }
 
@@ -160,7 +160,7 @@ function lettersPage() {
     </div>
     <div class="ex">
       ${exHead('Uzupełnij zdania przymiotnikami z ramki.')}
-      ${bank(shuffle(adjWords, 4))}
+      ${bank(shuffle(adjWords, 4), 'bank-fit')}
       <ol class="sent">${sentences}</ol>
     </div>`);
 }

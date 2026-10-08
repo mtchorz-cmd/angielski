@@ -17,7 +17,7 @@ export default {
         ['apple', 'jabłko', 'apple'], ['banana', 'banan', 'banana'], ['orange', 'pomarańcza', 'orange'],
         ['lemon', 'cytryna', 'lemon'], ['strawberry', 'truskawka', 'strawberry'], ['grapes', 'winogrona', 'grapes'],
         ['tomato', 'pomidor', 'tomato'], ['carrot', 'marchewka', 'carrot'], ['potato', 'ziemniak', 'potato'],
-        ['onion', 'cebula', 'onion'], ['pepper', 'papryka', 'pepper'], ['mushroom', 'grzyb, pieczarka', 'mushroom'],
+        ['onion', 'cebula', 'onion'], ['pepper', 'papryka (warzywo)', 'pepper'], ['mushroom', 'grzyb, pieczarka', 'mushroom'],
       ],
     },
     food: {
@@ -35,15 +35,15 @@ export default {
     },
     sweet: {
       level: 'A1', en: 'Something sweet', pl: 'coś słodkiego',
-      words: [['cake', 'ciasto', 'cake'], ['biscuit', 'herbatnik, ciastko', 'biscuit'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream'], ['sugar', 'cukier', 'sugar']],
+      words: [['cake', 'ciasto', 'cake'], ['biscuit', 'herbatnik, kruche ciasteczko', 'biscuit'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream'], ['sugar', 'cukier', 'sugar']],
     },
     meals: {
       level: 'A2', en: 'Meals', pl: 'posiłki',
-      words: [['breakfast', 'śniadanie', 'breakfast'], ['lunch', 'lunch, obiad w południe', 'lunch'], ['dinner', 'kolacja, główny posiłek', 'dinner'], ['snack', 'przekąska', 'snack']],
+      words: [['breakfast', 'śniadanie', 'breakfast'], ['lunch', 'lunch (posiłek w południe)', 'lunch'], ['dinner', 'obiad, kolacja', 'dinner'], ['snack', 'przekąska', 'snack']],
     },
     table: {
       level: 'A2', en: 'At the table', pl: 'przy stole',
-      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['glass', 'szklanka', 'glass'], ['the bill', 'rachunek', 'bill']],
+      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['glass', 'szklanka', 'glass'], ['bill', 'rachunek', 'bill']],
     },
     adjectives: {
       level: 'A2', en: 'Describing food', pl: 'opisujemy jedzenie',
@@ -61,9 +61,9 @@ export default {
     ['Anything else?', 'Coś jeszcze?'],
     ["That's all, thank you.", 'To wszystko, dziękuję.'],
     ['Enjoy your meal!', 'Smacznego!'],
-    ['Do you like fish?', 'Lubisz ryby?'],
+    ['Do you like seafood?', 'Lubisz owoce morza?'],
     ["It's delicious!", 'To jest pyszne!'],
-    ["I'm full.", 'Najadłem się / Najadłam się.'],
+    ["I'm full.", 'Jestem najedzony / najedzona.'],
     ['Can I have the bill, please?', 'Poproszę rachunek.'],
   ],
 
@@ -87,7 +87,7 @@ export default {
     ['I love chocolate cake because it is so {sweet}.'],
     ['Be careful! The tea is very {hot}.'],
     ["It's 30°C today. Can I have a {cold} drink, please?"],
-    ['This chicken has a lot of chilli. It is really {spicy}!'],
+    ["There's a lot of chilli in this chicken. It's really {spicy}!"],
   ],
 
   // Ćw. 5 — wykreślanka 10×10 (obrazki jako wskazówki)
@@ -99,14 +99,14 @@ export default {
     clues: {
       breakfast: 'I always have ______ at 7 a.m. before work.',
       lunch: 'At 1 p.m. I have ______ with my colleagues.',
-      dinner: 'In the evening we have ______ at home together.',
+      dinner: 'In the evening we have ______ together at home.',
       snack: "I'm a bit hungry. I'd like a small ______.",
-      chicken: 'Roast ______ is my favourite meat.',
+      chicken: 'My favourite meat is roast ______.',
       bread: 'Can I have some ______ and butter, please?',
-      carrot: 'A ______ is orange. Rabbits love it!',
+      carrot: 'This orange vegetable is a ______. Rabbits love it!',
       lemon: "I'd like a tea with ______, please.",
       coffee: "I drink a cup of ______ every morning. I don't like tea.",
-      chocolate: 'My favourite sweet is milk ______.',
+      chocolate: "I'd like a bar of milk ______, please.",
     },
   },
 
@@ -116,7 +116,7 @@ export default {
     ['Jesteś kelnerem i pytasz gościa, co podać.', 'What would you like?', 'dinner'],
     ['Zamawiasz kawę.', "I'd like a coffee, please.", 'coffee'],
     ['Prosisz kelnera o wodę.', 'Can I have some water, please?', 'water'],
-    ['Pytasz kolegę, czy lubi ryby.', 'Do you like fish?', 'fish'],
+    ['Pytasz kolegę, czy lubi owoce morza.', 'Do you like seafood?', 'fish'],
     ['Zupa bardzo ci smakuje.', "It's delicious!", 'soup'],
     ['Nie zmieścisz już deseru.', "I'm full.", 'cake'],
     ['Chcesz zapłacić.', 'Can I have the bill, please?', 'bill'],
@@ -125,17 +125,17 @@ export default {
   // Ćw. 8 — dialog z lukami
   gapFill: {
     title: 'At the restaurant',
-    bank: ['hungry', 'fresh', 'orange', 'Anything else', "that's all", 'Enjoy your meal', 'cake', 'sugar'],
+    bank: ['hungry', 'fresh', 'Anything else', "that's all", 'Enjoy your meal', 'sugar'],
     lines: [
       ['Waiter', 'Good evening! What would you like?'],
       ['Tom', "I'm very {hungry}! I'd like the fish with {fresh} vegetables, please."],
       ['Waiter', 'And to drink?'],
-      ['Tom', 'A glass of {orange} juice, please.'],
+      ['Tom', 'A glass of orange juice, please.'],
       ['Waiter', '{Anything else}?'],
       ['Tom', "No, {that's all}, thank you."],
       ['Waiter', 'Here you are. {Enjoy your meal}!'],
-      ['Waiter', 'Would you like a dessert?'],
-      ['Tom', 'Yes, please. Chocolate {cake} and a coffee, no {sugar}.'],
+      ['Waiter', 'Would you like anything for dessert?'],
+      ['Tom', 'Yes, please. The chocolate cake, and a coffee with no {sugar}, please.'],
     ],
   },
 
@@ -145,7 +145,7 @@ export default {
     ["What's your favourite fruit?", 'My favourite fruit is …'],
     ['What do you drink in the morning?', 'In the morning I drink …'],
     ['Do you like spicy food?', 'Yes, I do. / No, I don’t.'],
-    ['What do you eat when you want a snack?', 'When I want a snack, I eat …'],
+    ['What do you usually eat as a snack?', 'As a snack, I usually eat …'],
     ["You're in a café. Order something to eat and drink.", "I'd like … and …, please."],
   ],
 };
