@@ -103,7 +103,7 @@ function vocabPage1() {
   return page(`
     <header class="pg-head">
       <h2 class="pg-title">Słownictwo<span class="dot">.</span></h2>
-      <p class="lead">Zaznacz, które słowa i zwroty już znasz, a które są dla ciebie nowe.</p>
+      <p class="lead">Zaznacz słowa i zwroty, które już znasz.</p>
     </header>
     <div class="wl-grid">
       <div class="wl-col">${card(G.fruit)}${card(G.drinks)}</div>
