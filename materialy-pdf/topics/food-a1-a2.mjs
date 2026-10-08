@@ -148,7 +148,7 @@ export default {
     ["What's your favourite fruit?", 'My favourite fruit is …'],
     ['What do you drink in the morning?', 'In the morning I drink …'],
     ['Do you like spicy food?', 'Yes, I do. / No, I don’t.'],
-    ['What do you usually eat as a snack?', 'As a snack, I usually eat …'],
+    ["What's your favourite snack?", 'My favourite snack is …'],
     ['What do you usually order in a café?', 'I usually order … and …'],
   ],
 
