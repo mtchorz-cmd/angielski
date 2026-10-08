@@ -35,7 +35,7 @@ export default {
     },
     sweet: {
       level: 'A1', en: 'Something sweet', pl: 'coś słodkiego',
-      words: [['cake', 'ciasto', 'cake'], ['biscuit', 'herbatnik, kruche ciasteczko', 'biscuit'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream'], ['sugar', 'cukier', 'sugar']],
+      words: [['cake', 'ciasto', 'cake'], ['biscuit', 'herbatnik', 'biscuit'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream'], ['sugar', 'cukier', 'sugar']],
     },
     meals: {
       level: 'A2', en: 'Meals', pl: 'posiłki',
