@@ -42,7 +42,7 @@ const page = (body, { cls = '' } = {}) => {
   const footer =
     pageNo === 1
       ? ''
-      : `<footer class="foot"><span class="foot-logo">${wordmark}</span><span>${esc(T.footer)}</span><span class="pnum">${pageNo}</span></footer>`;
+      : `<footer class="foot"><span></span><span class="pnum">${pageNo}</span><span class="foot-logo">${wordmark}</span></footer>`;
   return `<section class="page ${cls}"><div class="body">${body}</div>${footer}</section>`;
 };
 
@@ -253,46 +253,52 @@ function dialogPage() {
 }
 
 // ---------- Ćw. 10: mapa myśli (odręczna, SVG w milimetrach) ----------
-// Środek „Food.” → gałęzie do kategorii (ikona, liczba słów, nazwa) → gałązki do linii na słowa.
-// Kategorie lewej kolumny rozgałęziają się w lewo, prawej w prawo; środek zostaje wolny.
+// Klasyczna mapa: środek „Food.” → niebieskie gałęzie do podkreślonych kategorii →
+// cienkie gałązki zakończone liniami do pisania. Kategorie rozrzucone swobodnie.
+// x, y = lewy górny róg ikony; side = strona nazwy względem ikony;
+// subs = początki linii do pisania [x, y]; dir = kierunek linii (1 w prawo, -1 w lewo).
+const MM_LAYOUT = [
+  { x: 40, y: 18, side: 'right', dir: -1, subs: [[34, 44], [32, 55], [34, 66]] },    // owoce
+  { x: 108, y: 6, side: 'right', dir: 1, subs: [[142, 30], [144, 41], [142, 52]] },  // warzywa
+  { x: 152, y: 74, side: 'left', dir: -1, subs: [[166, 98], [164, 109]] },           // napoje
+  { x: 150, y: 146, side: 'left', dir: -1, subs: [[164, 170], [162, 181]] },         // słodycze
+  { x: 96, y: 192, side: 'right', dir: 1, subs: [[141, 214], [143, 225]] },          // przymiotniki
+  { x: 44, y: 180, side: 'right', dir: -1, subs: [[36, 204], [34, 215]] },           // na stole
+  { x: 6, y: 138, side: 'right', dir: 1, subs: [[12, 162]] },                        // posiłek rano
+  { x: 10, y: 86, side: 'right', dir: 1, subs: [[16, 108]] },                        // zamów kawę
+];
 function gamePage() {
-  const W = 176, H = 200;
-  const C = { x: 88, y: 104, w: 46, h: 22 };
-  const rows = [8, 58, 124, 174];
+  const W = 176, H = 228, LINE = 30;
+  const C = { x: 88, y: 118, w: 50, h: 25 };
   let branches = '', nodes = '';
-  T.game.cards.forEach(([count, label, ic], i) => {
-    const left = i % 2 === 0;
-    const ny = rows[Math.floor(i / 2)];
-    const icX = left ? 4 : W - 15;                 // ikona 11×11 mm
-    const bubX = left ? 20 : W - 20;               // kółko z liczbą
-    const textX = left ? 24.5 : W - 24.5;
-    const labelW = [...label].length * 2.1;      // szacowana szerokość nazwy (Onest 600, 3,7 mm)
-    const joinX = left ? textX + labelW + 2 : textX - labelW - 2; // gałąź dochodzi do końca nazwy
-    const lineA = left ? 22 : W - 62, lineB = left ? 62 : W - 22;
-    // gałąź główna: od środka do kategorii
-    // krzywa wychodzi pionowo ze środka i dochodzi do nazwy poziomo (nie przecina napisu)
-    const endX = joinX + (left ? 1.5 : -1.5);
-    const cp2X = endX + (left ? 16 : -16);
-    branches += sketch('path', [`M ${C.x} ${C.y} C ${C.x} ${(C.y + ny) / 2}, ${cp2X} ${ny + 1.4}, ${endX} ${ny + 1.4}`], { seed: 40 + i, stroke: '#2663EB', strokeWidth: 0.55 });
-    nodes += `<svg x="${icX}" y="${ny - 4}" width="11" height="11" viewBox="-4 -4 108 108">${iconPaths(ic)}</svg>`;
-    nodes += `<circle cx="${bubX}" cy="${ny + 1.4}" r="2.9" fill="#F2F6FE" stroke="#C4D4F8" stroke-width="0.3"/>`;
-    nodes += `<text x="${bubX}" y="${ny + 2.6}" class="mm-count">${count}</text>`;
-    nodes += `<text x="${textX}" y="${ny + 2.8}" class="mm-label" text-anchor="${left ? 'start' : 'end'}">${esc(label)}</text>`;
-    // gałązki do linii na słowa
-    const icCX = icX + 5.5;
-    for (let k = 0; k < count; k++) {
-      const ly = ny + 15 + k * 9.5;
-      const start = left ? lineA : lineB;
-      branches += sketch('path', [`M ${icCX} ${ny + 7} Q ${icCX} ${ly} ${start} ${ly}`], { seed: 90 + i * 5 + k, strokeWidth: 0.35, roughness: 0.6 });
-      nodes += `<line x1="${lineA}" y1="${ly}" x2="${lineB}" y2="${ly}" stroke="#C9C6C0" stroke-width="0.3" stroke-dasharray="0.8 1.2"/>`;
-    }
+  T.game.cards.forEach(([, label, ic], i) => {
+    const L = MM_LAYOUT[i];
+    const labelW = [...label].length * 2.1;
+    const textX = L.side === 'right' ? L.x + 13 : L.x - 2;
+    const x0 = L.side === 'right' ? L.x : L.x - 2 - labelW, x1 = L.side === 'right' ? L.x + 13 + labelW : L.x + 11;
+    const uy = L.y + 13.5;                               // podkreślenie kategorii
+    const nearX = Math.abs(x0 - C.x) < Math.abs(x1 - C.x) ? x0 : x1;
+    const farX = nearX === x0 ? x1 : x0;
+    // gałąź główna: od środka do bliższego końca podkreślenia, wygięta w esowatą krzywą
+    const dx = nearX - C.x, dy = uy - C.y, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len;
+    const bend = (i % 2 ? 1 : -1) * (7 + (i % 3) * 3);
+    branches += sketch('path', [`M ${C.x} ${C.y} C ${C.x + dx * 0.35 + nx * bend} ${C.y + dy * 0.35 + ny * bend}, ${C.x + dx * 0.7 - nx * bend * 0.6} ${C.y + dy * 0.7 - ny * bend * 0.6}, ${nearX} ${uy}`], { seed: 40 + i, stroke: '#2663EB', strokeWidth: 0.65 });
+    branches += sketch('line', [x0, uy, x1, uy], { seed: 60 + i, stroke: '#2663EB', strokeWidth: 0.65, roughness: 0.5 });
+    nodes += `<svg x="${L.x}" y="${L.y}" width="12" height="12" viewBox="-4 -4 108 108">${iconPaths(ic)}</svg>`;
+    nodes += `<text x="${textX}" y="${L.y + 8.6}" class="mm-label" text-anchor="${L.side === 'right' ? 'start' : 'end'}">${esc(label)}</text>`;
+    // gałązki: od dalszego końca podkreślenia do linii na słowa
+    L.subs.forEach(([sx, sy], k) => {
+      const ex = sx + L.dir * LINE;
+      branches += sketch('path', [`M ${farX} ${uy} Q ${farX + (sx - farX) * 0.2} ${sy}, ${sx} ${sy}`], { seed: 90 + i * 5 + k, strokeWidth: 0.38, roughness: 0.6 });
+      branches += sketch('line', [sx, sy, ex, sy], { seed: 120 + i * 5 + k, stroke: '#9BA2B1', strokeWidth: 0.3, roughness: 0.4 });
+    });
   });
   const center =
-    sketch('ellipse', [C.x, C.y, C.w, C.h], { seed: 9, fill: '#F2F6FE', stroke: '#2663EB', strokeWidth: 0.55 }) +
+    sketch('ellipse', [C.x, C.y, C.w, C.h], { seed: 9, fill: '#F2F6FE', stroke: '#2663EB', strokeWidth: 0.65 }) +
     `<text x="${C.x}" y="${C.y + 2.6}" class="mm-center">${esc(T.title)}<tspan fill="#2663EB">.</tspan></text>`;
   return page(`
     <div class="ex ex-fill">
-      ${exHead('Uzupełnij mapę myśli. Wpisz słowa w każdej kategorii.')}
+      ${exHead('Uzupełnij mapę myśli. Dopisz dowolne słowa, które pamiętasz.')}
       <svg class="mm" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm" xmlns="http://www.w3.org/2000/svg">${branches}${nodes}${center}</svg>
     </div>`);
 }

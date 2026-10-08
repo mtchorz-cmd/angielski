@@ -34,9 +34,10 @@ ul, ol { list-style: none; }
 b { font-weight: 700; }
 
 /* stopka — osobny pas pod treścią */
-.foot { position: absolute; left: 17mm; right: 17mm; bottom: 10mm; height: 5mm; display: flex; align-items: center; justify-content: space-between; font-size: 7.5pt; color: var(--muted); font-weight: 500; }
-.foot-logo svg { height: 3.4mm; width: auto; display: block; }
-.pnum { min-width: 6mm; text-align: right; color: var(--ink2); font-weight: 600; }
+.foot { position: absolute; left: 17mm; right: 17mm; bottom: 10mm; height: 6mm; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 8.5pt; color: var(--muted); font-weight: 500; }
+.foot-logo { justify-self: end; }
+.foot-logo svg { height: 4.6mm; width: auto; display: block; }
+.pnum { text-align: center; color: var(--ink2); font-weight: 600; }
 
 /* nagłówek zadania */
 .ex { display: flex; flex-direction: column; gap: 8mm; }
