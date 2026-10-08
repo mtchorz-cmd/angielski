@@ -283,8 +283,8 @@ function gamePage() {
     const ang = Math.atan2(uy - C.y, ax - C.x);
     const sx = C.x + (C.w / 2 - 1) * Math.cos(ang), sy = C.y + (C.h / 2 - 1) * Math.sin(ang);
     const dist = Math.hypot(ax - sx, uy - sy);
-    const c1x = sx + Math.cos(ang) * dist * 0.35, c1y = sy + Math.sin(ang) * dist * 0.35;
-    const c2x = ax + (right ? -1 : 1) * Math.max(14, Math.abs(ax - sx) * 0.55);
+    const c1x = sx + Math.cos(ang) * dist * 0.5, c1y = sy + Math.sin(ang) * dist * 0.5;
+    const c2x = ax + (right ? -1 : 1) * Math.abs(ax - sx) * 0.9;
     branches += sketch('path', [`M ${sx} ${sy} C ${c1x} ${c1y}, ${c2x} ${uy}, ${ax} ${uy}`], { seed: 40 + i, stroke: '#2663EB', strokeWidth: 0.7, roughness: 0.25 });
     branches += sketch('line', [x0, uy, x1, uy], { seed: 60 + i, stroke: '#2663EB', strokeWidth: 0.7, roughness: 0.25 });
     nodes += `<svg x="${L.x}" y="${L.y}" width="12" height="12" viewBox="-4 -4 108 108">${iconPaths(ic)}</svg>`;
