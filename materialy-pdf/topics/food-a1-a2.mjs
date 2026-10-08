@@ -127,15 +127,18 @@ export default {
     title: 'At the restaurant',
     bank: ['hungry', 'fresh', 'Anything else', "that's all", 'Enjoy your meal', 'sugar'],
     lines: [
-      ['Waiter', 'Good evening! What would you like?'],
-      ['Tom', "I'm very {hungry}! I'd like the fish with {fresh} vegetables, please."],
-      ['Waiter', 'And to drink?'],
+      ['Waiter', 'Good evening! Are you ready to order?'],
+      ['Tom', "Yes, please. I'm very {hungry}! I'd like the fish with {fresh} vegetables."],
+      ['Waiter', 'Of course. And what would you like to drink?'],
       ['Tom', 'A glass of orange juice, please.'],
       ['Waiter', '{Anything else}?'],
       ['Tom', "No, {that's all}, thank you."],
       ['Waiter', 'Here you are. {Enjoy your meal}!'],
+      ['', '…'],
+      ['Waiter', 'How was your meal?'],
+      ['Tom', 'It was delicious, thank you.'],
       ['Waiter', 'Would you like anything for dessert?'],
-      ['Tom', 'Yes, please. The chocolate cake, and a coffee with no {sugar}, please.'],
+      ['Tom', 'Yes, please. The chocolate cake and a coffee with no {sugar}.'],
     ],
   },
 
@@ -146,6 +149,25 @@ export default {
     ['What do you drink in the morning?', 'In the morning I drink …'],
     ['Do you like spicy food?', 'Yes, I do. / No, I don’t.'],
     ['What do you usually eat as a snack?', 'As a snack, I usually eat …'],
-    ["You're in a café. Order something to eat and drink.", "I'd like … and …, please."],
+    ['What do you usually order in a café?', 'I usually order … and …'],
   ],
+
+  // Ćw. 10 — gra słowna: [ile słów, karta, ikona]
+  game: {
+    minutes: 3,
+    cards: [
+      [3, 'owoce', 'apple'],
+      [3, 'warzywa', 'carrot'],
+      [2, 'napoje', 'juice'],
+      [2, 'słodycze', 'icecream'],
+      [2, 'przymiotniki, które opisują jedzenie', 'pepper'],
+      [2, 'rzeczy, które leżą na stole', 'plate'],
+      [1, 'posiłek, który jesz rano', 'breakfast'],
+      [1, 'zwrot, którym zamówisz kawę', 'coffee'],
+    ],
+    examples: [
+      'apple, banana, lemon', 'carrot, onion, potato', 'water, tea', 'cake, chocolate',
+      'sweet, spicy', 'plate, fork', 'breakfast', "I'd like a coffee, please.",
+    ],
+  },
 };

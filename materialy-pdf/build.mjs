@@ -132,7 +132,6 @@ function picturesPage() {
     <div class="ex">
       ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
       <div class="oo">${odd}</div>
-      <p class="hint">Wyjaśnij swój wybór po angielsku, np. <i>A carrot isn’t a fruit.</i></p>
     </div>`);
 }
 
@@ -173,7 +172,7 @@ function wordSearchPage() {
     .join('');
   return page(`
     <div class="ex ex-fill">
-      ${exHead('Znajdź w diagramie słowa z obrazków (→ ↓ ↘) i wpisz je pod obrazkami.')}
+      ${exHead('Odszukaj w wykreślance ukryte słowa (→ ↓ ↘), a następnie podpisz obrazki.')}
       <div class="ws-wrap"><div class="ws-grid">${grid}</div></div>
       <ul class="ws-clues">${clues}</ul>
     </div>`);
@@ -233,7 +232,11 @@ function dialogPage() {
   const D = T.gapFill;
   let n = 0;
   const lines = D.lines
-    .map(([who, text]) => `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, () => gapBox(++n))}</p></div>`)
+    .map(([who, text]) =>
+      who
+        ? `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, () => gapBox(++n))}</p></div>`
+        : '<div class="dl-sep"><span>później</span></div>'
+    )
     .join('');
   return page(`
     <div class="ex">
@@ -246,6 +249,23 @@ function dialogPage() {
       <div class="about">${T.aboutYou
         .map(([q, hint], i) => `<div class="about-q"><p><span class="n">${i + 1}</span>${esc(q)} <span class="about-hint">${esc(hint)}</span></p><span class="line"></span></div>`)
         .join('')}</div>
+    </div>`);
+}
+
+// ---------- Ćw. 10: gra słowna ----------
+function gamePage() {
+  const total = T.game.cards.reduce((a, c) => a + c[0], 0);
+  const cards = T.game.cards
+    .map(([count, label, ic]) => `<div class="gm-card">
+        <div class="gm-top">${iconSvg(ic, { cls: 'gm-ic' })}<p><b class="gm-count">${count}</b> ${esc(label)}</p></div>
+        <div class="gm-lines">${Array.from({ length: count }, () => '<span class="line"></span>').join('')}</div>
+      </div>`)
+    .join('');
+  return page(`
+    <div class="ex ex-fill">
+      ${exHead(`Gra słowna. Masz ${T.game.minutes} minuty! Wpisz po angielsku tyle słów, ile podaje każda karta.`)}
+      <div class="gm-grid">${cards}</div>
+      <div class="gm-score">Mój wynik: <span class="gm-box"></span> / ${total}</div>
     </div>`);
 }
 
@@ -278,6 +298,7 @@ function keyPage() {
         ${block(5, `<div class="ws-grid ws-mini">${wsMini}</div>`)}
         ${block(7, `<p class="pairs">${T.situations.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(SIT_ORDER.indexOf(i))}</span>`).join('')}</p>`)}
         ${block(8, ol(gaps(T.gapFill.lines), 1))}
+        ${block(10, `<p class="k-note">Przykładowe odpowiedzi:</p>${ol(T.game.examples.map(esc), 1)}`)}
       </div>
     </div>
     <div class="finish">
@@ -287,7 +308,7 @@ function keyPage() {
 }
 
 // ---------- Złożenie ----------
-const pages = [cover(), vocabPage1(), vocabPage2(), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), keyPage()];
+const pages = [cover(), vocabPage1(), vocabPage2(), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), gamePage(), keyPage()];
 const css = readFileSync(join(ROOT, 'style.css'), 'utf8');
 const html = `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>gettinenglish · ${esc(T.title)} ${esc(T.level)}</title>
 <style>${css}</style></head><body>${pages.join('\n')}</body></html>`;
