@@ -33,6 +33,11 @@ const shuffle = (arr, seed) => {
 };
 const letter = (i) => String.fromCharCode(97 + i);
 const bank = (words, cls = '') => `<div class="bank ${cls}">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
+// Ramka w rzędach o zadanej liczbie słów (np. [6, 4]), dopasowana szerokością do treści
+const bankRows = (words, sizes) => {
+  let i = 0;
+  return `<div class="bank bank-fit bank-rows">${sizes.map((n) => `<div>${words.slice(i, (i += n)).map((w) => `<span>${esc(w)}</span>`).join('')}</div>`).join('')}</div>`;
+};
 // Luka w tekście: blady box z niebieskim numerem w środku
 const gapBox = (n, cls = '') => `<span class="gap ${cls}">${n ? `<i>${n}</i>` : ''}</span>`;
 
@@ -126,7 +131,7 @@ function picturesPage() {
   return page(`
     <div class="ex">
       ${exHead('Podpisz obrazki. Wybierz wyrazy z ramki.')}
-      ${bank(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3))}
+      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), [6, 4])}
       <div class="lp-grid">${cells}</div>
     </div>
     <div class="ex">

@@ -21,7 +21,7 @@ export default {
       ],
     },
     food: {
-      level: 'A1', en: 'Food & dishes', pl: 'produkty i dania',
+      level: 'A1', en: 'Types of food', pl: 'rodzaje jedzenia',
       words: [
         ['bread', 'chleb', 'bread'], ['butter', 'masło', 'butter'], ['cheese', 'ser', 'cheese'],
         ['egg', 'jajko', 'egg'], ['sandwich', 'kanapka', 'sandwich'], ['salad', 'sałatka', 'salad'],
