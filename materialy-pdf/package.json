@@ -1,0 +1,11 @@
+{
+  "name": "gettinenglish-materialy-pdf",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "roughjs": "4.6.6"
+  }
+}
