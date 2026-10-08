@@ -80,9 +80,8 @@ function cover() {
 // ---------- Słownictwo ----------
 const marks = '<span class="box"></span><span class="box"></span>';
 const colLabels = '<div class="wl-cols"><span>znam</span><span>nowe</span></div>';
-const lvl = (l) => `<span class="lvl lvl-${l.toLowerCase()}">${l}</span>`;
 const head = (g, withCols = true) =>
-  `<div class="wl-head">${lvl(g.level)}<div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div>${withCols ? colLabels : ''}</div>`;
+  `<div class="wl-head"><div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div>${withCols ? colLabels : ''}</div>`;
 const row = ([en, pl, ic]) =>
   `<li>${ic ? iconSvg(ic, { cls: 'wl-ic' }) : ''}<span class="wl-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks}</li>`;
 const card = (g) => `<div class="wcard">${head(g)}<ul class="wl">${g.words.map(row).join('')}</ul></div>`;
