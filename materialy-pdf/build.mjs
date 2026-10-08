@@ -12,13 +12,14 @@ import { wordSearch, crossword, rng } from './puzzles.mjs';
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const slug = process.argv[2] || 'food-a1-a2';
 const T = (await import(`./topics/${slug}.mjs`)).default;
+const G = T.groups;
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const svgFile = (name) => readFileSync(join(ROOT, 'assets/logo', name), 'utf8');
 const wordmark = svgFile('gettinenglish-wordmark.svg');
 const wordmarkWhite = svgFile('gettinenglish-wordmark-white.svg');
 
-const allWords = T.groups.flatMap((g) => g.words);
+const allWords = Object.values(G).flatMap((g) => g.words.filter((w) => w[2]));
 const iconToWord = Object.fromEntries(allWords.map((w) => [w[2], w[0]]));
 const wordToIcon = Object.fromEntries(allWords.map((w) => [w[0], w[2]]));
 const shuffle = (arr, seed) => {
@@ -31,6 +32,9 @@ const shuffle = (arr, seed) => {
   return a;
 };
 const letter = (i) => String.fromCharCode(97 + i);
+const bank = (words) => `<div class="bank">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
+// Luka w tekście: blady box z niebieskim numerem w środku
+const gapBox = (n, cls = '') => `<span class="gap ${cls}">${n ? `<i>${n}</i>` : ''}</span>`;
 
 let pageNo = 0;
 const page = (body, { cls = '' } = {}) => {
@@ -45,14 +49,15 @@ const page = (body, { cls = '' } = {}) => {
 let exNo = 0;
 const exHead = (instruction) => `<header class="ex-head"><span class="ex-num">${++exNo}</span><h2>${instruction}</h2></header>`;
 
-// ---------- 1. Okładka ----------
+// ---------- Okładka ----------
 function cover() {
-  // Ręcznie dobrane pozycje (mm): x, y, rozmiar, obrót — wolne pole na tytuł i logo.
+  // Pozycje (mm): x, y, rozmiar, obrót. Pole tytułu i logo zostaje wolne
+  // (build sprawdza to automatycznie — patrz „kontrola okładki” na dole).
   const spots = [
     [12, 14, 34, -12], [62, 8, 26, 8], [104, 20, 38, -4], [154, 10, 30, 14],
-    [168, 62, 34, -10], [8, 66, 28, 10], [150, 112, 40, 6], [6, 200, 36, -8],
-    [52, 222, 30, 12], [96, 206, 42, -6], [150, 196, 32, 10],
-    [70, 258, 26, -12], [118, 252, 34, 8], [166, 246, 30, -4], [160, 158, 26, -14],
+    [168, 62, 34, -10], [8, 56, 28, 10], [150, 112, 40, 6], [6, 196, 34, -8],
+    [52, 214, 30, 12], [96, 204, 40, -6], [150, 196, 32, 10],
+    [88, 254, 26, -12], [124, 250, 32, 8], [168, 246, 28, -4], [160, 158, 26, -14],
   ];
   const art = spots
     .map(([x, y, s, rot], i) => {
@@ -72,63 +77,98 @@ function cover() {
   );
 }
 
-// ---------- 2. Lista słów i zwrotów ----------
-function wordList() {
-  const marks = '<span class="box"></span><span class="box"></span>';
-  const cols = '<div class="wl-cols"><span>znam</span><span>nowe</span></div>';
-  const card = (g) => `
-    <div class="wcard">
-      <div class="wl-head"><div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div><span class="lvl">${g.level}</span>${cols}</div>
-      <ul class="wl">${g.words
-        .map(([en, pl, ic]) => `<li>${iconSvg(ic, { cls: 'wl-ic' })}<span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span>${marks}</li>`)
-        .join('')}</ul>
-    </div>`;
-  const left = T.groups.slice(0, 2);
-  const right = T.groups.slice(2);
-  const half = Math.ceil(T.phrases.length / 2);
-  const phraseCol = (list) =>
-    `<ul class="wl ph"><li class="ph-cols">${cols}</li>${list.map(([en, pl]) => `<li><span class="ph-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks}</li>`).join('')}</ul>`;
+// ---------- Słownictwo ----------
+const marks = '<span class="box"></span><span class="box"></span>';
+const colLabels = '<div class="wl-cols"><span>znam</span><span>nowe</span></div>';
+const lvl = (l) => `<span class="lvl lvl-${l.toLowerCase()}">${l}</span>`;
+const head = (g, withCols = true) =>
+  `<div class="wl-head">${lvl(g.level)}<div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div>${withCols ? colLabels : ''}</div>`;
+const row = ([en, pl, ic]) =>
+  `<li>${ic ? iconSvg(ic, { cls: 'wl-ic' }) : ''}<span class="wl-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks}</li>`;
+const card = (g) => `<div class="wcard">${head(g)}<ul class="wl">${g.words.map(row).join('')}</ul></div>`;
+// Karta szeroka: lista w kilku kolumnach, każda kolumna z własnymi etykietami znam/nowe
+const wideCard = (g, items, cols) => {
+  const per = Math.ceil(items.length / cols);
+  const parts = Array.from({ length: cols }, (_, i) => items.slice(i * per, (i + 1) * per));
+  return `<div class="wcard">${head(g, false)}<div class="wide" style="--cols:${cols}">${parts
+    .map((p) => `<ul class="wl">${'<li class="cols-row">' + colLabels + '</li>'}${p.map(row).join('')}</ul>`)
+    .join('')}</div></div>`;
+};
+
+function vocabPage1() {
   return page(`
     <header class="pg-head">
-      <h2 class="pg-title">Your words<span class="dot">.</span></h2>
+      <h2 class="pg-title">Słownictwo<span class="dot">.</span></h2>
       <p class="lead">Zaznacz, które słowa i zwroty już znasz, a które są dla ciebie nowe.</p>
     </header>
     <div class="wl-grid">
-      <div class="wl-col">${left.map(card).join('')}</div>
-      <div class="wl-col">${right.map(card).join('')}</div>
-    </div>
-    <div class="wcard">
-      <div class="wl-head"><div class="wl-t"><b>Useful phrases</b><span class="pl">przydatne zwroty</span></div><span class="lvl">A2</span></div>
-      <div class="ph-grid">${phraseCol(T.phrases.slice(0, half))}${phraseCol(T.phrases.slice(half))}</div>
+      <div class="wl-col">${card(G.fruit)}${card(G.drinks)}</div>
+      <div class="wl-col">${card(G.food)}${card(G.sweet)}</div>
     </div>`);
 }
+function vocabPage2() {
+  return page(`
+    <div class="wl-grid">
+      <div class="wl-col">${card(G.meals)}</div>
+      <div class="wl-col">${card(G.table)}</div>
+    </div>
+    ${wideCard(G.adjectives, G.adjectives.words, 3)}
+    ${wideCard({ level: 'A2', en: 'Useful phrases', pl: 'przydatne zwroty' }, T.phrases, 2)}`);
+}
 
-// ---------- 3. Podpisz obrazki + co nie pasuje ----------
+// ---------- Ćw. 1 + 2 ----------
 function picturesPage() {
-  const bank = shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3);
   const cells = T.labelPictures
     .map((ic, i) => `<div class="lp-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'lp-ic' })}<span class="line"></span></div>`)
     .join('');
   const odd = T.oddOneOut
-    .map((row, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${row.icons.map((ic) => `<span class="oo-cell">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
+    .map((r, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${r.icons.map((ic) => `<span class="oo-cell">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
     .join('');
   return page(`
     <div class="ex">
       ${exHead('Podpisz obrazki. Wybierz wyrazy z ramki.')}
-      <div class="bank">${bank.map((w) => `<span>${esc(w)}</span>`).join('')}</div>
+      ${bank(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3))}
       <div class="lp-grid">${cells}</div>
     </div>
     <div class="ex">
       ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
       <div class="oo">${odd}</div>
-      <p class="hint">Wyjaśnij swój wybór po angielsku, np. <i>Cheese isn’t a fruit.</i></p>
+      <p class="hint">Wyjaśnij swój wybór po angielsku, np. <i>Carrot isn’t a fruit.</i></p>
     </div>`);
 }
 
-// ---------- 4. Wykreślanka ----------
+// ---------- Ćw. 3 + 4 ----------
+const hideVowels = (w) => w.split('').map((ch, i) => (i > 0 && 'aeiou'.includes(ch) ? null : ch));
+function lettersPage() {
+  const items = T.missingLetters
+    .map((w, i) => {
+      const letters = hideVowels(w)
+        .map((ch) => (ch ? `<span class="ml-l">${ch}</span>` : '<span class="ml-l ml-gap"></span>'))
+        .join('');
+      return `<div class="ml-item"><span class="n">${i + 1}</span>${iconSvg(wordToIcon[w], { cls: 'ml-ic' })}<span class="ml-word">${letters}</span></div>`;
+    })
+    .join('');
+  let n = 0;
+  const adjWords = T.adjectivesGap.map(([t]) => t.match(/\{([^}]+)\}/)[1]);
+  const sentences = T.adjectivesGap
+    .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox(''))}</p></li>`)
+    .join('');
+  return page(`
+    <div class="ex">
+      ${exHead('Uzupełnij brakujące litery.')}
+      <div class="ml-grid">${items}</div>
+    </div>
+    <div class="ex">
+      ${exHead('Uzupełnij zdania przymiotnikami z ramki.')}
+      ${bank(shuffle(adjWords, 4))}
+      <ol class="sent">${sentences}</ol>
+    </div>`);
+}
+
+// ---------- Ćw. 5: wykreślanka ----------
 const WS = wordSearch(T.wordSearch.words.map((w) => w.toUpperCase()), T.wordSearch.size, T.wordSearch.seed);
 function wordSearchPage() {
-  const grid = WS.grid.map((row) => `<div class="ws-row">${row.map((ch) => `<span>${ch}</span>`).join('')}</div>`).join('');
+  const grid = WS.grid.map((r) => `<div class="ws-row">${r.map((ch) => `<span>${ch}</span>`).join('')}</div>`).join('');
   const clues = T.wordSearch.words
     .map((w) => `<li>${iconSvg(wordToIcon[w], { cls: 'ws-ic' })}<span class="dashes">${w.split('').map(() => '<i></i>').join('')}</span></li>`)
     .join('');
@@ -140,37 +180,34 @@ function wordSearchPage() {
     </div>`);
 }
 
-// ---------- 5. Krzyżówka (SVG — idealnie równa siatka) ----------
+// ---------- Ćw. 6: krzyżówka (SVG — idealnie równa siatka) ----------
 const CW = crossword(Object.keys(T.crossword.clues).map((w) => w.toUpperCase()), T.crossword.seed);
-function crosswordSvg(cellMm, solved = false) {
+function crosswordSvg(cellMm) {
   const nums = {};
   for (const it of CW.items) nums[`${it.r},${it.c}`] = it.n;
-  const s = 10; // jednostka siatki w SVG
+  const s = 10;
   let out = '';
   for (let r = 0; r < CW.rows; r++)
     for (let c = 0; c < CW.cols; c++) {
-      const ch = CW.grid[r][c];
-      if (!ch) continue;
+      if (!CW.grid[r][c]) continue;
       out += `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="#fff" stroke="#20242D" stroke-width="0.3"/>`;
       const n = nums[`${r},${c}`];
       if (n) out += `<text x="${c * s + 0.9}" y="${r * s + 2.9}" class="cw-n">${n}</text>`;
-      if (solved) out += `<text x="${c * s + 5}" y="${r * s + 6.9}" class="cw-l">${ch}</text>`;
     }
-  const W = CW.cols * s;
-  const H = CW.rows * s;
-  return `<svg class="cw-svg" viewBox="-0.5 -0.5 ${W + 1} ${H + 1}" width="${CW.cols * cellMm}mm" height="${CW.rows * cellMm}mm" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+  return `<svg class="cw-svg" viewBox="-0.5 -0.5 ${CW.cols * s + 1} ${CW.rows * s + 1}" width="${CW.cols * cellMm}mm" height="${CW.rows * cellMm}mm" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
 }
 function crosswordPage() {
   const list = (dir) =>
     CW.items
       .filter((i) => i.dir === dir)
       .sort((a, b) => a.n - b.n)
-      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[i.word.toLowerCase()]).replace(/\s*_+\s*/, (m) => `${m.startsWith(' ') ? ' ' : ''}<span class="cgap"></span>${m.endsWith(' ') ? ' ' : ''}`)}</span></li>`)
+      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[i.word.toLowerCase()]).replace(/_+/, '<span class="cgap"></span>')}</span></li>`)
       .join('');
+  const cell = Math.min(10.5, 150 / CW.rows, 172 / CW.cols);
   return page(`
     <div class="ex ex-fill">
       ${exHead('Uzupełnij zdania, a brakujące wyrazy wpisz do krzyżówki.')}
-      <div class="cw-wrap">${crosswordSvg(11)}</div>
+      <div class="cw-wrap">${crosswordSvg(cell)}</div>
       <div class="cw-clues">
         <div><h3>Poziomo →</h3><ul>${list('across')}</ul></div>
         <div><h3>Pionowo ↓</h3><ul>${list('down')}</ul></div>
@@ -178,7 +215,7 @@ function crosswordPage() {
     </div>`);
 }
 
-// ---------- 6. Co powiesz? ----------
+// ---------- Ćw. 7: co powiesz? ----------
 const SIT_ORDER = shuffle(T.situations.map((_, i) => i), 9);
 function situationsPage() {
   const left = T.situations
@@ -187,30 +224,23 @@ function situationsPage() {
   const right = SIT_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span>${esc(T.situations[idx][1])}</span></li>`).join('');
   return page(`
     <div class="ex ex-fill">
-      ${exHead('Co powiesz w tych sytuacjach? Dopasuj zwroty (a–h) do sytuacji (1–8).')}
-      <div class="st-wrap">
-        <ul class="st-left">${left}</ul>
-        <ul class="st-right">${right}</ul>
-      </div>
-      <p class="hint">Przeczytaj zwroty na głos. Wszystkie znajdziesz w sekcji <i>Useful phrases</i> na stronie 2.</p>
+      ${exHead('Co powiesz? Połącz sytuacje 1–8 ze zwrotami a–h.')}
+      <div class="st-wrap"><ul class="st-left">${left}</ul><ul class="st-right">${right}</ul></div>
     </div>`);
 }
 
-// ---------- 7. Dialog + o sobie ----------
-function gapPage() {
-  const G = T.gapFill;
+// ---------- Ćw. 8 + 9 ----------
+function dialogPage() {
+  const D = T.gapFill;
   let n = 0;
-  const lines = G.lines
-    .map(([who, text]) => {
-      const html = esc(text).replace(/\{([^}]+)\}/g, () => `<span class="gap"><sup>${++n}</sup></span>`);
-      return `<div class="dl-line"><span class="who">${esc(who)}</span><p>${html}</p></div>`;
-    })
+  const lines = D.lines
+    .map(([who, text]) => `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, () => gapBox(++n))}</p></div>`)
     .join('');
   return page(`
     <div class="ex">
       ${exHead('Uzupełnij dialog wyrazami z ramki.')}
-      <div class="bank">${shuffle(G.bank, 7).map((w) => `<span>${esc(w)}</span>`).join('')}</div>
-      <div class="dialog"><p class="dl-title">${esc(G.title)}</p>${iconSvg('coffee', { cls: 'dl-art' })}${lines}</div>
+      ${bank(shuffle(D.bank, 7))}
+      <div class="dialog"><p class="dl-title">${esc(D.title)}</p>${lines}</div>
     </div>
     <div class="ex">
       ${exHead('Odpowiedz na pytania o siebie. Skorzystaj z podpowiedzi.')}
@@ -220,43 +250,45 @@ function gapPage() {
     </div>`);
 }
 
-// ---------- 8. Klucz ----------
+// ---------- Klucz ----------
 function keyPage() {
   const inWS = new Set();
   for (const p of WS.placed) for (let i = 0; i < p.word.length; i++) inWS.add(`${p.r + p.dr * i},${p.c + p.dc * i}`);
   const wsMini = WS.grid
-    .map((row, r) => `<div class="ws-row">${row.map((ch, c) => `<span class="${inWS.has(`${r},${c}`) ? 'on' : ''}">${ch}</span>`).join('')}</div>`)
+    .map((r, ri) => `<div class="ws-row">${r.map((ch, c) => `<span class="${inWS.has(`${ri},${c}`) ? 'on' : ''}">${ch}</span>`).join('')}</div>`)
     .join('');
-  const ol = (items) => `<ol>${items.map((t) => `<li>${t}</li>`).join('')}</ol>`;
-  const gaps = [];
-  T.gapFill.lines.forEach(([, t]) => t.replace(/\{([^}]+)\}/g, (_, w) => gaps.push(esc(w))));
-  const cw = (dir) =>
-    CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `${i.n} ${i.word.toLowerCase()}`);
-  const sitKey = T.situations.map((_, i) => `${i + 1} ${letter(SIT_ORDER.indexOf(i))}`);
-  const block = (n, body) => `<div class="kb"><span class="kn">${n}</span><div>${body}</div></div>`;
+  const ol = (items, cols = 2) => `<ol style="columns:${cols}">${items.map((t) => `<li>${t}</li>`).join('')}</ol>`;
+  const gaps = (lines) => {
+    const out = [];
+    lines.forEach(([, t]) => t.replace(/\{([^}]+)\}/g, (_, w) => out.push(esc(w))));
+    return out;
+  };
+  const cw = (dir) => CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `<span class="nw">${i.n} ${i.word.toLowerCase()}</span>`).join(', ');
+  const block = (n, body) => `<div class="kb"><span class="kn">${n}</span><div class="kb-body">${body}</div></div>`;
   return page(`
-    <p class="key-label">Odpowiedzi</p>
+    <h2 class="pg-title">Odpowiedzi<span class="dot">.</span></h2>
     <div class="key">
       <div class="key-col">
-        ${block(1, ol(T.labelPictures.map((ic) => iconToWord[ic])))}
-        ${block(2, `<p>${T.oddOneOut.map((o, i) => `${letter(i)}&nbsp; ${esc(o.why)}`).join('<br>')}</p>`)}
-        ${block(5, `<p class="pairs">${sitKey.map((s) => `<span>${s}</span>`).join('')}</p>`)}
+        ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
+        ${block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
+        ${block(3, ol(T.missingLetters.map(esc)))}
+        ${block(4, ol(gaps(T.adjectivesGap.map((t) => ['', t[0]])), 1))}
+        ${block(6, `<p><span class="kl">Poziomo</span> ${cw('across')}</p><p><span class="kl">Pionowo</span> ${cw('down')}</p>`)}
       </div>
       <div class="key-col">
-        ${block(3, `<div class="ws-grid ws-mini">${wsMini}</div>`)}
-        ${block(4, `<p><span class="kl">Poziomo</span> ${cw('across').map((x) => `<span class="nw">${x}</span>`).join(', ')}</p><p><span class="kl">Pionowo</span> ${cw('down').map((x) => `<span class="nw">${x}</span>`).join(', ')}</p>`)}
-        ${block(6, `<p>${gaps.map((g, i) => `<span class="nw">${i + 1} ${g}</span>`).join(', ')}</p>`)}
+        ${block(5, `<div class="ws-grid ws-mini">${wsMini}</div>`)}
+        ${block(7, `<p class="pairs">${T.situations.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(SIT_ORDER.indexOf(i))}</span>`).join('')}</p>`)}
+        ${block(8, ol(gaps(T.gapFill.lines), 1))}
       </div>
     </div>
     <div class="finish">
-      <div class="finish-art">${['apple', 'cake', 'coffee'].map((i) => iconSvg(i, { cls: 'fin-ic' })).join('')}</div>
       <p class="finish-big">Well done<span class="dot">.</span></p>
-      <p>Wróć do listy słów na stronie 2 i sprawdź, ile pamiętasz.</p>
+      <p>Wróć do listy słów na stronach 2–3 i sprawdź, ile pamiętasz.</p>
     </div>`);
 }
 
 // ---------- Złożenie ----------
-const pages = [cover(), wordList(), picturesPage(), wordSearchPage(), crosswordPage(), situationsPage(), gapPage(), keyPage()];
+const pages = [cover(), vocabPage1(), vocabPage2(), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), keyPage()];
 const css = readFileSync(join(ROOT, 'style.css'), 'utf8');
 const html = `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>gettinenglish · ${esc(T.title)} ${esc(T.level)}</title>
 <style>${css}</style></head><body>${pages.join('\n')}</body></html>`;
@@ -272,20 +304,31 @@ const browser = await chromium.launch();
 const pg = await browser.newPage();
 await pg.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle' });
 await pg.evaluate(() => document.fonts.ready);
-// Kontrola: treść strony musi kończyć się co najmniej 8 mm nad stopką
-const overflow = await pg.evaluate(() =>
-  [...document.querySelectorAll('.page')].flatMap((p, i) => {
+const problems = await pg.evaluate(() => {
+  const mm = 96 / 25.4;
+  const out = [];
+  // 1) treść każdej strony kończy się co najmniej 8 mm nad stopką
+  document.querySelectorAll('.page').forEach((p, i) => {
     const foot = p.querySelector('.foot');
-    const body = p.querySelector('.body');
-    if (!foot) return [];
-    const mm = 96 / 25.4;
-    const max = Math.max(...[...body.querySelectorAll('*')].map((el) => el.getBoundingClientRect().bottom));
+    if (!foot) return;
+    const max = Math.max(...[...p.querySelector('.body').querySelectorAll('*')].map((el) => el.getBoundingClientRect().bottom));
     const room = (foot.getBoundingClientRect().top - max) / mm;
-    return room < 8 ? [`strona ${i + 1}: odstęp od stopki tylko ${room.toFixed(1)} mm`] : [];
-  })
-);
+    if (room < 8) out.push(`strona ${i + 1}: odstęp od stopki tylko ${room.toFixed(1)} mm`);
+  });
+  // 2) kontrola okładki: ilustracje nie mogą dotykać logo ani tytułu (margines 4 mm)
+  const cov = document.querySelector('.cover');
+  const keep = [cov.querySelector('.cv-logo svg'), cov.querySelector('.cv-main')].map((el) => el.getBoundingClientRect());
+  cov.querySelectorAll('.cv-ic').forEach((ic, k) => {
+    const a = ic.getBoundingClientRect();
+    for (const b of keep) {
+      const m = 4 * mm;
+      if (a.left < b.right + m && a.right > b.left - m && a.top < b.bottom + m && a.bottom > b.top - m) out.push(`okładka: ilustracja ${k + 1} za blisko logo/tytułu`);
+    }
+  });
+  return out;
+});
 const pdfPath = join(ROOT, 'out', `gettinenglish-${slug}.pdf`);
 await pg.pdf({ path: pdfPath, format: 'A4', printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
 await browser.close();
 console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
-if (overflow.length) console.log('UWAGA:\n' + overflow.join('\n'));
+if (problems.length) console.log('UWAGA:\n' + problems.join('\n'));

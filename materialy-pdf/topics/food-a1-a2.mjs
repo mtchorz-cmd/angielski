@@ -1,6 +1,7 @@
 // Temat: Food · poziom A1–A2.
-// Słowo: [en, pl, ikona]. Zwrot: [en, pl]. Wszystkie ćwiczenia używają tylko
-// słów i zwrotów z listy na stronie 2.
+// Słowo: [en, pl, ikona]. Zwrot / przymiotnik: [en, pl].
+// Zasada: ćwiczenia korzystają tylko ze słownictwa ze stron 2–3, a każde ćwiczenie,
+// w którym kursant sam wpisuje słowa, ma własną pulę wyrazów (bez zbędnych powtórzeń).
 export default {
   slug: 'food-a1-a2',
   title: 'Food',
@@ -9,120 +10,142 @@ export default {
   footer: 'Food · A1–A2',
   coverIcons: ['apple', 'carrot', 'bread', 'coffee', 'cheese', 'fish', 'icecream', 'tomato', 'banana', 'cake', 'milk', 'grapes', 'pasta', 'egg', 'juice', 'onion'],
 
-  groups: [
-    {
+  groups: {
+    fruit: {
       level: 'A1', en: 'Fruit & vegetables', pl: 'owoce i warzywa',
       words: [
         ['apple', 'jabłko', 'apple'], ['banana', 'banan', 'banana'], ['orange', 'pomarańcza', 'orange'],
-        ['grapes', 'winogrona', 'grapes'], ['tomato', 'pomidor', 'tomato'], ['carrot', 'marchewka', 'carrot'],
-        ['potato', 'ziemniak', 'potato'], ['onion', 'cebula', 'onion'],
+        ['lemon', 'cytryna', 'lemon'], ['strawberry', 'truskawka', 'strawberry'], ['grapes', 'winogrona', 'grapes'],
+        ['tomato', 'pomidor', 'tomato'], ['carrot', 'marchewka', 'carrot'], ['potato', 'ziemniak', 'potato'],
+        ['onion', 'cebula', 'onion'], ['pepper', 'papryka', 'pepper'], ['mushroom', 'grzyb, pieczarka', 'mushroom'],
       ],
     },
-    {
+    food: {
       level: 'A1', en: 'Everyday food', pl: 'codzienne jedzenie',
       words: [
-        ['bread', 'chleb', 'bread'], ['cheese', 'ser', 'cheese'], ['egg', 'jajko', 'egg'],
-        ['rice', 'ryż', 'rice'], ['pasta', 'makaron', 'pasta'], ['chicken', 'kurczak', 'chicken'],
-        ['fish', 'ryba', 'fish'], ['soup', 'zupa', 'soup'],
+        ['bread', 'chleb', 'bread'], ['butter', 'masło', 'butter'], ['cheese', 'ser', 'cheese'],
+        ['egg', 'jajko', 'egg'], ['sandwich', 'kanapka', 'sandwich'], ['salad', 'sałatka', 'salad'],
+        ['soup', 'zupa', 'soup'], ['rice', 'ryż', 'rice'], ['pasta', 'makaron', 'pasta'],
+        ['meat', 'mięso', 'meat'], ['chicken', 'kurczak', 'chicken'], ['fish', 'ryba', 'fish'],
       ],
     },
-    {
+    drinks: {
       level: 'A1', en: 'Drinks', pl: 'napoje',
-      words: [
-        ['water', 'woda', 'water'], ['milk', 'mleko', 'milk'], ['coffee', 'kawa', 'coffee'],
-        ['tea', 'herbata', 'tea'], ['juice', 'sok', 'juice'],
-      ],
+      words: [['water', 'woda', 'water'], ['milk', 'mleko', 'milk'], ['coffee', 'kawa', 'coffee'], ['tea', 'herbata', 'tea'], ['juice', 'sok', 'juice']],
     },
-    {
+    sweet: {
       level: 'A1', en: 'Something sweet', pl: 'coś słodkiego',
-      words: [['cake', 'ciasto', 'cake'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream']],
+      words: [['cake', 'ciasto', 'cake'], ['biscuit', 'herbatnik, ciastko', 'biscuit'], ['chocolate', 'czekolada', 'chocolate'], ['ice cream', 'lody', 'icecream'], ['sugar', 'cukier', 'sugar']],
     },
-    {
+    meals: {
       level: 'A2', en: 'Meals', pl: 'posiłki',
-      words: [['breakfast', 'śniadanie', 'breakfast'], ['lunch', 'lunch, drugie śniadanie', 'lunch'], ['dinner', 'obiad, kolacja', 'dinner']],
+      words: [['breakfast', 'śniadanie', 'breakfast'], ['lunch', 'lunch, obiad w południe', 'lunch'], ['dinner', 'kolacja, główny posiłek', 'dinner'], ['snack', 'przekąska', 'snack']],
     },
-    {
+    table: {
       level: 'A2', en: 'At the table', pl: 'przy stole',
-      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['the bill', 'rachunek', 'bill']],
+      words: [['plate', 'talerz', 'plate'], ['knife', 'nóż', 'knife'], ['fork', 'widelec', 'fork'], ['spoon', 'łyżka', 'spoon'], ['glass', 'szklanka', 'glass'], ['the bill', 'rachunek', 'bill']],
     },
-  ],
+    adjectives: {
+      level: 'A2', en: 'Describing food', pl: 'opisujemy jedzenie',
+      words: [['sweet', 'słodki'], ['salty', 'słony'], ['spicy', 'ostry, pikantny'], ['fresh', 'świeży'], ['hot', 'gorący'], ['cold', 'zimny']],
+    },
+  },
 
-  // Gotowe zwroty do rozmowy (strona 2, ostatnia sekcja)
+  // Gotowe zwroty do rozmowy
   phrases: [
     ["I'm hungry.", 'Jestem głodny / głodna.'],
     ["I'm thirsty.", 'Chce mi się pić.'],
-    ['What would you like?', 'Co podać? / Na co masz ochotę?'],
+    ['What would you like?', 'Co podać?'],
     ["I'd like a coffee, please.", 'Poproszę kawę.'],
     ['Can I have some water, please?', 'Czy mogę prosić o wodę?'],
-    ["Do you like fish? – Yes, I do.", 'Lubisz ryby? – Tak.'],
+    ['Anything else?', 'Coś jeszcze?'],
+    ["That's all, thank you.", 'To wszystko, dziękuję.'],
+    ['Enjoy your meal!', 'Smacznego!'],
+    ['Do you like fish?', 'Lubisz ryby?'],
     ["It's delicious!", 'To jest pyszne!'],
+    ["I'm full.", 'Najadłem się / Najadłam się.'],
     ['Can I have the bill, please?', 'Poproszę rachunek.'],
   ],
 
   // Ćw. 1 — podpisz obrazki
-  labelPictures: ['cheese', 'grapes', 'milk', 'knife', 'chicken', 'potato', 'tea', 'cake', 'spoon', 'rice'],
+  labelPictures: ['strawberry', 'mushroom', 'butter', 'knife', 'sandwich', 'biscuit', 'pepper', 'spoon', 'glass', 'icecream'],
 
-  // Ćw. 2 — co nie pasuje?
+  // Ćw. 2 — co nie pasuje? (rozpoznawanie, kursant nic nie wpisuje)
   oddOneOut: [
-    { icons: ['apple', 'banana', 'cheese', 'grapes'], answer: 2, why: 'cheese (to nie owoc)' },
-    { icons: ['water', 'juice', 'bread', 'milk'], answer: 2, why: 'bread (to nie napój)' },
-    { icons: ['fork', 'carrot', 'knife', 'spoon'], answer: 1, why: 'carrot (to nie sztućce)' },
-    { icons: ['cake', 'icecream', 'chocolate', 'onion'], answer: 3, why: 'onion (to nie słodycze)' },
+    { icons: ['lemon', 'grapes', 'carrot', 'orange'], answer: 2, why: 'carrot – to warzywo' },
+    { icons: ['milk', 'bread', 'tea', 'coffee'], answer: 1, why: 'bread – to nie napój' },
+    { icons: ['cake', 'chocolate', 'icecream', 'potato'], answer: 3, why: 'potato – to nie słodycze' },
+    { icons: ['banana', 'chicken', 'meat', 'fish'], answer: 0, why: 'banana – to nie mięso ani ryba' },
   ],
 
-  // Ćw. 3 — wykreślanka 10×10
-  wordSearch: { size: 10, seed: 11, words: ['apple', 'bread', 'cheese', 'carrot', 'milk', 'fish', 'tomato', 'coffee', 'onion', 'cake'] },
+  // Ćw. 3 — brakujące litery (ukryte samogłoski)
+  missingLetters: ['plate', 'fork', 'cheese', 'onion', 'juice', 'salad', 'potato', 'banana'],
 
-  // Ćw. 4 — krzyżówka: zdania z luką (A1–A2)
+  // Ćw. 4 — przymiotniki w zdaniach
+  adjectivesGap: [
+    ["There's too much salt in this soup. It's very {salty}."],
+    ['I love chocolate cake because it is so {sweet}.'],
+    ['Be careful! The tea is very {hot}.'],
+    ["It's 30°C today. Can I have a {cold} drink, please?"],
+    ['This chicken has a lot of chilli. It is really {spicy}!'],
+  ],
+
+  // Ćw. 5 — wykreślanka 10×10 (obrazki jako wskazówki)
+  wordSearch: { size: 10, seed: 11, words: ['apple', 'tomato', 'egg', 'rice', 'pasta', 'soup', 'water', 'meat', 'fish', 'tea'] },
+
+  // Ćw. 6 — krzyżówka: zdania z luką (A1–A2)
   crossword: {
     seed: 5,
     clues: {
-      banana: 'Monkeys love this long, yellow fruit: a ______.',
-      potato: "I'd like a baked ______ with cheese, please.",
-      egg: 'I have a boiled ______ for breakfast every day.',
-      rice: 'People in China and Japan eat a lot of ______.',
-      water: "I'm thirsty. Can I have some ______, please?",
-      chicken: "We're having roast ______ for Sunday lunch.",
-      juice: 'Can I have an apple ______, please?',
-      orange: 'An ______ is a round fruit. It is also a colour.',
-      cheese: "I'd like a ham and ______ sandwich, please.",
-      pasta: 'Spaghetti is a kind of Italian ______.',
+      breakfast: 'I always have ______ at 7 a.m. before work.',
+      lunch: 'At 1 p.m. I have ______ with my colleagues.',
+      dinner: 'In the evening we have ______ at home together.',
+      snack: "I'm a bit hungry. I'd like a small ______.",
+      chicken: 'Roast ______ is my favourite meat.',
+      bread: 'Can I have some ______ and butter, please?',
+      carrot: 'A ______ is orange. Rabbits love it!',
+      lemon: "I'd like a tea with ______, please.",
+      coffee: "I drink a cup of ______ every morning. I don't like tea.",
+      chocolate: 'My favourite sweet is milk ______.',
     },
   },
 
-  // Ćw. 5 — co powiesz? sytuacja → zwrot
+  // Ćw. 7 — co powiesz? [sytuacja PL, zwrot EN, ikona]
   situations: [
-    ['Kelner pyta gościa, co podać.', 'What would you like?', 'dinner'],
+    ['Jest gorąco i chce ci się pić.', "I'm thirsty.", 'juice'],
+    ['Jesteś kelnerem i pytasz gościa, co podać.', 'What would you like?', 'dinner'],
     ['Zamawiasz kawę.', "I'd like a coffee, please.", 'coffee'],
-    ['Od rana nic nie jesz.', "I'm hungry.", 'breakfast'],
-    ['Jest gorąco i chcesz się napić.', "I'm thirsty.", 'juice'],
     ['Prosisz kelnera o wodę.', 'Can I have some water, please?', 'water'],
     ['Pytasz kolegę, czy lubi ryby.', 'Do you like fish?', 'fish'],
     ['Zupa bardzo ci smakuje.', "It's delicious!", 'soup'],
+    ['Nie zmieścisz już deseru.', "I'm full.", 'cake'],
     ['Chcesz zapłacić.', 'Can I have the bill, please?', 'bill'],
   ],
 
-  // Ćw. 6 — dialog
+  // Ćw. 8 — dialog z lukami
   gapFill: {
-    title: 'At the café',
-    bank: ['hungry', 'breakfast', 'soup', "I'd like", 'cheese', 'thirsty', 'Can I have', 'juice', 'delicious', 'bill'],
+    title: 'At the restaurant',
+    bank: ['hungry', 'fresh', 'orange', 'Anything else', "that's all", 'Enjoy your meal', 'cake', 'sugar'],
     lines: [
-      ['Waiter', 'Good morning! What would you like?'],
-      ['Anna', "Hello! I'm very {hungry}. I didn't have {breakfast} today."],
-      ['Waiter', 'Our tomato {soup} is very good.'],
-      ['Anna', 'Great! {I\'d like} the soup and a {cheese} sandwich, please.'],
+      ['Waiter', 'Good evening! What would you like?'],
+      ['Tom', "I'm very {hungry}! I'd like the fish with {fresh} vegetables, please."],
       ['Waiter', 'And to drink?'],
-      ['Anna', "I'm really {thirsty}. {Can I have} some water and an apple {juice}, please?"],
-      ['Waiter', 'Of course. … How was everything?'],
-      ['Anna', 'It was {delicious}, thank you! Can I have the {bill}, please?'],
+      ['Tom', 'A glass of {orange} juice, please.'],
+      ['Waiter', '{Anything else}?'],
+      ['Tom', "No, {that's all}, thank you."],
+      ['Waiter', 'Here you are. {Enjoy your meal}!'],
+      ['Waiter', 'Would you like a dessert?'],
+      ['Tom', 'Yes, please. Chocolate {cake} and a coffee, no {sugar}.'],
     ],
   },
 
-  // Ćw. 7 — o sobie
+  // Ćw. 9 — o sobie
   aboutYou: [
     ['What do you usually have for breakfast?', 'I usually have …'],
-    ["What's your favourite drink?", 'My favourite drink is …'],
-    ['Do you like fish?', 'Yes, I do. / No, I don’t.'],
+    ["What's your favourite fruit?", 'My favourite fruit is …'],
+    ['What do you drink in the morning?', 'In the morning I drink …'],
+    ['Do you like spicy food?', 'Yes, I do. / No, I don’t.'],
+    ['What do you eat when you want a snack?', 'When I want a snack, I eat …'],
     ["You're in a café. Order something to eat and drink.", "I'd like … and …, please."],
   ],
 };

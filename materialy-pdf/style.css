@@ -1,7 +1,7 @@
 /* gettinenglish — „Ćwiczenia leksykalne” (PDF A4)
-   Minimalizm: białe strony, grafitowa typografia i ilustracje, kolor marki #2663EB
-   tylko jako akcent (numery zadań, kropka w tytule, delikatny cień kart ze słówkami).
-   Jeden krój: Onest. */
+   Minimalizm: białe strony, grafitowe ilustracje i typografia. Kolor marki #2663EB
+   jako delikatny akcent: numery zadań, nazwy kategorii, pigułki A1/A2, kratki
+   „znam / nowe”, blade tła ramek ze słowami i luk. Bez cieni. Jeden krój: Onest. */
 @font-face { font-family: 'Onest'; font-weight: 400; src: url('../assets/fonts/Onest-Regular.ttf'); }
 @font-face { font-family: 'Onest'; font-weight: 500; src: url('../assets/fonts/Onest-Medium.ttf'); }
 @font-face { font-family: 'Onest'; font-weight: 600; src: url('../assets/fonts/Onest-SemiBold.ttf'); }
@@ -10,52 +10,55 @@
 
 :root {
   --brand: #2663EB;
+  --brand-soft: #F2F6FE;   /* blade tło ramek i luk */
+  --brand-line: #C4D4F8;   /* obrys kratek i luk */
   --ink: #20242D;
   --ink2: #5C5850;
   --muted: #9BA2B1;
   --line: #ECEAE6;
   --line2: #D9D6D0;
-  --soft: #F7F6F3;
 }
 @page { size: A4; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { background: #fff; }
 body { font-family: 'Onest', Arial, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.45; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+ul, ol { list-style: none; }
 
 .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #fff; break-after: page; }
 .page:last-child { break-after: auto; }
-.body { position: absolute; left: 17mm; right: 17mm; top: 15mm; bottom: 24mm; display: flex; flex-direction: column; gap: 10mm; }
+.body { position: absolute; left: 17mm; right: 17mm; top: 16mm; bottom: 24mm; display: flex; flex-direction: column; gap: 16mm; }
 .dot { color: var(--brand); }
 .pl { color: var(--ink2); font-weight: 400; }
 b { font-weight: 700; }
-ul, ol { list-style: none; }
 
-/* stopka — osobny pas, treść kończy się nad nim */
+/* stopka — osobny pas pod treścią */
 .foot { position: absolute; left: 17mm; right: 17mm; bottom: 10mm; height: 5mm; display: flex; align-items: center; justify-content: space-between; font-size: 7.5pt; color: var(--muted); font-weight: 500; }
 .foot-logo svg { height: 3.4mm; width: auto; display: block; }
 .pnum { min-width: 6mm; text-align: right; color: var(--ink2); font-weight: 600; }
 
 /* nagłówek zadania */
-.ex { display: flex; flex-direction: column; gap: 5mm; }
+.ex { display: flex; flex-direction: column; gap: 6mm; }
 .ex-fill { flex: 1; }
 .ex-head { display: flex; align-items: flex-start; gap: 3.5mm; }
 .ex-num { flex: none; width: 7.5mm; height: 7.5mm; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 800; font-size: 10.5pt; display: grid; place-items: center; margin-top: -.6mm; }
 .ex-head h2 { font-size: 12pt; font-weight: 700; letter-spacing: -.01em; line-height: 1.35; }
-.n { font-weight: 700; color: var(--ink2); font-size: 9pt; }
+.n { font-weight: 700; color: var(--brand); font-size: 9pt; }
 .hint { font-size: 9pt; color: var(--ink2); }
 .hint i { color: var(--ink); }
 
-.bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5mm 5mm; padding: 3.5mm 5mm; border: 1px solid var(--line2); border-radius: 12px; font-weight: 600; font-size: 10.5pt; }
-
-.box { width: 4.2mm; height: 4.2mm; border: 1.2px solid var(--line2); border-radius: 1.2mm; display: inline-block; flex: none; background: #fff; }
+.bank { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5mm 6mm; padding: 3.6mm 6mm; background: var(--brand-soft); border-radius: 12px; font-weight: 600; font-size: 10.5pt; }
+.box { width: 4.2mm; height: 4.2mm; border: 1.2px solid var(--brand-line); border-radius: 1.2mm; display: inline-block; flex: none; background: var(--brand-soft); }
 .line { display: block; border-bottom: 1px solid var(--line2); height: 7mm; }
+.gap { display: inline-flex; align-items: center; width: 30mm; height: 6.4mm; vertical-align: middle; background: var(--brand-soft); border-bottom: 1.2px solid var(--brand-line); border-radius: 3px 3px 0 0; margin: 0 .8mm; padding-left: 1.4mm; }
+.gap i { font-style: normal; font-size: 7pt; font-weight: 700; color: var(--brand); }
 
 /* ---------- okładka ---------- */
 .cover { background: var(--brand); color: #fff; }
+.cover .body { inset: 0; }
 .cv-art { position: absolute; inset: 0; opacity: .26; }
 .cv-ic { position: absolute; }
 .cv-ic svg { width: 100%; height: 100%; display: block; }
-.cv-main { position: absolute; left: 22mm; right: 22mm; top: 100mm; }
+.cv-main { position: absolute; left: 22mm; top: 100mm; }
 .cv-pill { display: inline-block; border: 1.6px solid rgba(255,255,255,.85); border-radius: 999px; padding: 1.4mm 5mm; font-weight: 700; font-size: 13pt; letter-spacing: .04em; }
 .cv-title { font-size: 92pt; font-weight: 800; letter-spacing: -.035em; line-height: .95; margin-top: 7mm; }
 .cv-title .dot { color: #fff; opacity: .55; }
@@ -63,114 +66,122 @@ ul, ol { list-style: none; }
 .cv-logo { position: absolute; left: 22mm; bottom: 20mm; }
 .cv-logo svg { height: 8.5mm; width: auto; display: block; }
 
-/* ---------- strona 2: słowa ---------- */
-.page .body:has(.wl-grid) { gap: 4mm; }
+/* ---------- słownictwo ---------- */
 .pg-head { display: flex; flex-direction: column; gap: 1.5mm; }
-.pg-title { font-size: 22pt; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
+.pg-title { font-size: 24pt; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
 .lead { font-size: 10pt; color: var(--ink2); }
-.wl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
-.wl-col { display: flex; flex-direction: column; gap: 3.4mm; }
-.wcard { background: #fff; border: 1px solid #EEF1F7; border-radius: 14px; padding: 2.4mm 4mm 1.4mm; box-shadow: 0 4px 16px -10px rgba(38,99,235,.28); }
-.wl-head { display: flex; align-items: flex-end; gap: 2mm; padding-bottom: 1.6mm; border-bottom: 1px solid var(--line); margin-bottom: .4mm; }
-.wl-head b { font-size: 10pt; font-weight: 700; }
+.page .body:has(.wl-grid) { gap: 7mm; }
+.wl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; align-items: start; }
+.wl-col { display: flex; flex-direction: column; gap: 7mm; }
+.wcard { border: 1px solid var(--line); border-radius: 14px; padding: 3.2mm 4mm 2.4mm; }
+.wl-head { display: flex; align-items: center; gap: 2.6mm; padding-bottom: 2.2mm; border-bottom: 1px solid var(--line); margin-bottom: 1mm; }
 .wl-t { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+.wl-head b { font-size: 10.5pt; font-weight: 800; color: var(--brand); letter-spacing: -.01em; }
 .wl-head .pl { font-size: 7.8pt; }
-.lvl { font-size: 7pt; font-weight: 700; color: var(--muted); letter-spacing: .04em; margin-right: 1mm; }
-.wl-cols { display: flex; gap: 1.2mm; font-size: 6.4pt; color: var(--muted); font-weight: 600; }
+.lvl { flex: none; font-size: 7.2pt; font-weight: 800; border-radius: 999px; padding: .5mm 2.3mm; letter-spacing: .03em; }
+.lvl-a1 { background: var(--brand-soft); color: var(--brand); border: 1px solid var(--brand-line); }
+.lvl-a2 { background: var(--brand); color: #fff; border: 1px solid var(--brand); }
+.wl-cols { display: flex; gap: 1.2mm; font-size: 6.4pt; color: var(--brand); font-weight: 600; opacity: .8; }
 .wl-cols span { width: 7mm; text-align: center; }
-.wl li { display: flex; align-items: center; gap: 2.4mm; padding: .1mm 0; }
+.wl li { display: flex; align-items: center; gap: 2.6mm; padding: .5mm 0; }
 .wl li .box { margin: 0 1.4mm; }
-.wl-ic { width: 6.8mm; height: 6.8mm; flex: none; }
-.wl-en { font-weight: 600; font-size: 9.6pt; }
-.wl-pl { flex: 1; color: var(--ink2); font-size: 8pt; }
-.ph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 6mm; }
-.ph li { padding: .7mm 0; align-items: center; }
-.ph li.ph-cols { justify-content: flex-end; padding: .6mm 0 0; }
-.ph-txt { flex: 1; display: flex; flex-direction: column; line-height: 1.25; }
-.ph .wl-pl { font-size: 7.8pt; }
+.wl-ic { width: 7.6mm; height: 7.6mm; flex: none; }
+.wl-txt { flex: 1; display: flex; align-items: baseline; gap: 2mm; min-width: 0; }
+.wl-en { font-weight: 600; font-size: 9.8pt; }
+.wl-pl { color: var(--ink2); font-size: 8pt; }
+.wide { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 8mm; }
+.wide li { padding: 1mm 0; }
+.wide li.cols-row { justify-content: flex-end; padding: 0; }
+.wide .wl-txt { flex-direction: column; gap: 0; line-height: 1.3; }
+.wide .wl-pl { font-size: 7.8pt; }
 
-/* ---------- ćw. podpisz obrazki ---------- */
-.lp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5mm 5mm; }
+/* ---------- ćw. 1: podpisz obrazki ---------- */
+.lp-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6mm 6mm; }
 .lp-cell { position: relative; display: flex; flex-direction: column; align-items: center; padding-top: 2mm; }
-.lp-ic { width: 23mm; height: 23mm; }
+.lp-ic { width: 22mm; height: 22mm; }
 .lp-cell .line { width: 100%; height: 8mm; }
 .lp-cell .n { position: absolute; left: 0; top: 0; }
 
-/* ---------- ćw. co nie pasuje ---------- */
-.oo { display: flex; flex-direction: column; gap: 3mm; }
+/* ---------- ćw. 2: co nie pasuje ---------- */
+.oo { display: flex; flex-direction: column; gap: 3.5mm; }
 .oo-row { display: flex; align-items: center; gap: 4mm; }
 .oo-row .n { width: 5mm; }
-.oo-cell { flex: 1; display: grid; place-items: center; height: 27mm; border-radius: 12px; border: 1px solid var(--line); }
-.oo-ic { width: 21mm; height: 21mm; }
+.oo-cell { flex: 1; display: grid; place-items: center; height: 23mm; border-radius: 12px; border: 1px solid var(--line); }
+.oo-ic { width: 19mm; height: 19mm; }
 
-/* ---------- ćw. wykreślanka ---------- */
+/* ---------- ćw. 3: brakujące litery ---------- */
+.ml-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 12mm; }
+.ml-item { display: flex; align-items: center; gap: 4mm; }
+.ml-ic { width: 17mm; height: 17mm; flex: none; }
+.ml-word { display: flex; gap: 1.2mm; }
+.ml-l { width: 6.6mm; height: 8mm; display: grid; place-items: end center; font-size: 15pt; font-weight: 600; line-height: 1; padding-bottom: .8mm; }
+.ml-gap { background: var(--brand-soft); border-bottom: 1.4px solid var(--brand-line); border-radius: 3px 3px 0 0; }
+
+/* ---------- ćw. 4: zdania ---------- */
+.sent { display: flex; flex-direction: column; gap: 4mm; }
+.sent li { display: flex; gap: 3mm; align-items: baseline; }
+.sent p { font-size: 10.8pt; line-height: 1.6; }
+
+/* ---------- ćw. 5: wykreślanka ---------- */
 .ws-wrap { display: flex; justify-content: center; padding-top: 2mm; }
 .ws-grid { border: 1px solid var(--line2); border-radius: 10px; overflow: hidden; display: inline-block; }
 .ws-row { display: flex; }
 .ws-row span { width: 13.4mm; height: 13.4mm; display: grid; place-items: center; font-weight: 500; font-size: 14pt; color: var(--ink); }
 .ws-clues { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8mm 4mm; margin-top: 6mm; }
-.ws-clues li { display: flex; flex-direction: column; align-items: center; gap: 1.5mm; }
+.ws-clues li { display: flex; flex-direction: column; align-items: center; gap: 2mm; }
 .ws-ic { width: 18mm; height: 18mm; }
 .dashes { display: flex; gap: .9mm; }
-.dashes i { width: 3.4mm; height: 6mm; border-bottom: 1.3px solid var(--ink2); }
+.dashes i { width: 3.4mm; height: 6mm; border-bottom: 1.4px solid var(--brand-line); }
 
-/* ---------- ćw. krzyżówka ---------- */
-.cw-wrap { display: flex; justify-content: center; padding: 2mm 0 1mm; }
+/* ---------- ćw. 6: krzyżówka ---------- */
+.cw-wrap { display: flex; justify-content: center; padding: 8mm 0; }
 .cw-svg { display: block; }
-.cw-svg .cw-n { font: 700 2.6px 'Onest', Arial, sans-serif; fill: var(--ink2); }
-.cw-svg .cw-l { font: 700 5.6px 'Onest', Arial, sans-serif; fill: var(--ink); text-anchor: middle; }
-.cw-clues { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; }
-.cw-clues h3 { font-size: 10pt; font-weight: 700; margin-bottom: 2.4mm; }
-.cw-clues ul { display: flex; flex-direction: column; gap: 2.2mm; }
-.cw-clues li { display: flex; gap: 2.4mm; font-size: 10.2pt; line-height: 1.45; }
-.cgap { display: inline-block; width: 14mm; border-bottom: 1.2px solid var(--ink2); vertical-align: -.6mm; }
-.cw-clues li b { color: var(--ink2); min-width: 4mm; }
+.cw-svg .cw-n { font: 700 2.6px 'Onest', Arial, sans-serif; fill: var(--brand); }
+.cw-clues { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
+.cw-clues h3 { font-size: 10pt; font-weight: 700; color: var(--brand); margin-bottom: 3mm; }
+.cw-clues ul { display: flex; flex-direction: column; gap: 2.6mm; }
+.cw-clues li { display: flex; gap: 2.6mm; font-size: 10pt; line-height: 1.45; }
+.cw-clues li b { color: var(--brand); min-width: 4mm; }
+.cgap { display: inline-block; width: 14mm; border-bottom: 1.3px solid var(--brand-line); vertical-align: -.6mm; }
 
-/* ---------- ćw. co powiesz ---------- */
-.st-wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 10mm; margin-top: 2mm; }
-.st-left, .st-right { display: flex; flex-direction: column; }
-.st-left li { display: flex; align-items: center; gap: 3mm; height: 25mm; border-bottom: 1px solid var(--line); }
-.st-left li .n { width: 4mm; }
-.st-ic { width: 17mm; height: 17mm; flex: none; }
-.st-pl { flex: 1; font-size: 10pt; }
-.st-box { width: 8mm; height: 8mm; border: 1.2px solid var(--line2); border-radius: 2mm; flex: none; }
-.st-right li { display: flex; align-items: center; gap: 3mm; height: 25mm; border-bottom: 1px solid var(--line); font-weight: 600; font-size: 10.5pt; }
-.st-right li .n { width: 4mm; }
-.ex-fill .hint { margin-top: auto; }
+/* ---------- ćw. 7: co powiesz ---------- */
+.st-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 18mm; margin-top: 4mm; }
+.st-left li, .st-right li { display: flex; align-items: center; gap: 3.4mm; height: 24mm; }
+.st-left li .n, .st-right li .n { width: 4mm; }
+.st-ic { width: 15mm; height: 15mm; flex: none; }
+.st-pl { flex: 1; font-size: 10pt; line-height: 1.35; }
+.st-box { width: 8mm; height: 8mm; border: 1.2px solid var(--brand-line); background: var(--brand-soft); border-radius: 2mm; flex: none; }
+.st-right li { font-weight: 600; font-size: 10.5pt; }
 
-/* ---------- ćw. dialog ---------- */
-.dialog { position: relative; display: flex; flex-direction: column; gap: 1.2mm; }
-.dl-title { font-weight: 700; font-size: 10.5pt; margin-bottom: 1.5mm; }
-.dl-art { position: absolute; right: 0; top: -1mm; width: 20mm; height: 20mm; }
-.dl-line { display: flex; gap: 3mm; align-items: baseline; max-width: 150mm; }
+/* ---------- ćw. 8: dialog ---------- */
+.dialog { display: flex; flex-direction: column; gap: .8mm; }
+.dl-title { font-weight: 700; font-size: 10.5pt; color: var(--brand); margin-bottom: 1.5mm; }
+.dl-line { display: flex; gap: 3mm; align-items: baseline; }
 .who { flex: none; width: 15mm; font-weight: 700; font-size: 9pt; color: var(--ink2); }
-.dl-line p { font-size: 10.5pt; line-height: 2.15; }
-.gap { display: inline-block; width: 27mm; border-bottom: 1.2px solid var(--ink2); position: relative; height: 5mm; vertical-align: -1mm; margin: 0 .6mm; }
-.gap sup { position: absolute; left: 0; top: -2.4mm; font-size: 6.5pt; font-weight: 700; color: var(--ink2); }
-.about { display: flex; flex-direction: column; gap: 4mm; }
+.dl-line p { font-size: 10.5pt; line-height: 2.05; }
+
+/* ---------- ćw. 9: o sobie ---------- */
+.about { display: flex; flex-direction: column; gap: 3mm; }
 .about-q p { font-size: 10.5pt; font-weight: 500; display: flex; gap: 2.5mm; align-items: baseline; flex-wrap: wrap; }
 .about-hint { color: var(--muted); font-weight: 400; font-size: 9pt; font-style: italic; }
-.about-q .line { height: 8mm; margin-left: 5mm; }
+.about-q .line { height: 7.5mm; margin-left: 5mm; }
 
 /* ---------- klucz ---------- */
-.page .body:has(.key) { gap: 6mm; }
-.key-label { font-size: 13pt; font-weight: 700; }
-.key { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; font-size: 9pt; color: var(--ink2); line-height: 1.6; }
+.page .body:has(.key) { gap: 8mm; }
+.key { display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; font-size: 9.2pt; color: var(--ink2); line-height: 1.65; }
 .key-col { display: flex; flex-direction: column; gap: 6mm; }
-.kb { display: flex; gap: 3mm; }
-.kn { flex: none; width: 5.5mm; height: 5.5mm; border-radius: 50%; border: 1px solid var(--line2); display: grid; place-items: center; font-weight: 700; font-size: 7.5pt; color: var(--ink); }
-.kb ol { counter-reset: k; columns: 2; column-gap: 6mm; }
+.kb { display: flex; gap: 3.5mm; }
+.kn { flex: none; width: 6mm; height: 6mm; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 8pt; }
+.kb-body { flex: 1; padding-top: .3mm; }
+.kb ol { counter-reset: k; column-gap: 6mm; }
 .kb ol li { counter-increment: k; }
-.kb ol li::before { content: counter(k) '  '; font-weight: 700; color: var(--ink); white-space: pre; }
-.kl { font-weight: 700; color: var(--ink); }
-.pairs { display: grid; grid-template-columns: repeat(4, auto); gap: 0 5mm; justify-content: start; }
-.ws-mini { border-radius: 6px; }
-.ws-mini .ws-row span { width: 5.6mm; height: 5.6mm; font-size: 7pt; color: #C9C6C0; font-weight: 500; }
-.ws-mini .ws-row span.on { color: var(--ink); font-weight: 800; background: #F1F4FC; }
-.finish { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 3mm; }
-.finish-art { display: flex; gap: 5mm; }
-.fin-ic { width: 19mm; height: 19mm; }
-.finish-big { font-size: 28pt; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
-.finish p { font-size: 11pt; }
-.finish .finish-big { font-size: 30pt; }
+.kb ol li::before { content: counter(k); display: inline-block; width: 5mm; font-weight: 700; color: var(--brand); }
+.kl { font-weight: 700; color: var(--brand); }
 .nw { white-space: nowrap; }
+.pairs { display: grid; grid-template-columns: repeat(4, auto); gap: 0 6mm; justify-content: start; }
+.ws-mini { border-radius: 6px; }
+.ws-mini .ws-row span { width: 6mm; height: 6mm; font-size: 7.4pt; color: #C9C6C0; font-weight: 500; }
+.ws-mini .ws-row span.on { color: var(--ink); font-weight: 800; background: var(--brand-soft); }
+.finish { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 3mm; }
+.finish .finish-big { font-size: 30pt; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
+.finish p { font-size: 11pt; }
