@@ -1,18 +1,22 @@
 # Materiały PDF do samodzielnej nauki słownictwa (gettinenglish)
 
-Generator kart pracy A4 w standardzie marki gettinenglish (kolor `#2663EB`, krój Onest,
-prawdziwe pliki logo SVG), z odręcznymi ilustracjami rysowanymi przez rough.js.
+Generator kart pracy A4 („Ćwiczenia leksykalne”) w standardzie marki gettinenglish (kolor `#2663EB`, krój Onest,
+prawdziwe pliki logo SVG), z odręcznymi ilustracjami w stylu doodle (grafitowa kreska, rough.js).
 
 Gotowe pliki: `out/`, np. `out/gettinenglish-food-a1-a2.pdf`.
 
 ## Struktura PDF
 1. Okładka: temat, poziom, logo i ilustracje w tle
-2. „Your words”: lista słów w podkategoriach z poziomem CEFR, kratki *now / later*
-3. Ćw. 1 „Label the pictures” i ćw. 2 „Odd one out”
-4. Ćw. 3: wykreślanka z obrazkami jako wskazówkami
-5. Ćw. 4: krzyżówka obrazkowa
-6. Ćw. 5: dialog z lukami i ćw. 6 „Your turn”
-7. Klucz odpowiedzi i zakończenie
+2. „Your words”: słowa w podkategoriach (A1/A2) oraz „Useful phrases”, z kratkami *znam / nowe*
+3. Podpisz obrazki · Co nie pasuje?
+4. Wykreślanka 10×10 (obrazki jako wskazówki)
+5. Krzyżówka ze zdaniami z luką (siatka rysowana w SVG)
+6. Co powiesz w tych sytuacjach? (dopasuj zwroty)
+7. Dialog z lukami · Odpowiedz na pytania o siebie
+8. Odpowiedzi i „Well done”
+
+Polecenia są po polsku, a wszystkie ćwiczenia używają wyłącznie słów i zwrotów ze strony 2.
+Build sprawdza, czy treść kończy się co najmniej 8 mm nad stopką.
 
 ## Nowy temat
 1. Skopiuj `topics/food-a1-a2.mjs` jako np. `topics/travel-a1-a2.mjs` i podmień słowa oraz ćwiczenia.
