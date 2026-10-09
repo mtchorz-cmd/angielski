@@ -64,8 +64,10 @@ function cover() {
     [52, 214, 30, 12], [96, 204, 40, -6], [150, 196, 32, 10],
     [88, 254, 26, -12], [124, 250, 32, 8], [168, 246, 28, -4], [160, 158, 26, -14],
   ];
+  const skip = new Set(T.coverSkip || []);   // np. gdy dłuższy tytuł zasłoniłby ilustrację
   const art = spots
     .map(([x, y, s, rot], i) => {
+      if (skip.has(i)) return '';
       const name = T.coverIcons[i % T.coverIcons.length];
       return `<div class="cv-ic" style="left:${x}mm;top:${y}mm;width:${s}mm;height:${s}mm;transform:rotate(${rot}deg)">${iconSvg(name, { mode: 'line', stroke: '#FFFFFF' })}</div>`;
     })
@@ -99,24 +101,21 @@ const wideCard = (g, items, cols) => {
     .join('')}</div></div>`;
 };
 
+// Dwie kolumny kart; układ (które grupy w której kolumnie) podaje plik tematu
+const vocabGrid = (cols) => `<div class="wl-grid">${cols.map((ids) => `<div class="wl-col">${ids.map((id) => card(G[id])).join('')}</div>`).join('')}</div>`;
+
 function vocabPage1() {
   return page(`
     <header class="pg-head">
       <h2 class="pg-title">Słownictwo<span class="dot">.</span></h2>
       <p class="lead">Zaznacz słowa i zwroty, które już znasz.</p>
     </header>
-    <div class="wl-grid">
-      <div class="wl-col">${card(G.fruit)}${card(G.drinks)}</div>
-      <div class="wl-col">${card(G.food)}${card(G.sweet)}</div>
-    </div>`);
+    ${vocabGrid(T.vocabLayout.page1)}`);
 }
 function vocabPage2() {
   return page(`
-    <div class="wl-grid">
-      <div class="wl-col">${card(G.meals)}</div>
-      <div class="wl-col">${card(G.table)}</div>
-    </div>
-    ${wideCard(G.adjectives, G.adjectives.words, 3)}
+    ${vocabGrid(T.vocabLayout.page2)}
+    ${(T.vocabLayout.wide || []).map(([id, cols]) => wideCard(G[id], G[id].words, cols)).join('')}
     ${wideCard({ level: 'A2', en: 'Useful phrases', pl: 'przydatne zwroty' }, T.phrases, 2)}`);
 }
 
@@ -152,8 +151,8 @@ function lettersPage() {
     })
     .join('');
   let n = 0;
-  const adjWords = T.adjectivesGap.map(([t]) => t.match(/\{([^}]+)\}/)[1]);
-  const sentences = T.adjectivesGap
+  const adjWords = (T.adjectivesGap || []).map(([t]) => t.match(/\{([^}]+)\}/)[1]);
+  const sentences = (T.adjectivesGap || [])
     .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox(''))}</p></li>`)
     .join('');
   return page(`
@@ -161,19 +160,35 @@ function lettersPage() {
       ${exHead('Uzupełnij brakujące litery.')}
       <div class="ml-grid">${items}</div>
     </div>
-    <div class="ex">
+    ${T.sortColumns ? sortExercise() : `<div class="ex">
       ${exHead('Uzupełnij zdania przymiotnikami z ramki.')}
       ${bank(shuffle(adjWords, 4), 'bank-fit')}
       <ol class="sent">${sentences}</ol>
-    </div>`);
+    </div>`}`);
+}
+
+// Ćw. 4 (wariant): przyporządkuj wyrazy do kolumn, np. play / go / do
+function sortExercise() {
+  const S = T.sortColumns;
+  const all = shuffle(S.columns.flatMap((c) => c.words), 6);
+  const cols = S.columns
+    .map((c) => `<div class="sc-col"><p class="sc-head">${esc(c.head)}</p>${c.words.map(() => '<span class="line"></span>').join('')}</div>`)
+    .join('');
+  return `<div class="ex">
+      ${exHead(esc(S.instruction))}
+      ${bankRows(all, S.rows)}
+      <div class="sc-grid" style="--cols:${S.columns.length}">${cols}</div>
+    </div>`;
 }
 
 // ---------- Ćw. 5: wykreślanka ----------
-const WS = wordSearch(T.wordSearch.words.map((w) => w.toUpperCase()), T.wordSearch.size, T.wordSearch.seed);
+const wsWord = (e) => (Array.isArray(e) ? e[0] : e);
+const wsIcon = (e) => (Array.isArray(e) ? e[1] : wordToIcon[e]);
+const WS = wordSearch(T.wordSearch.words.map((e) => wsWord(e).toUpperCase()), T.wordSearch.size, T.wordSearch.seed);
 function wordSearchPage() {
   const grid = WS.grid.map((r) => `<div class="ws-row">${r.map((ch) => `<span>${ch}</span>`).join('')}</div>`).join('');
   const clues = T.wordSearch.words
-    .map((w) => `<li>${iconSvg(wordToIcon[w], { cls: 'ws-ic' })}<span class="dashes">${w.split('').map(() => '<i></i>').join('')}</span></li>`)
+    .map((e) => `<li>${iconSvg(wsIcon(e), { cls: 'ws-ic' })}<span class="dashes">${wsWord(e).split('').map(() => '<i></i>').join('')}</span></li>`)
     .join('');
   return page(`
     <div class="ex ex-fill">
@@ -332,14 +347,16 @@ function keyPage() {
         ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
         ${block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
         ${block(3, ol(T.missingLetters.map(esc)))}
-        ${block(4, ol(gaps(T.adjectivesGap.map((t) => ['', t[0]])), 1))}
+        ${T.sortColumns
+          ? block(4, T.sortColumns.columns.map((c) => `<p><span class="kl">${esc(c.head)}</span> ${c.words.map(esc).join(', ')}</p>`).join(''))
+          : block(4, ol(gaps(T.adjectivesGap.map((t) => ['', t[0]])), 1))}
         ${block(6, `<p><span class="kl">Poziomo</span> ${cw('across')}</p><p><span class="kl">Pionowo</span> ${cw('down')}</p>`)}
       </div>
       <div class="key-col">
         ${block(5, `<div class="ws-grid ws-mini">${wsMini}</div>`)}
         ${block(7, `<p class="pairs">${T.situations.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(SIT_ORDER.indexOf(i))}</span>`).join('')}</p>`)}
         ${block(8, ol(gaps(T.gapFill.lines), 1))}
-        ${block(10, `<p class="k-note">Przykładowe odpowiedzi:</p>${ol(T.game.examples.map(esc), 1)}`)}
+        ${block(10, `<p class="k-note">Przykładowe odpowiedzi:</p><p>${T.game.cards.map((c, i) => `<span class="kl">${esc(c[1])}:</span> ${esc(T.game.examples[i])}`).join('<br>')}</p>`)}
       </div>
     </div>
     <div class="finish">

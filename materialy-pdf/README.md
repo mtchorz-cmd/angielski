@@ -3,7 +3,9 @@
 Generator kart pracy A4 („Ćwiczenia leksykalne”) w standardzie marki gettinenglish (kolor `#2663EB`, krój Onest,
 prawdziwe pliki logo SVG), z odręcznymi ilustracjami w stylu doodle (grafitowa kreska, rough.js).
 
-Gotowe pliki: `out/`, np. `out/gettinenglish-food-a1-a2.pdf`.
+Gotowe pliki w `out/`:
+- `gettinenglish-food-a1-a2.pdf` – Food · A1–A2
+- `gettinenglish-hobbies-a1-a2.pdf` – Hobbies · A1–A2
 
 ## Struktura PDF (11 stron)
 1. Okładka: temat, poziom, logo i ilustracje w tle
@@ -33,3 +35,9 @@ nie dotykają logo ani tytułu.
 
 Wykreślanka i krzyżówka układają się automatycznie, a klucz zawsze zgadza się z diagramami.
 Build wymaga Playwright z Chromium.
+
+## Opcje w pliku tematu
+- `vocabLayout` – które grupy słów trafiają na stronę 2 i 3 (dwie kolumny) oraz karty szerokie.
+- `adjectivesGap` (zdania z przymiotnikami) **albo** `sortColumns` (np. play / go / do) – wariant zad. 4.
+- `wordSearch.words` – słowo albo `[słowo, ikona]`, gdy wyraz w wykreślance różni się od hasła (np. *piano*).
+- `coverSkip` – numery ilustracji na okładce do pominięcia, gdy dłuższy tytuł by na nie nachodził.

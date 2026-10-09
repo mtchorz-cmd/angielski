@@ -89,7 +89,8 @@ b { font-weight: 700; }
 .wl li { display: flex; align-items: center; gap: 2.6mm; padding: .5mm 0; }
 .wl li .box { margin: 0 1.4mm; }
 .wl-ic { width: 7.6mm; height: 7.6mm; flex: none; }
-.wl-txt { flex: 1; display: flex; align-items: baseline; gap: 2mm; min-width: 0; }
+.wl-txt { flex: 1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 2mm; min-width: 0; }
+.wl-txt .wl-en { white-space: nowrap; }
 .wl-en { font-weight: 600; font-size: 9.8pt; }
 .wl-pl { color: var(--ink2); font-size: 8pt; }
 .wide { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 8mm; }
@@ -198,3 +199,8 @@ b { font-weight: 700; }
 .mm-count { font-size: 3.4px; font-weight: 800; fill: var(--brand); text-anchor: middle; }
 .mm-center { font-size: 7.5px; font-weight: 800; fill: var(--ink); text-anchor: middle; letter-spacing: -.02em; }
 .k-note { font-style: italic; }
+
+/* ---------- ćw. 4 (wariant): sortowanie do kolumn ---------- */
+.sc-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 10mm; }
+.sc-head { font-size: var(--task); font-weight: 800; color: var(--brand); padding-bottom: 2mm; border-bottom: 1.4px solid var(--brand-line); margin-bottom: 1mm; }
+.sc-col .line { height: 9mm; }

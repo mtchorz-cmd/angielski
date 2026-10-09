@@ -10,6 +10,13 @@ export default {
   footer: 'Food · A1–A2',
   coverIcons: ['apple', 'carrot', 'bread', 'coffee', 'cheese', 'fish', 'icecream', 'tomato', 'banana', 'cake', 'milk', 'grapes', 'pasta', 'egg', 'juice', 'onion'],
 
+  // Układ stron słownictwa: dwie kolumny kart na stronie 2 i 3, potem karty szerokie [grupa, liczba kolumn]
+  vocabLayout: {
+    page1: [['fruit', 'drinks'], ['food', 'sweet']],
+    page2: [['meals'], ['table']],
+    wide: [['adjectives', 3]],
+  },
+
   groups: {
     fruit: {
       level: 'A1', en: 'Fruit & vegetables', pl: 'owoce i warzywa',
