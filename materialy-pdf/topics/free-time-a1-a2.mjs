@@ -1,7 +1,7 @@
 // Temat: Free time · poziom A1–A2.
 // Nacisk na popularne kolokacje (w bezokoliczniku) i praktyczne zwroty.
 // Kolokacja: [en, pl, ikona]. Zwrot: [en, pl].
-// Przymiotniki opisujące czas wolny nie mają osobnej sekcji – pojawiają się w zdaniach krzyżówki.
+// Wykreślanka i krzyżówka korzystają wyłącznie z wyrazów ze słowniczka.
 export default {
   slug: 'free-time-a1-a2',
   title: 'Free time',
@@ -112,25 +112,26 @@ export default {
     ],
   },
 
-  // Ćw. 5 — wykreślanka ([słowo, ikona])
+  // Ćw. 5 — wykreślanka ([słowo, ikona]) — tylko wyrazy z kolokacji ze słowniczka
   wordSearch: {
-    size: 10, seed: 21,
-    words: [['cinema', 'cinema'], ['theatre', 'theatre'], ['museum', 'museum'], ['concert', 'concert'], ['piano', 'piano'], ['guitar', 'guitar'], ['dancing', 'dancing'], ['games', 'videogames']],
+    size: 12, seed: 21,
+    words: [['tennis', 'tennis'], ['yoga', 'yoga'], ['fishing', 'fishing'], ['skiing', 'skiing'], ['cakes', 'baking'], ['books', 'reading'],
+      ['photos', 'camera'], ['songs', 'singing'], ['films', 'films'], ['bike', 'cycling'], ['party', 'party'], ['games', 'videogames']],
   },
 
-  // Ćw. 6 — krzyżówka: zdania z luką (m.in. przymiotniki opisujące czas wolny)
+  // Ćw. 6 — krzyżówka: zdania z luką (tylko wyrazy ze słowniczka, inne niż w wykreślance)
   crossword: {
     seed: 7,
     clues: {
       gym: 'I decided to join a ______ because I was in bad shape.',
-      boring: "This film is so ______. I'm falling asleep!",
-      exciting: 'The match was really ______ – we won in the last minute!',
-      tiring: "Hiking in the mountains is fun, but it's very ______.",
-      relaxing: "I love lying on the sofa with a good book. It's so ______.",
-      interesting: 'This museum is really ______. I learned a lot.',
-      fun: 'Come to the party with us! It will be ______.',
-      politics: "My dad watches the news every day. He's interested in ______.",
-      music: 'What kind of ______ do you like? – Rock and pop.',
+      cinema: "What's on at the ______ this week? – A new comedy.",
+      theatre: "We're going to the ______ tonight to see a play.",
+      concert: 'We went to a rock ______ last night. The band was great!',
+      museum: 'We visited the science ______ in London. We learned a lot.',
+      piano: "I'm learning to play the ______. I practise every day.",
+      guitar: 'My brother plays the ______ in a rock band.',
+      pictures: 'My grandma likes to paint ______ of flowers.',
+      dancing: "I love music. Let's go ______ on Friday night!",
     },
   },
 

@@ -205,8 +205,8 @@ function wordSearchPage() {
   return page(`
     <div class="ex ex-fill">
       ${exHead('Odszukaj w wykreślance ukryte słowa (→ ↓ ↘), a następnie podpisz obrazki.')}
-      <div class="ws-wrap"><div class="ws-grid">${grid}</div></div>
-      <ul class="ws-clues">${clues}</ul>
+      <div class="ws-wrap"><div class="ws-grid" style="--ws-cell:${Math.min(13.4, 134 / WS.grid.length).toFixed(1)}mm">${grid}</div></div>
+      <ul class="ws-clues" style="--ws-cols:${Math.ceil(T.wordSearch.words.length / 2)}">${clues}</ul>
     </div>`);
 }
 

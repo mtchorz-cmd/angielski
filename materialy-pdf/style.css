@@ -130,8 +130,8 @@ b { font-weight: 700; }
 .ws-wrap { display: flex; justify-content: center; padding-top: 2mm; }
 .ws-grid { border: 1px solid var(--line2); border-radius: 10px; overflow: hidden; display: inline-block; }
 .ws-row { display: flex; }
-.ws-row span { width: 13.4mm; height: 13.4mm; display: grid; place-items: center; font-weight: 500; font-size: 14pt; color: var(--ink); }
-.ws-clues { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8mm 4mm; margin-top: 6mm; }
+.ws-row span { width: var(--ws-cell, 13.4mm); height: var(--ws-cell, 13.4mm); display: grid; place-items: center; font-weight: 500; font-size: 14pt; color: var(--ink); }
+.ws-clues { display: grid; grid-template-columns: repeat(var(--ws-cols, 5), 1fr); gap: 8mm 4mm; margin-top: 6mm; }
 .ws-clues li { display: flex; flex-direction: column; align-items: center; gap: 2mm; }
 .ws-ic { width: var(--ex-ic); height: var(--ex-ic); }
 .dashes { display: flex; gap: .9mm; }
