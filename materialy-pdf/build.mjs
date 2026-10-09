@@ -383,7 +383,7 @@ function keyPage() {
 const pages = [cover(), vocabPage1(), vocabPage2(), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), gamePage(), keyPage()];
 const css = readFileSync(join(ROOT, 'style.css'), 'utf8');
 const html = `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>gettinenglish · ${esc(T.title)} ${esc(T.level)}</title>
-<style>${css}</style></head><body>${pages.join('\n')}</body></html>`;
+<style>${css}</style></head><body class="${T.stackTranslations ? 'stacked' : ''}">${pages.join('\n')}</body></html>`;
 
 mkdirSync(join(ROOT, 'preview'), { recursive: true });
 mkdirSync(join(ROOT, 'out'), { recursive: true });

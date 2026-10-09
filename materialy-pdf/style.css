@@ -213,3 +213,7 @@ b { font-weight: 700; }
 .mp-box { width: 7mm; height: 7mm; }
 
 .bank span { white-space: nowrap; }
+
+/* Tłumaczenie zawsze pod hasłem (dla dłuższych kolokacji) */
+.stacked .wl-txt { flex-direction: column; gap: 0; line-height: 1.25; }
+.stacked .wl li { padding: .9mm 0; }
