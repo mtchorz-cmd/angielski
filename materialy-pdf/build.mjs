@@ -34,9 +34,9 @@ const shuffle = (arr, seed) => {
 const letter = (i) => String.fromCharCode(97 + i);
 const bank = (words, cls = '') => `<div class="bank ${cls}">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
 // Ramka w rzędach o zadanej liczbie słów (np. [6, 4]), dopasowana szerokością do treści
-const bankRows = (words, sizes) => {
+const bankRows = (words, sizes, cls = '') => {
   let i = 0;
-  return `<div class="bank bank-fit bank-rows">${sizes.map((n) => `<div>${words.slice(i, (i += n)).map((w) => `<span>${esc(w)}</span>`).join('')}</div>`).join('')}</div>`;
+  return `<div class="bank bank-fit bank-rows ${cls}">${sizes.map((n) => `<div>${words.slice(i, (i += n)).map((w) => `<span>${esc(w)}</span>`).join('')}</div>`).join('')}</div>`;
 };
 // Luka w tekście: blady box z niebieskim numerem w środku
 const gapBox = (n, cls = '') => `<span class="gap ${cls}">${n ? `<i>${n}</i>` : ''}</span>`;
@@ -124,19 +124,30 @@ function picturesPage() {
   const cells = T.labelPictures
     .map((ic, i) => `<div class="lp-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'lp-ic' })}<span class="line"></span></div>`)
     .join('');
-  const odd = T.oddOneOut
+  const odd = (T.oddOneOut || [])
     .map((r, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${r.icons.map((ic) => `<span class="oo-cell">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
     .join('');
   return page(`
     <div class="ex">
       ${exHead('Podpisz obrazki. Wybierz wyrazy z ramki.')}
-      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), T.labelRows || [6, 4])}
+      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), T.labelRows || [6, 4], T.labelBankWide ? 'bank-wide' : '')}
       <div class="lp-grid">${cells}</div>
     </div>
-    <div class="ex">
+    ${T.pictureTrueFalse ? tfExercise() : `<div class="ex">
       ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
       <div class="oo">${odd}</div>
-    </div>`);
+    </div>`}`);
+}
+
+// Ćw. 2 (wariant): czy podpis pasuje do obrazka? [ikona, podpis, poprawny podpis | null]
+function tfExercise() {
+  const cells = T.pictureTrueFalse
+    .map(([ic, cap], i) => `<div class="tf-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'tf-ic' })}<p class="tf-cap">${esc(cap)}</p><div class="tf-yn"><span><i class="box"></i>tak</span><span><i class="box"></i>nie</span></div></div>`)
+    .join('');
+  return `<div class="ex">
+      ${exHead('Czy podpis pasuje do obrazka? Zaznacz TAK albo NIE.')}
+      <div class="tf-grid">${cells}</div>
+    </div>`;
 }
 
 // ---------- Ćw. 3 + 4 ----------
@@ -357,7 +368,9 @@ function keyPage() {
     <div class="key">
       <div class="key-col">
         ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
-        ${block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
+        ${T.pictureTrueFalse
+          ? block(2, `<p>${T.pictureTrueFalse.map(([, , fix], i) => `<span class="kl">${i + 1}</span> ${fix ? `nie – ${esc(fix)}` : 'tak'}`).join('<br>')}</p>`)
+          : block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
         ${T.matchPairs
           ? block(3, `<p class="pairs">${T.matchPairs.pairs.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(MP_ORDER.indexOf(i))}</span>`).join('')}</p>`)
           : block(3, ol(T.missingLetters.map(esc)))}

@@ -84,15 +84,21 @@ export default {
   ],
 
   // Ćw. 1 — podpisz obrazki (kolokacje)
-  labelRows: [4, 3, 3],
+  labelRows: [5, 5],
+  labelBankWide: true,
   labelPictures: ['camera', 'shopping', 'sofa', 'party', 'crossword', 'tv', 'dinner', 'friends', 'fishing', 'gallery'],
 
-  // Ćw. 2 — co nie pasuje? (rozpoznawanie)
-  oddOneOut: [
-    { icons: ['football', 'piano', 'basketball', 'tennis'], answer: 1, why: 'piano – to nie sport' },
-    { icons: ['painting', 'camera', 'singing', 'running'], answer: 3, why: 'running – to sport, nie zainteresowanie artystyczne' },
-    { icons: ['yoga', 'cinema', 'theatre', 'museum'], answer: 0, why: 'yoga – to nie miejsce' },
-    { icons: ['boardgames', 'reading', 'skiing', 'videogames'], answer: 2, why: 'skiing – tego nie robimy w domu' },
+  // Ćw. 2 — czy podpis pasuje do obrazka? [ikona, podpis, poprawny podpis albo null]
+  // Podpisy nie zdradzają odpowiedzi z ćw. 1, 3 i 4.
+  pictureTrueFalse: [
+    ['gym', 'go to the gym', null],
+    ['piano', 'play the guitar', 'play the piano'],
+    ['dancing', 'go dancing', null],
+    ['theatre', 'go to the cinema', 'go to the theatre'],
+    ['videogames', 'play video games', null],
+    ['concert', 'visit a museum', 'go to a concert'],
+    ['painting', 'paint pictures', null],
+    ['coffee', 'meet friends', null],
   ],
 
   // Ćw. 3 — połącz czasowniki z wyrazami
@@ -139,26 +145,26 @@ export default {
   situations: [
     ['Pytasz koleżankę, co robi w wolnym czasie.', 'What do you do in your free time?', 'park'],
     ['Pytasz kolegę, jakie ma hobby.', 'What are your hobbies?', 'camera'],
-    ['Mówisz, że interesujesz się polityką.', "I'm interested in politics.", 'tv'],
-    ['Pytasz, jakiej muzyki ktoś słucha.', 'What kind of music do you like?', 'music'],
+    ['Chcesz powiedzieć, że interesujesz się polityką.', "I'm interested in politics.", 'tv'],
+    ['Chcesz wiedzieć, jakiej muzyki słucha twój znajomy.', 'What kind of music do you like?', 'music'],
     ['Pytasz kolegę, jak często chodzi na siłownię.', 'How often do you go to the gym?', 'gym'],
     ['Pytasz koleżankę, czy ma czas w sobotę.', 'Are you free on Saturday?', 'calendar'],
     ['Pytasz kolegę, w czym jest dobry.', 'What are you good at?', 'medal'],
-    ['Odmawiasz, bo nie masz czasu.', "I'm sorry, I can't. I'm busy.", 'chat'],
+    ['Musisz odrzucić zaproszenie, bo nie masz czasu.', "I'm sorry, I can't. I'm busy.", 'chat'],
   ],
 
-  // Ćw. 8 — dialog
+  // Ćw. 8 — dialog (luki: pojedyncze słowa)
   gapFill: {
     title: 'Plans for the weekend',
-    bank: ['for fun', 'Do you want to come', 'Maybe next time', "Why don't we", 'What time shall we', "Let's meet"],
+    bank: ['fun', 'free', 'come', 'busy', 'next', 'time', 'meet'],
     lines: [
-      ['Anna', 'Hi, Tom! What do you do {for fun}?'],
+      ['Anna', 'Hi, Tom! What do you do for {fun}?'],
       ['Tom', 'I love sport. I go to the gym every morning and I play tennis at the weekend.'],
-      ['Anna', "Cool! I'm going to a concert on Saturday. {Do you want to come} with me?"],
-      ['Tom', "Sorry, I can't. I'm busy on Saturday. {Maybe next time}."],
-      ['Anna', 'OK. {Why don\'t we} go to the cinema on Sunday, then?'],
-      ['Tom', 'Great idea! {What time shall we} meet?'],
-      ['Anna', "{Let's meet} at seven, in front of the cinema."],
+      ['Anna', "Cool! Are you {free} on Saturday? I'm going to a concert. Do you want to {come} with me?"],
+      ['Tom', "Sorry, I can't. I'm {busy} on Saturday. Maybe {next} time."],
+      ['Anna', 'OK. Why don\'t we go to the cinema on Sunday, then?'],
+      ['Tom', 'Great idea! What {time} shall we meet?'],
+      ['Anna', "Let's {meet} at seven, in front of the cinema."],
       ['Tom', 'Perfect. See you on Sunday!'],
     ],
   },
