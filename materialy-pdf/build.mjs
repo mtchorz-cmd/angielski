@@ -102,7 +102,7 @@ const wideCard = (g, items, cols) => {
 };
 
 // Dwie kolumny kart; układ (które grupy w której kolumnie) podaje plik tematu
-const vocabGrid = (cols) => `<div class="wl-grid">${cols.map((ids) => `<div class="wl-col">${ids.map((id) => card(G[id])).join('')}</div>`).join('')}</div>`;
+const vocabGrid = (cols) => !cols || !cols.length ? '' : `<div class="wl-grid">${cols.map((ids) => `<div class="wl-col">${ids.map((id) => card(G[id])).join('')}</div>`).join('')}</div>`;
 
 function vocabPage1() {
   return page(`
@@ -130,7 +130,7 @@ function picturesPage() {
   return page(`
     <div class="ex">
       ${exHead('Podpisz obrazki. Wybierz wyrazy z ramki.')}
-      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), [6, 4])}
+      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), T.labelRows || [6, 4])}
       <div class="lp-grid">${cells}</div>
     </div>
     <div class="ex">
@@ -142,7 +142,7 @@ function picturesPage() {
 // ---------- Ćw. 3 + 4 ----------
 const hideVowels = (w) => w.split('').map((ch, i) => (i > 0 && 'aeiou'.includes(ch) ? null : ch));
 function lettersPage() {
-  const items = T.missingLetters
+  const items = (T.missingLetters || [])
     .map((w, i) => {
       const letters = hideVowels(w)
         .map((ch) => (ch ? `<span class="ml-l">${ch}</span>` : '<span class="ml-l ml-gap"></span>'))
@@ -156,15 +156,27 @@ function lettersPage() {
     .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox(''))}</p></li>`)
     .join('');
   return page(`
-    <div class="ex">
+    ${T.matchPairs ? matchExercise() : `<div class="ex">
       ${exHead('Uzupełnij brakujące litery.')}
       <div class="ml-grid">${items}</div>
-    </div>
+    </div>`}
     ${T.sortColumns ? sortExercise() : `<div class="ex">
       ${exHead('Uzupełnij zdania przymiotnikami z ramki.')}
       ${bank(shuffle(adjWords, 4), 'bank-fit')}
       <ol class="sent">${sentences}</ol>
     </div>`}`);
+}
+
+// Ćw. 3 (wariant): połącz czasowniki z wyrazami, np. read → books
+const MP_ORDER = T.matchPairs ? shuffle(T.matchPairs.pairs.map((_, i) => i), 13) : [];
+function matchExercise() {
+  const M = T.matchPairs;
+  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box"></span></li>`).join('');
+  const right = MP_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span class="mp-w">${esc(M.pairs[idx][1])}</span></li>`).join('');
+  return `<div class="ex">
+      ${exHead(esc(M.instruction))}
+      <div class="mp-wrap"><ul class="mp-col">${left}</ul><ul class="mp-col">${right}</ul></div>
+    </div>`;
 }
 
 // Ćw. 4 (wariant): przyporządkuj wyrazy do kolumn, np. play / go / do
@@ -346,7 +358,9 @@ function keyPage() {
       <div class="key-col">
         ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
         ${block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
-        ${block(3, ol(T.missingLetters.map(esc)))}
+        ${T.matchPairs
+          ? block(3, `<p class="pairs">${T.matchPairs.pairs.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(MP_ORDER.indexOf(i))}</span>`).join('')}</p>`)
+          : block(3, ol(T.missingLetters.map(esc)))}
         ${T.sortColumns
           ? block(4, T.sortColumns.columns.map((c) => `<p><span class="kl">${esc(c.head)}</span> ${c.words.map(esc).join(', ')}</p>`).join(''))
           : block(4, ol(gaps(T.adjectivesGap.map((t) => ['', t[0]])), 1))}

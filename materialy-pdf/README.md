@@ -5,7 +5,7 @@ prawdziwe pliki logo SVG), z odręcznymi ilustracjami w stylu doodle (grafitowa 
 
 Gotowe pliki w `out/`:
 - `gettinenglish-food-a1-a2.pdf` – Food · A1–A2
-- `gettinenglish-hobbies-a1-a2.pdf` – Hobbies · A1–A2
+- `gettinenglish-free-time-a1-a2.pdf` – Free time · A1–A2
 
 ## Struktura PDF (11 stron)
 1. Okładka: temat, poziom, logo i ilustracje w tle
@@ -38,6 +38,8 @@ Build wymaga Playwright z Chromium.
 
 ## Opcje w pliku tematu
 - `vocabLayout` – które grupy słów trafiają na stronę 2 i 3 (dwie kolumny) oraz karty szerokie.
+- `missingLetters` **albo** `matchPairs` (łączenie czasowników z wyrazami) – wariant zad. 3.
 - `adjectivesGap` (zdania z przymiotnikami) **albo** `sortColumns` (np. play / go / do) – wariant zad. 4.
+- `labelRows` – podział słów w ramce zad. 1 na rzędy, np. `[4, 3, 3]`.
 - `wordSearch.words` – słowo albo `[słowo, ikona]`, gdy wyraz w wykreślance różni się od hasła (np. *piano*).
 - `coverSkip` – numery ilustracji na okładce do pominięcia, gdy dłuższy tytuł by na nie nachodził.

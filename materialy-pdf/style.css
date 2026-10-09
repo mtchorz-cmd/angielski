@@ -76,7 +76,7 @@ b { font-weight: 700; }
 .pg-head { display: flex; flex-direction: column; gap: 1.5mm; }
 .pg-title { font-size: 24pt; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; }
 .lead { font-size: 10pt; color: var(--ink2); }
-.page .body:has(.wl-grid) { gap: 7mm; }
+.page .body:has(.wl-grid), .page .body:has(.wcard) { gap: 7mm; }
 .wl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; align-items: start; }
 .wl-col { display: flex; flex-direction: column; gap: 7mm; }
 .wcard { border: 1px solid var(--line); border-radius: 14px; padding: 3.2mm 4mm 2.4mm; }
@@ -204,3 +204,12 @@ b { font-weight: 700; }
 .sc-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 10mm; }
 .sc-head { font-size: var(--task); font-weight: 800; color: var(--brand); padding-bottom: 2mm; border-bottom: 1.4px solid var(--brand-line); margin-bottom: 1mm; }
 .sc-col .line { height: 9mm; }
+
+/* ---------- ćw. 3 (wariant): łączenie kolokacji ---------- */
+.mp-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0 22mm; padding: 0 6mm; }
+.mp-col li { display: flex; align-items: center; gap: 3.4mm; height: 10.5mm; border-bottom: 1px solid var(--line); font-size: var(--task); }
+.mp-col li .n { width: 4mm; }
+.mp-w { flex: 1; font-weight: 600; }
+.mp-box { width: 7mm; height: 7mm; }
+
+.bank span { white-space: nowrap; }
