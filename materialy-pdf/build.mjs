@@ -250,7 +250,7 @@ function dialogPage() {
       <div class="dialog"><p class="dl-title">${esc(D.title)}</p>${lines}</div>
     </div>
     <div class="ex">
-      ${exHead('Odpowiedz na pytania o siebie. Skorzystaj z podpowiedzi.')}
+      ${exHead('Odpowiedz na poniższe pytania. Skorzystaj z podpowiedzi.')}
       <div class="about">${T.aboutYou
         .map(([q, hint], i) => `<div class="about-q"><p><span class="n">${i + 1}</span>${esc(q)} <span class="about-hint">${esc(hint)}</span></p><span class="line"></span></div>`)
         .join('')}</div>
