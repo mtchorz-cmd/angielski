@@ -83,7 +83,7 @@ export default {
 
   // Ćw. 4 — przymiotniki w zdaniach
   adjectivesGap: [
-    ['Do you prefer sweet or {salty} snacks?'],
+    ['I think the soup is a little too {salty}.'],
     ['I love chocolate cake because it is so {sweet}.'],
     ['Be careful, the plate is {hot}.'],
     ["Where's your sister? Her dinner's getting {cold}."],
