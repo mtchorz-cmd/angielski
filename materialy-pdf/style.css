@@ -162,14 +162,14 @@ b { font-weight: 700; }
 .dl-line { display: flex; gap: 3mm; align-items: baseline; }
 .who { flex: none; width: 15mm; font-weight: 700; font-size: 9pt; color: var(--ink2); }
 .dl-line p { font-size: var(--task); line-height: 1.9; }
-.dl-sep { display: flex; align-items: center; gap: 3mm; margin: 1mm 0 1mm 18mm; color: var(--muted); font-size: 8pt; font-style: italic; }
+.dl-sep { display: flex; align-items: center; gap: 3mm; margin: 4mm 0 4mm 18mm; color: var(--muted); font-size: 8pt; font-style: italic; }
 .dl-sep::before, .dl-sep::after { content: ''; height: 1px; width: 12mm; background: var(--line2); }
 
 /* ---------- ćw. 9: o sobie ---------- */
 .about { display: flex; flex-direction: column; gap: 2.4mm; }
 .about-q p { font-size: var(--task); font-weight: 500; display: flex; gap: 2.5mm; align-items: baseline; flex-wrap: wrap; }
 .about-hint { color: var(--muted); font-weight: 400; font-size: 9pt; font-style: italic; }
-.about-q .line { height: 6.6mm; margin-left: 5mm; }
+.about-q .line { height: 6mm; margin-left: 5mm; }
 
 /* ---------- klucz ---------- */
 .page .body:has(.key) { gap: 8mm; }

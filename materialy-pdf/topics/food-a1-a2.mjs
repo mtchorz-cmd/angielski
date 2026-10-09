@@ -86,8 +86,8 @@ export default {
     ['This soup is too {salty} for me.'],
     ['I love chocolate cake because it is so {sweet}.'],
     ['Be careful, the plate is {hot}.'],
-    ["It's 30°C today. Can I have a {cold} drink, please?"],
-    ["There's a lot of chilli in this chicken. It's really {spicy}!"],
+    ["Where's your sister? Her dinner's getting {cold}."],
+    ['Eating too much {spicy} food gives me an upset stomach.'],
   ],
 
   // Ćw. 5 — wykreślanka 10×10 (obrazki jako wskazówki)
