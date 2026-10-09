@@ -84,8 +84,8 @@ export default {
   // Ćw. 4 — przymiotniki w zdaniach
   adjectivesGap: [
     ['I think the soup is a little too {salty}.'],
-    ['I love chocolate cake because it is so {sweet}.'],
-    ['Be careful, the plate is {hot}.'],
+    ['This doughnut is a bit {sweet} for my taste.'],
+    ['Be careful, the bowl is {hot}.'],
     ["Where's your sister? Her dinner's getting {cold}."],
     ['Eating too much {spicy} food gives me an upset stomach.'],
   ],
