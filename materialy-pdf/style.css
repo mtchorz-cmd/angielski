@@ -229,3 +229,5 @@ b { font-weight: 700; }
 .tf-cap { font-size: var(--task); font-weight: 600; text-align: center; white-space: nowrap; }
 .tf-yn { display: flex; gap: 5mm; font-size: 8.5pt; color: var(--ink2); }
 .tf-yn span { display: flex; align-items: center; gap: 1.4mm; }
+/* Długie zwroty w kartach szerokich mogą się zawinąć — kratki zostają w ramce */
+.wide .wl-txt .wl-en { white-space: normal; }
