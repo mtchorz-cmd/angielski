@@ -435,8 +435,37 @@ const problems = await pg.evaluate(() => {
   });
   return out;
 });
+// Pola formularza do wersji interaktywnej (mm względem lewego górnego rogu strony).
+// Strona z kluczem odpowiedzi nie dostaje pól.
+const fields = await pg.evaluate(() => {
+  const mm = 96 / 25.4;
+  const out = [];
+  document.querySelectorAll('.page').forEach((p, pi) => {
+    if (p.querySelector('.key') || p.classList.contains('cover')) return;
+    const P = p.getBoundingClientRect();
+    const add = (el, type, opts = {}) => {
+      const r = el.getBoundingClientRect();
+      let { left: x, top: y, width: w, height: h } = r;
+      if (opts.above) { y = r.bottom - opts.above * mm; h = opts.above * mm + 0.4 * mm; }
+      out.push({ page: pi, type, x: (x - P.left) / mm, y: (y - P.top) / mm, w: w / mm, h: h / mm, ...opts });
+    };
+    p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
+    p.querySelectorAll('.st-box, .ml-gap').forEach((el) => add(el, 'letter', { center: true }));
+    p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));
+    p.querySelectorAll('.lp-cell .line, .sc-col .line, .about-q .line').forEach((el) => add(el, 'text', { above: 6.5 }));
+    p.querySelectorAll('.dashes').forEach((el) => add(el, 'text', { above: 6, center: true }));
+    p.querySelectorAll('.gap').forEach((el) => add(el, 'text', { inset: 3.2 }));
+    p.querySelectorAll('.mm line').forEach((el) => add(el, 'text', { above: 6, small: true }));
+  });
+  return out;
+});
+writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(fields));
+
 const pdfPath = join(ROOT, 'out', `gettinenglish-${slug}.pdf`);
 await pg.pdf({ path: pdfPath, format: 'A4', printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
 await browser.close();
 console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
+// Wersja interaktywna: ten sam PDF + pola do wpisywania i zaznaczania (PyMuPDF)
+const formPath = join(ROOT, 'out', `gettinenglish-${slug}-interaktywny.pdf`);
+console.log(execSync(`python3 "${join(ROOT, 'add-fields.py')}" "${pdfPath}" "${join(ROOT, 'preview', `${slug}-fields.json`)}" "${formPath}"`).toString().trim());
 if (problems.length) console.log('UWAGA:\n' + problems.join('\n'));

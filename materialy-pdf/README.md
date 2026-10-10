@@ -43,3 +43,11 @@ Build wymaga Playwright z Chromium.
 - `labelRows` – podział słów w ramce zad. 1 na rzędy, np. `[4, 3, 3]`.
 - `wordSearch.words` – słowo albo `[słowo, ikona]`, gdy wyraz w wykreślance różni się od hasła (np. *piano*).
 - `coverSkip` – numery ilustracji na okładce do pominięcia, gdy dłuższy tytuł by na nie nachodził.
+
+## Wersja interaktywna (do wypełniania na komputerze / tablecie)
+`node build.mjs <slug>` tworzy dwa pliki:
+- `out/gettinenglish-<slug>.pdf` — do druku,
+- `out/gettinenglish-<slug>-interaktywny.pdf` — ten sam układ + pola formularza:
+  kratki znam/nowe i tak/nie do zaznaczania, pola tekstowe w lukach, na liniach,
+  w krzyżówce (po jednej literze w kratce) i na mapie myśli. Klucz odpowiedzi nie ma pól.
+Pola dodaje `add-fields.py` (PyMuPDF) na podstawie położeń zebranych w `build.mjs`.
