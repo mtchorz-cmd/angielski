@@ -109,7 +109,7 @@ const vocabGrid = (cols) => !cols || !cols.length ? '' : `<div class="wl-grid">$
 
 function vocabPage1() {
   return page(`
-    <header class="pg-head">
+    <header class="pg-head" id="slownictwo">
       <h2 class="pg-title">Słownictwo<span class="dot">.</span></h2>
       <p class="lead">Zaznacz słowa i zwroty, które już znasz.</p>
     </header>
@@ -391,7 +391,7 @@ function keyPage() {
     </div>
     <div class="finish">
       <p class="finish-big">Well done<span class="dot">.</span></p>
-      <p>Wróć do listy słów na stronach 2–3 i sprawdź, ile pamiętasz.</p>
+      <p>Wróć do <a class="to-vocab" href="#slownictwo">listy słów na stronach 2–3</a> i sprawdź, ile pamiętasz.</p>
     </div>`);
 }
 
@@ -451,6 +451,8 @@ const fields = await pg.evaluate(() => {
     };
     p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
     p.querySelectorAll('.st-box, .ml-gap').forEach((el) => add(el, 'letter', { center: true }));
+    // wykreślanka: każda litera to przełącznik z półprzezroczystym „zakreśleniem”
+    p.querySelectorAll('.ws-grid:not(.ws-mini) .ws-row span').forEach((el) => add(el, 'mark'));
     p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));
     p.querySelectorAll('.lp-cell .line, .sc-col .line, .about-q .line').forEach((el) => add(el, 'text', { above: 6.5 }));
     p.querySelectorAll('.dashes').forEach((el) => add(el, 'text', { above: 6, center: true }));

@@ -142,7 +142,7 @@ export default {
     clues: {
       gym: 'I decided to join a ______ because I was in bad shape.',
       cinema: "What's on at the ______ this week? – I have no idea.",
-      theatre: "We're going to the ______ tonight to see a play.",
+      theatre: "We're going to the ______ tonight to see a play. Do you want to come with us?",
       concert: 'We went to a rock ______ last night. The band was great!',
       museum: 'We visited the science ______ in London. We had a good time.',
       piano: "I'm learning to play the ______. I practise every day.",

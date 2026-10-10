@@ -48,6 +48,6 @@ Build wymaga Playwright z Chromium.
 `node build.mjs <slug>` tworzy dwa pliki:
 - `out/gettinenglish-<slug>.pdf` — do druku,
 - `out/gettinenglish-<slug>-interaktywny.pdf` — ten sam układ + pola formularza:
-  kratki znam/nowe i tak/nie do zaznaczania, pola tekstowe w lukach, na liniach,
+  kratki znam/nowe i tak/nie do zaznaczania, litery wykreślanki do zakreślania kliknięciem, pola tekstowe w lukach, na liniach,
   w krzyżówce (po jednej literze w kratce) i na mapie myśli. Klucz odpowiedzi nie ma pól.
 Pola dodaje `add-fields.py` (PyMuPDF) na podstawie położeń zebranych w `build.mjs`.

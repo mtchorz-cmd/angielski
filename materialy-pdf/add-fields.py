@@ -14,7 +14,7 @@ BRAND = (0.149, 0.388, 0.922)
 
 doc = pymupdf.open(src)
 fields = json.load(open(fields_path, encoding='utf-8'))
-count = {'check': 0, 'text': 0, 'letter': 0}
+count = {'check': 0, 'text': 0, 'letter': 0, 'mark': 0}
 
 for i, f in enumerate(fields):
     page = doc[f['page']]
@@ -29,7 +29,11 @@ for i, f in enumerate(fields):
     wd.border_width = 0
     wd.border_color = None
     wd.fill_color = None
-    if f['type'] == 'check':
+    if f['type'] == 'mark':
+        # wykreślanka: przełącznik bez znaku ✓ — wygląd „włączony” podmieniamy niżej na zakreślenie
+        wd.field_type = pymupdf.PDF_WIDGET_TYPE_CHECKBOX
+        wd.field_value = False
+    elif f['type'] == 'check':
         wd.field_type = pymupdf.PDF_WIDGET_TYPE_CHECKBOX
         wd.text_color = BRAND
         wd.field_value = False
@@ -68,8 +72,24 @@ for page in doc:
         n += 1
         doc.xref_set_key(w.xref, 'NM', f'(ge-field-{n})')
         doc.xref_set_key(w.xref, 'P', f'{page.xref} 0 R')
-        if w.field_type == pymupdf.PDF_WIDGET_TYPE_CHECKBOX:
+        if w.field_name.startswith('mark'):
+            # wygląd: wyłączony = nic, włączony = półprzezroczysty niebieski pasek pod literą
+            r = w.rect
+            bw, bh = r.width, r.height
+            off = doc.get_new_xref()
+            doc.update_object(off, f'<</Type/XObject/Subtype/Form/BBox[0 0 {bw:.2f} {bh:.2f}]>>')
+            doc.update_stream(off, b' ')
+            on = doc.get_new_xref()
+            doc.update_object(on, f'<</Type/XObject/Subtype/Form/BBox[0 0 {bw:.2f} {bh:.2f}]'
+                                  f'/Resources<</ExtGState<</G0<</Type/ExtGState/ca 0.32/CA 0.32>>>>>>>>')
+            doc.update_stream(on, f'q /G0 gs 0.149 0.388 0.922 rg 0 {bh*0.12:.2f} {bw:.2f} {bh*0.76:.2f} re f Q'.encode())
+            doc.xref_set_key(w.xref, 'AP', f'<</N<</Off {off} 0 R/Yes {on} 0 R>>/D<</Off {off} 0 R/Yes {on} 0 R>>>>')
+            doc.xref_set_key(w.xref, 'MK', '<<>>')
+            doc.xref_set_key(w.xref, 'AS', '/Off')
+            doc.xref_set_key(w.xref, 'V', '/Off')
+            doc.xref_set_key(w.xref, 'TU', '(zaznacz literę)')
+        elif w.field_type == pymupdf.PDF_WIDGET_TYPE_CHECKBOX:
             doc.xref_set_key(w.xref, 'MK', '<</CA(4)>>')
 
 doc.save(dst, garbage=3, deflate=True)
-print(f"Interaktywny PDF: {dst}  (pola tekstowe: {count['text']}, litery: {count['letter']}, kratki: {count['check']})")
+print(f"Interaktywny PDF: {dst}  (pola tekstowe: {count['text']}, litery: {count['letter']}, kratki: {count['check']}, wykreślanka: {count['mark']})")

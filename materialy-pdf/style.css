@@ -237,3 +237,4 @@ b { font-weight: 700; }
 .stacked .wide .wl-en { text-wrap: balance; }
 /* Free time: luki w dialogu 1,5 raza mniejsze — na miarę jednego słowa */
 .stacked .dialog .gap { width: 20mm; height: 5mm; }
+.finish a.to-vocab { color: var(--brand); text-decoration: underline; text-decoration-color: var(--brand-line); text-underline-offset: 2px; }
