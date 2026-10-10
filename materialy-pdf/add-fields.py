@@ -73,7 +73,7 @@ for page in doc:
         doc.xref_set_key(w.xref, 'NM', f'(ge-field-{n})')
         doc.xref_set_key(w.xref, 'P', f'{page.xref} 0 R')
         if w.field_name.startswith('mark'):
-            # wygląd: wyłączony = nic, włączony = półprzezroczysty niebieski pasek pod literą
+            # wygląd: wyłączony = nic, włączony = półprzezroczysty niebieski kafelek pod literą
             r = w.rect
             bw, bh = r.width, r.height
             off = doc.get_new_xref()
@@ -82,7 +82,21 @@ for page in doc:
             on = doc.get_new_xref()
             doc.update_object(on, f'<</Type/XObject/Subtype/Form/BBox[0 0 {bw:.2f} {bh:.2f}]'
                                   f'/Resources<</ExtGState<</G0<</Type/ExtGState/ca 0.32/CA 0.32>>>>>>>>')
-            doc.update_stream(on, f'q /G0 gs 0.149 0.388 0.922 rg 0 {bh*0.12:.2f} {bw:.2f} {bh*0.76:.2f} re f Q'.encode())
+            # zaokrąglony kafelek z równym marginesem z każdej strony: między zaznaczonymi
+            # literami zawsze ta sama mała przerwa — w poziomie, w pionie i po skosie
+            m = min(bw, bh) * 0.07
+            rr = min(bw, bh) * 0.16
+            x0, y0, x1, y1 = m, m, bw - m, bh - m
+            k = rr * 0.5523
+            path = (f'{x0 + rr:.2f} {y0:.2f} m {x1 - rr:.2f} {y0:.2f} l '
+                    f'{x1 - rr + k:.2f} {y0:.2f} {x1:.2f} {y0 + rr - k:.2f} {x1:.2f} {y0 + rr:.2f} c '
+                    f'{x1:.2f} {y1 - rr:.2f} l '
+                    f'{x1:.2f} {y1 - rr + k:.2f} {x1 - rr + k:.2f} {y1:.2f} {x1 - rr:.2f} {y1:.2f} c '
+                    f'{x0 + rr:.2f} {y1:.2f} l '
+                    f'{x0 + rr - k:.2f} {y1:.2f} {x0:.2f} {y1 - rr + k:.2f} {x0:.2f} {y1 - rr:.2f} c '
+                    f'{x0:.2f} {y0 + rr:.2f} l '
+                    f'{x0:.2f} {y0 + rr - k:.2f} {x0 + rr - k:.2f} {y0:.2f} {x0 + rr:.2f} {y0:.2f} c h f')
+            doc.update_stream(on, f'q /G0 gs 0.149 0.388 0.922 rg {path} Q'.encode())
             doc.xref_set_key(w.xref, 'AP', f'<</N<</Off {off} 0 R/Yes {on} 0 R>>/D<</Off {off} 0 R/Yes {on} 0 R>>>>')
             doc.xref_set_key(w.xref, 'MK', '<<>>')
             doc.xref_set_key(w.xref, 'AS', '/Off')
