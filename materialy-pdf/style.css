@@ -84,7 +84,7 @@ b { font-weight: 700; }
 .wl-t { flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
 .wl-head b { font-size: 10.5pt; font-weight: 800; color: var(--brand); letter-spacing: -.01em; }
 .wl-head .pl { font-size: 7.8pt; }
-.wl-cols { display: flex; gap: 1.2mm; font-size: 6.4pt; color: var(--brand); font-weight: 600; opacity: .8; }
+.wl-cols { display: flex; gap: 2.6mm; font-size: 6.4pt; color: var(--brand); font-weight: 600; opacity: .8; }
 .wl-cols span { width: 7mm; text-align: center; }
 .wl li { display: flex; align-items: center; gap: 2.6mm; padding: .5mm 0; }
 .wl li .box { margin: 0 1.4mm; }
