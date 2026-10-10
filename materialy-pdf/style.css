@@ -202,7 +202,7 @@ b { font-weight: 700; }
 
 /* ---------- ćw. 4 (wariant): sortowanie do kolumn ---------- */
 .sc-grid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 10mm; }
-.sc-head { font-size: var(--task); font-weight: 800; color: var(--brand); padding-bottom: 2mm; border-bottom: 1.4px solid var(--brand-line); margin-bottom: 1mm; }
+.sc-head { font-size: var(--task); font-weight: 800; color: var(--brand); padding-bottom: 0; }
 .sc-col .line { height: 9mm; border-bottom: 1.2px solid var(--brand-line); }
 
 /* ---------- ćw. 3 (wariant): łączenie kolokacji ---------- */
@@ -235,3 +235,5 @@ b { font-weight: 700; }
 .stacked .wide li:not(.cols-row) { padding: 1.4mm 0; border-top: 1px solid var(--line); }
 .stacked .wide li.cols-row + li { border-top: 0; }
 .stacked .wide .wl-en { text-wrap: balance; }
+/* Free time: luki w dialogu 1,5 raza mniejsze — na miarę jednego słowa */
+.stacked .dialog .gap { width: 20mm; height: 5mm; }
