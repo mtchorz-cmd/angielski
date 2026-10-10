@@ -120,7 +120,7 @@ export default {
 
   // Ćw. 4 — play / go / do
   sortColumns: {
-    instruction: 'Wpisz wyrazy z ramki do właściwej kolumny: play, go albo do.',
+    instruction: 'Dopasuj wyrazy z ramki do właściwej kolumny.',
     rows: [6, 6],
     columns: [
       { head: 'play', words: ['football', 'basketball', 'volleyball', 'board games'] },
@@ -141,14 +141,14 @@ export default {
     seed: 7,
     clues: {
       gym: 'I decided to join a ______ because I was in bad shape.',
-      cinema: "What's on at the ______ this week? – A new comedy.",
+      cinema: "What's on at the ______ this week? – I have no idea.",
       theatre: "We're going to the ______ tonight to see a play.",
       concert: 'We went to a rock ______ last night. The band was great!',
-      museum: 'We visited the science ______ in London. We learned a lot.',
+      museum: 'We visited the science ______ in London. We had a good time.',
       piano: "I'm learning to play the ______. I practise every day.",
-      guitar: 'My brother plays the ______ in a rock band.',
+      guitar: 'Can you teach me how to play the ______?',
       pictures: 'My grandma likes to paint ______ of flowers.',
-      dancing: "I love music. Let's go ______ on Friday night!",
+      dancing: "Let's go ______ on Friday night.",
     },
   },
 
@@ -158,9 +158,9 @@ export default {
     ['Pytasz kolegę, jakie ma hobby.', 'What are your hobbies?', 'camera'],
     ['Chcesz powiedzieć, że interesujesz się sztuką.', "I'm interested in art.", 'gallery'],
     ['Chcesz wiedzieć, jakiej muzyki słucha twój znajomy.', 'What kind of music do you like?', 'music'],
-    ['Mówisz, że ćwiczysz na siłowni trzy razy w tygodniu.', 'I work out at the gym three times a week.', 'gym'],
+    ['Powiedz, że ćwiczysz na siłowni trzy razy w tygodniu.', 'I work out at the gym three times a week.', 'gym'],
     ['Pytasz koleżankę, jak często chodzi na zakupy.', 'How often do you go shopping?', 'shopping'],
-    ['Przyznajesz, że nie śpiewasz zbyt dobrze.', "I'm not very good at singing.", 'singing'],
+    ['Powiedz, że nie śpiewasz zbyt dobrze.', "I'm not very good at singing.", 'singing'],
     ['Musisz odrzucić zaproszenie, bo nie masz czasu.', "I'd love to, but I'm busy.", 'chat'],
   ],
 
