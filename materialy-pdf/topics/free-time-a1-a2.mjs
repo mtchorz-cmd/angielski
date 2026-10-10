@@ -181,12 +181,12 @@ export default {
 
   // Ćw. 9 — pytania
   aboutYou: [
-    ['What do you do for fun?', 'For fun I …'],
-    ['What are you good at?', "I'm good at …"],
-    ['Do you enjoy learning English?', 'Yes, I do. / No, I don’t.'],
-    ['How often do you go shopping?', 'I go shopping …'],
-    ['What are you doing after work?', 'After work I’m …'],
-    ['What are you interested in?', "I'm interested in …"],
+    ['What do you do for fun?'],
+    ['What are you good at?'],
+    ['Do you enjoy learning English?'],
+    ['How often do you go shopping?'],
+    ['What are you doing after work?'],
+    ['What are you interested in?'],
   ],
 
   // Ćw. 10 — mapa myśli: [liczba linii, kategoria, ikona]
