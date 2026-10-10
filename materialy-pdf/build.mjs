@@ -96,9 +96,12 @@ const card = (g) => `<div class="wcard">${head(g)}<ul class="wl">${g.words.map(r
 const wideCard = (g, items, cols) => {
   const per = Math.ceil(items.length / cols);
   const parts = Array.from({ length: cols }, (_, i) => items.slice(i * per, (i + 1) * per));
-  return `<div class="wcard">${head(g, false)}<div class="wide" style="--cols:${cols}">${parts
-    .map((p) => `<ul class="wl">${'<li class="cols-row">' + colLabels + '</li>'}${p.map(row).join('')}</ul>`)
-    .join('')}</div></div>`;
+  // Jedna siatka dla wszystkich kolumn: wiersze mają tę samą wysokość, więc kratki
+  // znam/nowe leżą w równych odstępach i na tej samej wysokości w każdej kolumnie.
+  const cells = parts
+    .map((p) => '<li class="cols-row">' + colLabels + '</li>' + p.map(row).join('') + '<li class="empty"></li>'.repeat(per - p.length))
+    .join('');
+  return `<div class="wcard">${head(g, false)}<ul class="wl wide" style="--cols:${cols};--rows:${per}">${cells}</ul></div>`;
 };
 
 // Dwie kolumny kart; układ (które grupy w której kolumnie) podaje plik tematu

@@ -93,7 +93,7 @@ b { font-weight: 700; }
 .wl-txt .wl-en { white-space: nowrap; }
 .wl-en { font-weight: 600; font-size: 9.8pt; }
 .wl-pl { color: var(--ink2); font-size: 8pt; }
-.wide { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0 8mm; }
+.wide { display: grid; grid-template-columns: repeat(var(--cols), 1fr); grid-template-rows: auto repeat(var(--rows), 1fr); grid-auto-flow: column; gap: 0 8mm; }
 .wide li { padding: 1mm 0; }
 .wide li.cols-row { justify-content: flex-end; padding: 0; }
 .wide .wl-txt { flex-direction: column; gap: 0; line-height: 1.3; }
@@ -231,3 +231,7 @@ b { font-weight: 700; }
 .tf-yn span { display: flex; align-items: center; gap: 1.4mm; }
 /* Długie zwroty w kartach szerokich mogą się zawinąć — kratki zostają w ramce */
 .wide .wl-txt .wl-en { white-space: normal; }
+/* Free time: wiersze rozdzielone delikatną linią, kratki na środku wiersza */
+.stacked .wide li:not(.cols-row) { padding: 1.4mm 0; border-top: 1px solid var(--line); }
+.stacked .wide li.cols-row + li { border-top: 0; }
+.stacked .wide .wl-en { text-wrap: balance; }
