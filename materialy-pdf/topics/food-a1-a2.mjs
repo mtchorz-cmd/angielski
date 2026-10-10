@@ -151,12 +151,12 @@ export default {
 
   // Ćw. 9 — o sobie
   aboutYou: [
-    ['What do you usually have for breakfast?', 'I usually have …'],
-    ["What's your favourite fruit?", 'My favourite fruit is …'],
-    ['What do you drink in the morning?', 'In the morning I drink …'],
-    ['Do you like spicy food?', 'Yes, I do. / No, I don’t.'],
-    ["What's your favourite snack?", 'My favourite snack is …'],
-    ['What do you usually order in a café?', 'I usually order … and …'],
+    ['What do you usually have for breakfast?'],
+    ["What's your favourite fruit?"],
+    ['What do you drink in the morning?'],
+    ['Do you like spicy food?'],
+    ["What's your favourite snack?"],
+    ['What do you usually order in a café?'],
   ],
 
   // Ćw. 10 — mapa myśli: [ile słów, kategoria, ikona]

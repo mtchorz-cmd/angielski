@@ -49,5 +49,27 @@ for i, f in enumerate(fields):
         page.load_widget(added.xref).update()
     count[f['type']] += 1
 
+# Porządki zgodności z przeglądarkami PDF:
+# - unikalny identyfikator /NM każdego pola (PyMuPDF numeruje od zera na każdej stronie,
+#   przez co w części przeglądarek kratki na różnych stronach „kolidowały”),
+# - odwołanie /P do strony, na której leży pole,
+# - wspólne zasoby formularza (czcionki Helvetica i ZapfDingbats dla znaku ✓).
+cat = doc.pdf_catalog()
+helv = doc.get_new_xref()
+doc.update_object(helv, '<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>')
+zadb = doc.get_new_xref()
+doc.update_object(zadb, '<</Type/Font/Subtype/Type1/BaseFont/ZapfDingbats>>')
+af = doc.xref_get_key(cat, 'AcroForm')
+fields_arr = doc.xref_get_key(cat, 'AcroForm/Fields')[1]
+doc.xref_set_key(cat, 'AcroForm', f'<</Fields{fields_arr}/DA(/Helv 0 Tf 0 g)/DR<</Font<</Helv {helv} 0 R/ZaDb {zadb} 0 R>>>>>>')
+n = 0
+for page in doc:
+    for w in page.widgets():
+        n += 1
+        doc.xref_set_key(w.xref, 'NM', f'(ge-field-{n})')
+        doc.xref_set_key(w.xref, 'P', f'{page.xref} 0 R')
+        if w.field_type == pymupdf.PDF_WIDGET_TYPE_CHECKBOX:
+            doc.xref_set_key(w.xref, 'MK', '<</CA(4)>>')
+
 doc.save(dst, garbage=3, deflate=True)
 print(f"Interaktywny PDF: {dst}  (pola tekstowe: {count['text']}, litery: {count['letter']}, kratki: {count['check']})")
