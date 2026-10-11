@@ -130,7 +130,7 @@ export default {
 
   // Ćw. 4 — do którego święta to pasuje?
   sortColumns: {
-    instruction: 'Do którego święta to pasuje? Dopasuj wyrazy z ramki do właściwej kolumny.',
+    instruction: 'Dopasuj wyrazy z ramki do właściwej kolumny.',
     rows: [5, 4],
     columns: [
       { head: 'Christmas', words: ['mistletoe', 'wreath', 'gingerbread cookies'] },
@@ -150,46 +150,45 @@ export default {
   crossword: {
     seed: 7,
     clues: {
-      celebrate: 'How do you ______ your birthday? – I have a party with my friends.',
+      party: "I'm having a housewarming ______ next Saturday. I hope you can come.",
       guests: 'We invited a hundred ______ to our wedding.',
       anniversary: "Today is my parents' 25th wedding ______.",
-      reception: 'After the ceremony, there was a wedding ______ at a hotel.',
+      reception: 'The food at the wedding ______ was absolutely delicious.',
       wish: 'Close your eyes and make a ______!',
-      Easter: 'We paint eggs for ______.',
-      Christmas: 'We decorate the tree on ______ Eve.',
-      Santa: 'Children believe that ______ Claus brings their presents.',
-      Communion: 'My niece is making her First Holy ______ in May.',
+      Easter: 'I used to paint ______ eggs with my sisters.',
+      Christmas: 'Did your family decorate the ______ tree together when you were a kid?',
+      Santa: 'And ______ Claus will come down the chimney with presents for everybody.',
+      bank: 'I was thinking maybe we could go away for the ______ holiday weekend.',
     },
   },
 
   // Ćw. 7 — jakie życzenia złożysz?
-  situationsInstruction: 'Jakie życzenia złożysz? Połącz sytuacje 1–8 z życzeniami a–h.',
+  situationsInstruction: 'Połącz sytuacje 1–8 z życzeniami a–h.',
   situations: [
     ['Twoja koleżanka ma dziś urodziny.', 'Happy birthday!', 'cake'],
     ['Jest Wigilia. Składasz życzenia rodzinie.', 'Merry Christmas!', 'christmastree'],
-    ['Jest północ 31 grudnia.', 'Happy New Year!', 'fireworks'],
-    ['Składasz życzenia na Wielkanoc.', 'Happy Easter!', 'easteregg'],
-    ['Twój brat bierze ślub.', 'Congratulations!', 'rings'],
+    ['Zegar wybija północ w sylwestrową noc.', 'Happy New Year!', 'clock'],
+    ['Chcesz wysłać krótkie życzenia wielkanocne.', 'Happy Easter!', 'easteregg'],
+    ['Twoja przyjaciółka właśnie się zaręczyła.', 'Congratulations!', 'rings'],
     ['Wznosisz toast na przyjęciu.', 'Cheers!', 'toast'],
     ['Kolega idzie wieczorem na imprezę.', 'Have a great time!', 'party'],
-    ['Ktoś składa ci życzenia świąteczne. Odpowiadasz tym samym.', 'Same to you!', 'chat'],
+    ['Kolega życzy Ci udanych wakacji. Co powiesz?', 'Same to you!', 'suitcase'],
   ],
 
   // Ćw. 8 — dialog (luki: pojedyncze słowa)
   gapFill: {
-    title: 'An invitation',
-    sep: 'w sobotę',
-    bank: ['birthday', 'come', 'inviting', 'Happy', 'surprise', 'time', 'Cheers'],
+    title: 'Christmas plans',
+    bank: ['spending', 'traditions', 'wafers', 'Mass', 'carols', 'Boxing', 'same'],
     lines: [
-      ['Kate', 'Hi, Ben! What are you doing on Saturday?'],
-      ['Ben', 'Nothing special. Why?'],
-      ['Kate', "It's my {birthday}. Would you like to {come} to my party?"],
-      ['Ben', "Yes, I'd love to! Thank you for {inviting} me."],
-      ['Kate', 'Great! The party starts at six.'],
-      ['', ''],
-      ['Ben', '{Happy} birthday, Kate! This is for you.'],
-      ['Kate', 'Oh, thank you! What a lovely {surprise}! Come in and have a great {time}.'],
-      ['Ben', '{Cheers}! All the best, Kate!'],
+      ['Emma', 'Where are you {spending} Christmas this year, Tom?'],
+      ['Tom', "At my grandparents' house in the mountains. The whole family will be there. And you?"],
+      ['Emma', "We're staying at home. Do you have any special {traditions}?"],
+      ['Tom', 'Yes, lots! On Christmas Eve, we share {wafers} before dinner, and then we go to Midnight {Mass}.'],
+      ['Emma', 'That sounds lovely. In my family, we always sing {carols} together after dinner.'],
+      ['Tom', 'Do you open your presents on Christmas Eve?'],
+      ['Emma', 'No, we open them on Christmas Day, in the morning. Then on {Boxing} Day, we visit our cousins.'],
+      ['Tom', 'Well, I have to go. Merry Christmas, Emma!'],
+      ['Emma', 'Thanks, {same} to you!'],
     ],
   },
 
