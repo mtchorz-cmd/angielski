@@ -67,3 +67,9 @@ dopasowane do szerokości ekranu, z polami do wpisywania, zaznaczaniem (wykreśl
 znam/nowe) i przyciskami **Sprawdź** / **Wyczyść** pod ćwiczeniami. Odpowiedzi zapisują się w przeglądarce
 kursanta (localStorage). Wygląd: `web.css`, logika: `web-client.js`; odpowiedzi z tych samych atrybutów `data-*`
 co wersja PDF. Plik publikuje się jako stronę (Artifact) i udostępnia kursantom link.
+
+## Holidays and celebrations A1–A2 (`topics/holidays-a1-a2.mjs`)
+Podział: Christmas, Easter, New Year, Other holidays, Family celebrations + 14 zwrotów/życzeń.
+Nowe opcje generatora: `matchDates` (ćw. 2 — łączenie świąt z datami), `situationsInstruction`,
+`gapFill.sep` (tekst przerywnika w dialogu), `mindMapTitle`; tytuł okładki zmniejsza się sam przy długich słowach,
+hasła krzyżówki mogą mieć wielką literę (np. `Easter`).

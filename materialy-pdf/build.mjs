@@ -76,13 +76,16 @@ function cover() {
     `<div class="cv-art">${art}</div>
      <div class="cv-main">
        <span class="cv-pill">${esc(T.level)}</span>
-       <h1 class="cv-title">${esc(T.title)}<span class="dot">.</span></h1>
+       <h1 class="cv-title" style="font-size:${coverTitlePt()}pt">${esc(T.title)}<span class="dot">.</span></h1>
        <p class="cv-sub">${esc(T.subtitle)}</p>
      </div>
      <div class="cv-logo">${wordmarkWhite}</div>`,
     { cls: 'cover' }
   );
 }
+
+// Długie tytuły na okładce: mniejszy krój, żeby najdłuższe słowo zmieściło się w szerokości strony
+const coverTitlePt = () => Math.min(92, Math.floor(880 / Math.max(...T.title.split(' ').map((w) => w.length + 1))));
 
 // ---------- Słownictwo ----------
 // para kratek znam/nowe w jednym wierszu (w wersji internetowej wykluczają się nawzajem)
@@ -138,7 +141,7 @@ function picturesPage() {
       ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), T.labelRows || [6, 4], T.labelBankWide ? 'bank-wide' : '')}
       <div class="lp-grid">${cells}</div>
     </div>
-    ${T.pictureTrueFalse ? tfExercise() : `<div class="ex">
+    ${T.matchDates ? matchExercise(T.matchDates, MD_ORDER) : T.pictureTrueFalse ? tfExercise() : `<div class="ex">
       ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
       <div class="oo">${odd}</div>
     </div>`}`);
@@ -185,10 +188,11 @@ function lettersPage() {
 
 // Ćw. 3 (wariant): połącz czasowniki z wyrazami, np. read → books
 const MP_ORDER = T.matchPairs ? shuffle(T.matchPairs.pairs.map((_, i) => i), 13) : [];
-function matchExercise() {
-  const M = T.matchPairs;
-  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box" data-ans="${letter(MP_ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`).join('');
-  const right = MP_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span class="mp-w">${esc(M.pairs[idx][1])}</span></li>`).join('');
+// Ćw. 2 (wariant): połącz święta z datami — ten sam układ co łączenie w ćw. 3
+const MD_ORDER = T.matchDates ? shuffle(T.matchDates.pairs.map((_, i) => i), 17) : [];
+function matchExercise(M = T.matchPairs, ORDER = MP_ORDER) {
+  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box" data-ans="${letter(ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`).join('');
+  const right = ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span class="mp-w">${esc(M.pairs[idx][1])}</span></li>`).join('');
   return `<div class="ex">
       ${exHead(esc(M.instruction))}
       <div class="mp-wrap"><ul class="mp-col">${left}</ul><ul class="mp-col">${right}</ul></div>
@@ -230,6 +234,7 @@ function wordSearchPage() {
 }
 
 // ---------- Ćw. 6: krzyżówka (SVG — idealnie równa siatka) ----------
+const clueKey = (w) => Object.keys(T.crossword.clues).find((k) => k.toUpperCase() === w.toUpperCase());
 const CW = crossword(Object.keys(T.crossword.clues).map((w) => w.toUpperCase()), T.crossword.seed);
 function crosswordSvg(cellMm) {
   const nums = {};
@@ -257,7 +262,7 @@ function crosswordPage() {
     CW.items
       .filter((i) => i.dir === dir)
       .sort((a, b) => a.n - b.n)
-      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[i.word.toLowerCase()]).replace(/(\S+) _+([.,?!]?)/, '<span class="nw">$1 <span class="cgap"></span>$2</span>')}</span></li>`)
+      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[clueKey(i.word)]).replace(/(\S+) _+([.,?!]?)/, '<span class="nw">$1 <span class="cgap"></span>$2</span>')}</span></li>`)
       .join('');
   const cell = Math.min(10.5, 150 / CW.rows, 172 / CW.cols);
   return page(`
@@ -280,7 +285,7 @@ function situationsPage() {
   const right = SIT_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span>${esc(T.situations[idx][1])}</span></li>`).join('');
   return page(`
     <div class="ex ex-fill">
-      ${exHead('Co powiesz? Połącz sytuacje 1–8 ze zwrotami a–h.')}
+      ${exHead(esc(T.situationsInstruction || 'Co powiesz? Połącz sytuacje 1–8 ze zwrotami a–h.'))}
       <div class="st-wrap"><ul class="st-left">${left}</ul><ul class="st-right">${right}</ul></div>
     </div>`);
 }
@@ -293,7 +298,7 @@ function dialogPage() {
     .map(([who, text]) =>
       who
         ? `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, (_, w) => gapBox(++n, '', w))}</p></div>`
-        : '<div class="dl-sep"><span>40 minut później</span></div>'
+        : `<div class="dl-sep"><span>${esc(D.sep || '40 minut później')}</span></div>`
     )
     .join('');
   return page(`
@@ -355,7 +360,7 @@ function gamePage() {
   });
   const center =
     sketch('ellipse', [C.x, C.y, C.w, C.h], { seed: 9, fill: '#F2F6FE', stroke: '#2663EB', strokeWidth: 0.7, roughness: 0.4 }) +
-    `<text x="${C.x}" y="${C.y + 2.6}" class="mm-center">${esc(T.title)}<tspan fill="#2663EB">.</tspan></text>`;
+    `<text x="${C.x}" y="${C.y + 2.6}" class="mm-center">${esc(T.mindMapTitle || T.title)}<tspan fill="#2663EB">.</tspan></text>`;
   return page(`
     <div class="ex ex-fill">
       ${exHead('Uzupełnij mapę myśli. Dopisz dowolne słowa, które pamiętasz.')}
@@ -376,14 +381,16 @@ function keyPage() {
     lines.forEach(([, t]) => t.replace(/\{([^}]+)\}/g, (_, w) => out.push(esc(w))));
     return out;
   };
-  const cw = (dir) => CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `<span class="nw">${i.n} ${i.word.toLowerCase()}</span>`).join(', ');
+  const cw = (dir) => CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `<span class="nw">${i.n} ${clueKey(i.word)}</span>`).join(', ');
   const block = (n, body) => `<div class="kb"><span class="kn">${n}</span><div class="kb-body">${body}</div></div>`;
   return page(`
     <h2 class="pg-title">Klucz odpowiedzi<span class="dot">.</span></h2>
     <div class="key">
       <div class="key-col">
         ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
-        ${T.pictureTrueFalse
+        ${T.matchDates
+          ? block(2, `<p class="pairs">${T.matchDates.pairs.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(MD_ORDER.indexOf(i))}</span>`).join('')}</p>`)
+          : T.pictureTrueFalse
           ? block(2, `<p>${T.pictureTrueFalse.map(([, , fix], i) => `<span class="kl">${i + 1}</span> ${fix ? `nie – ${esc(fix)}` : 'tak'}`).join('<br>')}</p>`)
           : block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
         ${T.matchPairs
