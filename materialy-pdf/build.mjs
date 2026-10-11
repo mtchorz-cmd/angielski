@@ -1,0 +1,592 @@
+// Generator PDF „Ćwiczenia leksykalne” w standardzie gettinenglish.
+// Użycie: node build.mjs [slug-tematu]   (domyślnie food-a1-a2)
+// Wynik: out/gettinenglish-<slug>.pdf  (+ preview/<slug>.html do podglądu)
+import { createRequire } from 'node:module';
+import { execSync } from 'node:child_process';
+import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { iconSvg, iconPaths, sketch } from './icons.mjs';
+import { wordSearch, crossword, rng } from './puzzles.mjs';
+
+const ROOT = dirname(fileURLToPath(import.meta.url));
+const slug = process.argv[2] || 'food-a1-a2';
+const T = (await import(`./topics/${slug}.mjs`)).default;
+const G = T.groups;
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const svgFile = (name) => readFileSync(join(ROOT, 'assets/logo', name), 'utf8');
+const wordmark = svgFile('gettinenglish-wordmark.svg');
+const wordmarkWhite = svgFile('gettinenglish-wordmark-white.svg');
+
+const allWords = Object.values(G).flatMap((g) => g.words.filter((w) => w[2]));
+const iconToWord = Object.fromEntries(allWords.map((w) => [w[2], w[0]]));
+const wordToIcon = Object.fromEntries(allWords.map((w) => [w[0], w[2]]));
+const shuffle = (arr, seed) => {
+  const rand = rng(seed);
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+const letter = (i) => String.fromCharCode(97 + i);
+const bank = (words, cls = '') => `<div class="bank ${cls}">${words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>`;
+// Ramka w rzędach o zadanej liczbie słów (np. [6, 4]), dopasowana szerokością do treści
+const bankRows = (words, sizes, cls = '') => {
+  let i = 0;
+  return `<div class="bank bank-fit bank-rows ${cls}">${sizes.map((n) => `<div>${words.slice(i, (i += n)).map((w) => `<span>${esc(w)}</span>`).join('')}</div>`).join('')}</div>`;
+};
+// Luka w tekście: blady box z niebieskim numerem w środku
+const gapBox = (n, cls = '', ans = '', item = n) => `<span class="gap ${cls}"${ans ? ` data-ans="${esc(ans)}" data-item="${item}"` : ''}>${n ? `<i>${n}</i>` : ''}</span>`;
+
+let pageNo = 0;
+const page = (body, { cls = '' } = {}) => {
+  pageNo++;
+  const footer =
+    pageNo === 1
+      ? ''
+      : `<footer class="foot"><span></span><span class="pnum">${pageNo}</span><span class="foot-logo">${wordmark}</span></footer>`;
+  return `<section class="page ${cls}"><div class="body">${body}</div>${footer}</section>`;
+};
+
+let exNo = 0;
+const exHead = (instruction) => `<header class="ex-head"><span class="ex-num">${++exNo}</span><h2>${instruction}</h2></header>`;
+
+// ---------- Okładka ----------
+function cover() {
+  // Pozycje (mm): x, y, rozmiar, obrót. Pole tytułu i logo zostaje wolne
+  // (build sprawdza to automatycznie — patrz „kontrola okładki” na dole).
+  const spots = [
+    [12, 14, 34, -12], [62, 8, 26, 8], [104, 20, 38, -4], [154, 10, 30, 14],
+    [168, 62, 34, -10], [8, 56, 28, 10], [150, 112, 40, 6], [6, 196, 34, -8],
+    [52, 214, 30, 12], [96, 204, 40, -6], [150, 196, 32, 10],
+    [88, 254, 26, -12], [124, 250, 32, 8], [168, 246, 28, -4], [160, 158, 26, -14],
+  ];
+  const skip = new Set(T.coverSkip || []);   // np. gdy dłuższy tytuł zasłoniłby ilustrację
+  const art = spots
+    .map(([x, y, s, rot], i) => {
+      if (skip.has(i)) return '';
+      const name = T.coverIcons[i % T.coverIcons.length];
+      return `<div class="cv-ic" style="left:${x}mm;top:${y}mm;width:${s}mm;height:${s}mm;transform:rotate(${rot}deg)">${iconSvg(name, { mode: 'line', stroke: '#FFFFFF' })}</div>`;
+    })
+    .join('');
+  return page(
+    `<div class="cv-art">${art}</div>
+     <div class="cv-main">
+       <span class="cv-pill">${esc(T.level)}</span>
+       <h1 class="cv-title" style="font-size:${coverTitlePt()}pt">${esc(T.title)}<span class="dot">.</span></h1>
+       <p class="cv-sub">${esc(T.subtitle)}</p>
+     </div>
+     <div class="cv-logo">${wordmarkWhite}</div>`,
+    { cls: 'cover' }
+  );
+}
+
+// Długie tytuły na okładce: mniejszy krój, żeby najdłuższe słowo zmieściło się w szerokości strony
+const coverTitlePt = () => Math.min(92, Math.floor(880 / Math.max(...T.title.split(' ').map((w) => w.length + 1))));
+
+// ---------- Słownictwo ----------
+// para kratek znam/nowe w jednym wierszu (w wersji internetowej wykluczają się nawzajem)
+let pairNo = 0;
+const marks = () => { const id = ++pairNo; return `<span class="box" data-pair="${id}"></span><span class="box" data-pair="${id}"></span>`; };
+const colLabels = '<div class="wl-cols"><span>znam</span><span>nowe</span></div>';
+const head = (g, withCols = true) =>
+  `<div class="wl-head"><div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div>${withCols ? colLabels : ''}</div>`;
+const row = ([en, pl, ic]) =>
+  `<li>${ic ? iconSvg(ic, { cls: 'wl-ic' }) : ''}<span class="wl-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks()}</li>`;
+const card = (g) => `<div class="wcard">${head(g)}<ul class="wl">${g.words.map(row).join('')}</ul></div>`;
+// Karta szeroka: lista w kilku kolumnach, każda kolumna z własnymi etykietami znam/nowe
+const wideCard = (g, items, cols) => {
+  const per = Math.ceil(items.length / cols);
+  const parts = Array.from({ length: cols }, (_, i) => items.slice(i * per, (i + 1) * per));
+  // Jedna siatka dla wszystkich kolumn: wiersze mają tę samą wysokość, więc kratki
+  // znam/nowe leżą w równych odstępach i na tej samej wysokości w każdej kolumnie.
+  const cells = parts
+    .map((p) => '<li class="cols-row">' + colLabels + '</li>' + p.map(row).join('') + '<li class="empty"></li>'.repeat(per - p.length))
+    .join('');
+  return `<div class="wcard">${head(g, false)}<ul class="wl wide" style="--cols:${cols};--rows:${per}">${cells}</ul></div>`;
+};
+
+// Dwie kolumny kart; układ (które grupy w której kolumnie) podaje plik tematu
+const vocabGrid = (cols) => !cols || !cols.length ? '' : `<div class="wl-grid">${cols.map((ids) => `<div class="wl-col">${ids.map((id) => card(G[id])).join('')}</div>`).join('')}</div>`;
+
+function vocabPage1() {
+  return page(`
+    <header class="pg-head" id="slownictwo">
+      <h2 class="pg-title">Słownictwo<span class="dot">.</span></h2>
+      <p class="lead">Zaznacz słowa i zwroty, które już znasz.</p>
+    </header>
+    ${vocabGrid(T.vocabLayout.page1)}`);
+}
+// Opcjonalna trzecia strona słowniczka (dłuższe tematy): vocabLayout.page3 / wide3 — wtedy zwroty trafiają na nią.
+const HAS_P3 = !!(T.vocabLayout.page3 || T.vocabLayout.wide3);
+const VOCAB_LAST = HAS_P3 ? 4 : 3;
+const phrasesCard = () => wideCard({ level: 'A2', en: 'Useful phrases', pl: 'przydatne zwroty' }, T.phrases, 2);
+function vocabPage2() {
+  return page(`
+    ${vocabGrid(T.vocabLayout.page2)}
+    ${(T.vocabLayout.wide || []).map(([id, cols]) => wideCard(G[id], G[id].words, cols)).join('')}
+    ${HAS_P3 ? '' : phrasesCard()}`);
+}
+function vocabPage3() {
+  return page(`
+    ${vocabGrid(T.vocabLayout.page3)}
+    ${(T.vocabLayout.wide3 || []).map(([id, cols]) => wideCard(G[id], G[id].words, cols)).join('')}
+    ${phrasesCard()}`);
+}
+
+// ---------- Ćw. 1 + 2 ----------
+function picturesPage() {
+  const cells = T.labelPictures
+    .map((ic, i) => `<div class="lp-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'lp-ic' })}<span class="line" data-ans="${esc(iconToWord[ic])}" data-item="${i + 1}"></span></div>`)
+    .join('');
+  const odd = (T.oddOneOut || [])
+    .map((r, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${r.icons.map((ic, k) => `<span class="oo-cell" data-ans="${k === r.answer ? 'on' : 'off'}" data-item="${letter(i)}">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
+    .join('');
+  return page(`
+    <div class="ex">
+      ${exHead('Podpisz obrazki. Wybierz wyrazy z ramki.')}
+      ${bankRows(shuffle(T.labelPictures.map((ic) => iconToWord[ic]), 3), T.labelRows || [6, 4], T.labelBankWide ? 'bank-wide' : '')}
+      <div class="lp-grid">${cells}</div>
+    </div>
+    ${T.matchDates ? matchExercise(T.matchDates, MD_ORDER) : T.pictureTrueFalse ? tfExercise() : `<div class="ex">
+      ${exHead('Zakreśl obrazek, który nie pasuje do pozostałych.')}
+      <div class="oo">${odd}</div>
+    </div>`}`);
+}
+
+// Ćw. 2 (wariant): czy podpis pasuje do obrazka? [ikona, podpis, poprawny podpis | null]
+function tfExercise() {
+  const cells = T.pictureTrueFalse
+    .map(([ic, cap, fix], i) => `<div class="tf-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'tf-ic' })}<p class="tf-cap">${esc(cap)}</p><div class="tf-yn"><span><i class="box" data-ans="${fix ? 'off' : 'on'}" data-item="${i + 1}"></i>tak</span><span><i class="box" data-ans="${fix ? 'on' : 'off'}" data-item="${i + 1}"></i>nie</span></div></div>`)
+    .join('');
+  return `<div class="ex">
+      ${exHead('Czy podpis pasuje do obrazka? Zaznacz TAK albo NIE.')}
+      <div class="tf-grid">${cells}</div>
+    </div>`;
+}
+
+// ---------- Ćw. 3 + 4 ----------
+const hideVowels = (w) => w.split('').map((ch, i) => (i > 0 && 'aeiou'.includes(ch) ? null : ch));
+function lettersPage() {
+  const items = (T.missingLetters || [])
+    .map((w, i) => {
+      const letters = hideVowels(w)
+        .map((ch, k) => (ch ? `<span class="ml-l">${ch}</span>` : `<span class="ml-l ml-gap" data-ans="${w[k]}" data-word="${i + 1}"></span>`))
+        .join('');
+      return `<div class="ml-item"><span class="n">${i + 1}</span>${iconSvg(wordToIcon[w], { cls: 'ml-ic' })}<span class="ml-word">${letters}</span></div>`;
+    })
+    .join('');
+  let n = 0;
+  const adjWords = (T.adjectivesGap || []).map(([t]) => t.match(/\{([^}]+)\}/)[1]);
+  const sentences = (T.adjectivesGap || [])
+    .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox('', '', t.match(/\{([^}]+)\}/)[1], n))}</p></li>`)
+    .join('');
+  return page(`
+    ${T.matchPairs ? matchExercise() : `<div class="ex">
+      ${exHead('Uzupełnij brakujące litery.')}
+      <div class="ml-grid">${items}</div>
+    </div>`}
+    ${T.sortColumns ? sortExercise() : `<div class="ex">
+      ${exHead('Uzupełnij zdania przymiotnikami z ramki.')}
+      ${bank(shuffle(adjWords, 4), 'bank-fit')}
+      <ol class="sent">${sentences}</ol>
+    </div>`}`);
+}
+
+// Ćw. 3 (wariant): połącz czasowniki z wyrazami, np. read → books
+const MP_ORDER = T.matchPairs ? shuffle(T.matchPairs.pairs.map((_, i) => i), 13) : [];
+// Ćw. 2 (wariant): połącz święta z datami — ten sam układ co łączenie w ćw. 3
+const MD_ORDER = T.matchDates ? shuffle(T.matchDates.pairs.map((_, i) => i), 17) : [];
+function matchExercise(M = T.matchPairs, ORDER = MP_ORDER) {
+  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box" data-ans="${letter(ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`).join('');
+  const right = ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span class="mp-w">${esc(M.pairs[idx][1])}</span></li>`).join('');
+  return `<div class="ex">
+      ${exHead(esc(M.instruction))}
+      <div class="mp-wrap"><ul class="mp-col">${left}</ul><ul class="mp-col">${right}</ul></div>
+    </div>`;
+}
+
+// Ćw. 4 (wariant): przyporządkuj wyrazy do kolumn, np. play / go / do
+function sortExercise() {
+  const S = T.sortColumns;
+  const all = shuffle(S.columns.flatMap((c) => c.words), 6);
+  const cols = S.columns
+    .map((c) => `<div class="sc-col"><p class="sc-head">${esc(c.head)}</p>${c.words.map(() => `<span class="line" data-grp="${esc(c.head)}" data-set="${esc(c.words.join('|'))}"></span>`).join('')}</div>`)
+    .join('');
+  return `<div class="ex">
+      ${exHead(esc(S.instruction))}
+      ${bankRows(all, S.rows)}
+      <div class="sc-grid" style="--cols:${S.columns.length}">${cols}</div>
+    </div>`;
+}
+
+// ---------- Ćw. 5: wykreślanka ----------
+const wsWord = (e) => (Array.isArray(e) ? e[0] : e);
+const wsIcon = (e) => (Array.isArray(e) ? e[1] : wordToIcon[e]);
+const WS = wordSearch(T.wordSearch.words.map((e) => wsWord(e).toUpperCase()), T.wordSearch.size, T.wordSearch.seed);
+function wordSearchPage() {
+  // do sprawdzania: które ukryte słowa przechodzą przez literę
+  const hit = {};
+  for (const p of WS.placed) for (let i = 0; i < p.word.length; i++) (hit[`${p.r + p.dr * i},${p.c + p.dc * i}`] = hit[`${p.r + p.dr * i},${p.c + p.dc * i}`] || []).push(p.word.toLowerCase());
+  const grid = WS.grid.map((r, ri) => `<div class="ws-row">${r.map((ch, ci) => `<span data-hit="${(hit[`${ri},${ci}`] || []).join(',')}">${ch}</span>`).join('')}</div>`).join('');
+  const clues = T.wordSearch.words
+    .map((e, k) => `<li>${iconSvg(wsIcon(e), { cls: 'ws-ic' })}<span class="dashes" data-ans="${esc(wsWord(e))}" data-item="${k + 1}">${wsWord(e).split('').map(() => '<i></i>').join('')}</span></li>`)
+    .join('');
+  return page(`
+    <div class="ex ex-fill">
+      ${exHead('Odszukaj w wykreślance ukryte słowa (→ ↓ ↘), a następnie podpisz obrazki.')}
+      <div class="ws-wrap"><div class="ws-grid" style="--ws-cell:${Math.min(13.4, 134 / WS.grid.length).toFixed(1)}mm">${grid}</div></div>
+      <ul class="ws-clues" style="--ws-cols:${Math.ceil(T.wordSearch.words.length / 2)}">${clues}</ul>
+    </div>`);
+}
+
+// ---------- Ćw. 6: krzyżówka (SVG — idealnie równa siatka) ----------
+const clueKey = (w) => Object.keys(T.crossword.clues).find((k) => k.toUpperCase() === w.toUpperCase());
+const CW = crossword(Object.keys(T.crossword.clues).map((w) => w.toUpperCase()), T.crossword.seed);
+function crosswordSvg(cellMm) {
+  const nums = {};
+  for (const it of CW.items) nums[`${it.r},${it.c}`] = it.n;
+  // do sprawdzania: które hasła przechodzą przez kratkę
+  const words = {};
+  for (const it of CW.items)
+    for (let k = 0; k < it.word.length; k++) {
+      const key = it.dir === 'across' ? `${it.r},${it.c + k}` : `${it.r + k},${it.c}`;
+      (words[key] = words[key] || []).push(it.n);
+    }
+  const s = 10;
+  let out = '';
+  for (let r = 0; r < CW.rows; r++)
+    for (let c = 0; c < CW.cols; c++) {
+      if (!CW.grid[r][c]) continue;
+      out += `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="#fff" stroke="#20242D" stroke-width="0.3" data-ans="${CW.grid[r][c].toLowerCase()}" data-words="${words[`${r},${c}`].join(',')}"/>`;
+      const n = nums[`${r},${c}`];
+      if (n) out += `<text x="${c * s + 0.9}" y="${r * s + 2.9}" class="cw-n">${n}</text>`;
+    }
+  return `<svg class="cw-svg" viewBox="-0.5 -0.5 ${CW.cols * s + 1} ${CW.rows * s + 1}" width="${CW.cols * cellMm}mm" height="${CW.rows * cellMm}mm" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+function crosswordPage() {
+  const list = (dir) =>
+    CW.items
+      .filter((i) => i.dir === dir)
+      .sort((a, b) => a.n - b.n)
+      .map((i) => `<li><b>${i.n}</b><span>${esc(T.crossword.clues[clueKey(i.word)]).replace(/(\S+) _+([.,?!]?)/, '<span class="nw">$1 <span class="cgap"></span>$2</span>')}</span></li>`)
+      .join('');
+  const cell = Math.min(10.5, 150 / CW.rows, 172 / CW.cols);
+  return page(`
+    <div class="ex ex-fill">
+      ${exHead('Uzupełnij zdania, a brakujące wyrazy wpisz do krzyżówki.')}
+      <div class="cw-wrap">${crosswordSvg(cell)}</div>
+      <div class="cw-clues">
+        <div><h3>Poziomo →</h3><ul>${list('across')}</ul></div>
+        <div><h3>Pionowo ↓</h3><ul>${list('down')}</ul></div>
+      </div>
+    </div>`);
+}
+
+// ---------- Ćw. 7: co powiesz? ----------
+const SIT_ORDER = shuffle(T.situations.map((_, i) => i), 9);
+function situationsPage() {
+  const left = T.situations
+    .map(([pl, , ic], i) => `<li><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'st-ic' })}<span class="st-pl">${esc(pl)}</span><span class="st-box" data-ans="${letter(SIT_ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`)
+    .join('');
+  const right = SIT_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span>${esc(T.situations[idx][1])}</span></li>`).join('');
+  return page(`
+    <div class="ex ex-fill">
+      ${exHead(esc(T.situationsInstruction || 'Co powiesz? Połącz sytuacje 1–8 ze zwrotami a–h.'))}
+      <div class="st-wrap"><ul class="st-left">${left}</ul><ul class="st-right">${right}</ul></div>
+    </div>`);
+}
+
+// ---------- Ćw. 8 + 9 ----------
+function dialogPage() {
+  const D = T.gapFill;
+  let n = 0;
+  const lines = D.lines
+    .map(([who, text]) =>
+      who
+        ? `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, (_, w) => gapBox(++n, '', w))}</p></div>`
+        : `<div class="dl-sep"><span>${esc(D.sep || '40 minut później')}</span></div>`
+    )
+    .join('');
+  return page(`
+    <div class="ex">
+      ${exHead('Uzupełnij dialog wyrazami z ramki.')}
+      ${bank(shuffle(D.bank, 7), 'bank-fit')}
+      <div class="dialog"><p class="dl-title">${esc(D.title)}</p>${lines}</div>
+    </div>
+    <div class="ex">
+      ${exHead(T.aboutYou.some(([, h]) => h) ? 'Odpowiedz na poniższe pytania. Skorzystaj z podpowiedzi.' : 'Odpowiedz na poniższe pytania.')}
+      <div class="about">${T.aboutYou
+        .map(([q, hint], i) => `<div class="about-q"><p><span class="n">${i + 1}</span>${esc(q)}${hint ? ` <span class="about-hint">${esc(hint)}</span>` : ''}</p>${'<span class="line"></span>'.repeat(T.aboutLines || 1)}</div>`)
+        .join('')}</div>
+    </div>`);
+}
+
+// ---------- Ćw. 10: mapa myśli (SVG w milimetrach) ----------
+// Środek „Food.” → gładkie, zaokrąglone gałęzie (krzywe S) do kategorii →
+// pod każdą kategorią kropkowane linie na notatki.
+// x, y = lewy górny róg ikony; nazwa zawsze po prawej stronie ikony.
+const MM_LAYOUT = [
+  { x: 14, y: 14 },   // owoce
+  { x: 120, y: 8 },   // warzywa
+  { x: 128, y: 72 },  // napoje
+  { x: 130, y: 140 }, // słodycze
+  { x: 118, y: 188 }, // przymiotniki
+  { x: 12, y: 182 },  // na stole
+  { x: 6, y: 132 },   // posiłek rano
+  { x: 6, y: 74 },    // zamów kawę
+];
+function gamePage() {
+  const W = 176, H = 228, UL = 46, NOTE = 40;
+  const C = { x: 88, y: 114, w: 50, h: 25 };
+  let branches = '', nodes = '';
+  T.game.cards.forEach(([count, label, ic], i) => {
+    const L = MM_LAYOUT[i];
+    // podkreślenie ma stałą szerokość, kropki są od strony dalszej od środka — gałąź ich nie przecina
+    const x0 = L.x, x1 = L.x + UL;
+    const uy = L.y + 13.5;
+    const right = (x0 + x1) / 2 > C.x;
+    const dotX = right ? x1 - NOTE : x0;
+    // gałąź: wychodzi poziomo z boku owalu i dochodzi poziomo do podkreślenia
+    const ax = right ? x0 : x1;
+    // start na obwodzie owalu w kierunku kategorii; wyjście promieniste, dojście poziome — łagodny łuk
+    const ang = Math.atan2(uy - C.y, ax - C.x);
+    const sx = C.x + (C.w / 2 - 1) * Math.cos(ang), sy = C.y + (C.h / 2 - 1) * Math.sin(ang);
+    const dist = Math.hypot(ax - sx, uy - sy);
+    const c1x = sx + Math.cos(ang) * dist * 0.5, c1y = sy + Math.sin(ang) * dist * 0.5;
+    const c2x = ax + (right ? -1 : 1) * Math.abs(ax - sx) * 0.9;
+    // gałąź i podkreślenie kategorii to jedna ciągła linia (bez łączenia dwóch kresek)
+    const farEnd = right ? x1 : x0;
+    branches += sketch('path', [`M ${sx} ${sy} C ${c1x} ${c1y}, ${c2x} ${uy}, ${ax} ${uy} L ${farEnd} ${uy}`], { seed: 40 + i, stroke: '#2663EB', strokeWidth: 0.7, roughness: 0.15 });
+    nodes += `<svg x="${L.x}" y="${L.y}" width="12" height="12" viewBox="-4 -4 108 108">${iconPaths(ic)}</svg>`;
+    nodes += `<text x="${L.x + 13}" y="${L.y + 8.6}" class="mm-label">${esc(label)}</text>`;
+    for (let k = 0; k < count; k++) {
+      const ly = uy + 9 + k * 9;
+      nodes += `<line x1="${dotX}" y1="${ly}" x2="${dotX + NOTE}" y2="${ly}" stroke="#9BA2B1" stroke-width="0.35" stroke-linecap="round" stroke-dasharray="0.1 1.4"/>`;
+    }
+  });
+  const center =
+    sketch('ellipse', [C.x, C.y, C.w, C.h], { seed: 9, fill: '#F2F6FE', stroke: '#2663EB', strokeWidth: 0.7, roughness: 0.4 }) +
+    `<text x="${C.x}" y="${C.y + 2.6}" class="mm-center">${esc(T.mindMapTitle || T.title)}<tspan fill="#2663EB">.</tspan></text>`;
+  return page(`
+    <div class="ex ex-fill">
+      ${exHead('Uzupełnij mapę myśli. Dopisz dowolne słowa, które pamiętasz.')}
+      <svg class="mm" viewBox="0 0 ${W} ${H}" width="${W}mm" height="${H}mm" xmlns="http://www.w3.org/2000/svg">${branches}${nodes}${center}</svg>
+    </div>`);
+}
+
+// ---------- Klucz ----------
+function keyPage() {
+  const inWS = new Set();
+  for (const p of WS.placed) for (let i = 0; i < p.word.length; i++) inWS.add(`${p.r + p.dr * i},${p.c + p.dc * i}`);
+  const wsMini = WS.grid
+    .map((r, ri) => `<div class="ws-row">${r.map((ch, c) => `<span class="${inWS.has(`${ri},${c}`) ? 'on' : ''}">${ch}</span>`).join('')}</div>`)
+    .join('');
+  const ol = (items, cols = 2) => `<ol style="columns:${cols}">${items.map((t) => `<li>${t}</li>`).join('')}</ol>`;
+  const gaps = (lines) => {
+    const out = [];
+    lines.forEach(([, t]) => t.replace(/\{([^}]+)\}/g, (_, w) => out.push(esc(w))));
+    return out;
+  };
+  const cw = (dir) => CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `<span class="nw">${i.n} ${clueKey(i.word)}</span>`).join(', ');
+  const block = (n, body) => `<div class="kb"><span class="kn">${n}</span><div class="kb-body">${body}</div></div>`;
+  return page(`
+    <h2 class="pg-title">Klucz odpowiedzi<span class="dot">.</span></h2>
+    <div class="key">
+      <div class="key-col">
+        ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
+        ${T.matchDates
+          ? block(2, `<p class="pairs">${T.matchDates.pairs.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(MD_ORDER.indexOf(i))}</span>`).join('')}</p>`)
+          : T.pictureTrueFalse
+          ? block(2, `<p>${T.pictureTrueFalse.map(([, , fix], i) => `<span class="kl">${i + 1}</span> ${fix ? `nie – ${esc(fix)}` : 'tak'}`).join('<br>')}</p>`)
+          : block(2, `<p>${T.oddOneOut.map((o, i) => `<span class="kl">${letter(i)}</span> ${esc(o.why)}`).join('<br>')}</p>`)}
+        ${T.matchPairs
+          ? block(3, `<p class="pairs">${T.matchPairs.pairs.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(MP_ORDER.indexOf(i))}</span>`).join('')}</p>`)
+          : block(3, ol(T.missingLetters.map(esc)))}
+        ${T.sortColumns
+          ? block(4, T.sortColumns.columns.map((c) => `<p><span class="kl">${esc(c.head)}</span> ${c.words.map(esc).join(', ')}</p>`).join(''))
+          : block(4, ol(gaps(T.adjectivesGap.map((t) => ['', t[0]])), 1))}
+        ${block(6, `<p><span class="kl">Poziomo</span> ${cw('across')}</p><p><span class="kl">Pionowo</span> ${cw('down')}</p>`)}
+      </div>
+      <div class="key-col">
+        ${block(5, `<div class="ws-grid ws-mini">${wsMini}</div>`)}
+        ${block(7, `<p class="pairs">${T.situations.map((_, i) => `<span><span class="kl">${i + 1}</span> ${letter(SIT_ORDER.indexOf(i))}</span>`).join('')}</p>`)}
+        ${block(8, ol(gaps(T.gapFill.lines), 1))}
+        ${block(10, `<p class="k-note">Przykładowe odpowiedzi:</p><p>${T.game.cards.map((c, i) => `<span class="kl">${esc(c[1])}:</span> ${esc(T.game.examples[i])}`).join('<br>')}</p>`)}
+      </div>
+    </div>
+    <div class="finish">
+      <p class="finish-big">Well done<span class="dot">.</span></p>
+      <p>Wróć do <a class="to-vocab" href="#slownictwo">listy słów na stronach 2–${VOCAB_LAST}</a> i sprawdź, ile pamiętasz.</p>
+    </div>`);
+}
+
+// ---------- Złożenie ----------
+const pages = [cover(), vocabPage1(), vocabPage2(), ...(HAS_P3 ? [vocabPage3()] : []), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), gamePage(), keyPage()];
+const css = readFileSync(join(ROOT, 'style.css'), 'utf8');
+const html = `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>gettinenglish · ${esc(T.title)} ${esc(T.level)}</title>
+<style>${css}</style></head><body class="${T.stackTranslations ? 'stacked' : ''}">${pages.join('\n')}</body></html>`;
+
+mkdirSync(join(ROOT, 'preview'), { recursive: true });
+mkdirSync(join(ROOT, 'out'), { recursive: true });
+const htmlPath = join(ROOT, 'preview', `${slug}.html`);
+writeFileSync(htmlPath, html);
+
+const require = createRequire(execSync('npm root -g').toString().trim() + '/');
+const { chromium } = require('playwright');
+const browser = await chromium.launch();
+const pg = await browser.newPage();
+await pg.goto(pathToFileURL(htmlPath).href, { waitUntil: 'networkidle' });
+await pg.evaluate(() => document.fonts.ready);
+const problems = await pg.evaluate(() => {
+  const mm = 96 / 25.4;
+  const out = [];
+  // 1) treść każdej strony kończy się co najmniej 8 mm nad stopką
+  document.querySelectorAll('.page').forEach((p, i) => {
+    const foot = p.querySelector('.foot');
+    if (!foot) return;
+    const max = Math.max(...[...p.querySelector('.body').querySelectorAll('*')].map((el) => el.getBoundingClientRect().bottom));
+    const room = (foot.getBoundingClientRect().top - max) / mm;
+    if (room < 8) out.push(`strona ${i + 1}: odstęp od stopki tylko ${room.toFixed(1)} mm`);
+  });
+  // 2) kontrola okładki: ilustracje nie mogą dotykać logo ani tytułu (margines 4 mm)
+  const cov = document.querySelector('.cover');
+  const keep = [cov.querySelector('.cv-logo svg'), cov.querySelector('.cv-main')].map((el) => el.getBoundingClientRect());
+  cov.querySelectorAll('.cv-ic').forEach((ic, k) => {
+    const a = ic.getBoundingClientRect();
+    for (const b of keep) {
+      const m = 4 * mm;
+      if (a.left < b.right + m && a.right > b.left - m && a.top < b.bottom + m && a.bottom > b.top - m) out.push(`okładka: ilustracja ${k + 1} za blisko logo/tytułu`);
+    }
+  });
+  return out;
+});
+const pdfPath = join(ROOT, 'out', `gettinenglish-${slug}.pdf`);
+const pdfOpts = { format: 'A4', printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } };
+await pg.pdf({ path: pdfPath, ...pdfOpts });
+
+// ---------- Wersja interaktywna ----------
+// Przyciski „Sprawdź” / „Wyczyść” i wersja internetowa są wyłączone (decyzja: e-booki bez automatycznego
+// sprawdzania — kursant tylko wpisuje i zaznacza). Włączenie: CHECK_BUTTONS = true.
+const CHECK_BUTTONS = false;
+// Pod każdym ćwiczeniem, które da się sprawdzić automatycznie, pojawia się pole wyniku
+// i przyciski „Sprawdź” / „Wyczyść” (rysowane w HTML, klikalne dzięki polom PDF).
+// Następnie zbieramy położenia wszystkich pól (mm od lewego górnego rogu strony)
+// razem z odpowiedziami z klucza (atrybuty data-*), a add-fields.py dodaje formularz.
+const interactive = await pg.evaluate((CHECK_BUTTONS) => {
+  const mm = 96 / 25.4;
+  document.body.classList.add('interactive');
+  const CHECKABLE = '[data-ans], [data-grp], [data-hit]';
+  const head = document.querySelector('#slownictwo');
+  if (head && CHECK_BUTTONS) head.insertAdjacentHTML('beforeend', '<p class="i-hint">Wersja interaktywna: wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Sprawdzanie działa najlepiej w Adobe Acrobat Reader.</p>');
+  document.querySelectorAll('.ex').forEach((ex) => {
+    if (!CHECK_BUTTONS || !ex.querySelector(CHECKABLE)) return;
+    ex.insertAdjacentHTML('beforeend', '<div class="chk-ui"><span class="chk-score"></span><span class="chk-btn" data-act="check">Sprawdź</span><span class="chk-btn chk-clear" data-act="clear">Wyczyść</span></div>');
+  });
+  const out = [];
+  const warn = [];
+  document.querySelectorAll('.page').forEach((p, pi) => {
+    if (p.querySelector('.key') || p.classList.contains('cover')) return;
+    const P = p.getBoundingClientRect();
+    const foot = p.querySelector('.foot');
+    const add = (el, type, opts = {}) => {
+      const r = el.getBoundingClientRect();
+      let { left: x, top: y, width: w, height: h } = r;
+      if (opts.above) { y = r.bottom - opts.above * mm; h = opts.above * mm + 0.4 * mm; }
+      const exEl = el.closest('.ex');
+      const d = el.dataset || {};
+      out.push({
+        page: pi, type, x: (x - P.left) / mm, y: (y - P.top) / mm, w: w / mm, h: h / mm, ...opts,
+        ex: exEl ? Number(exEl.querySelector('.ex-num').textContent) : null,
+        ans: d.ans, item: d.item, grp: d.grp, set: d.set, words: d.words, word: d.word, hit: d.hit, act: d.act, pair: d.pair,
+      });
+    };
+    p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
+    p.querySelectorAll('.st-box').forEach((el) => add(el, 'letter', { center: true }));
+    p.querySelectorAll('.ml-gap').forEach((el) => add(el, 'letter', { center: true, fs: 10.5 }));
+    p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));
+    p.querySelectorAll('.lp-cell .line, .sc-col .line, .about-q .line').forEach((el) => add(el, 'text', { above: 6.5 }));
+    p.querySelectorAll('.dashes').forEach((el) => add(el, 'text', { above: 6, center: true }));
+    p.querySelectorAll('.gap').forEach((el) => add(el, 'text', { inset: 3.2 }));
+    p.querySelectorAll('.mm line').forEach((el) => add(el, 'text', { above: 6, small: true }));
+    // „co nie pasuje”: kliknięcie obrazka rysuje wokół niego niebieską obwódkę (zakreślenie)
+    p.querySelectorAll('.oo-cell').forEach((el) => add(el, 'ring'));
+    // wykreślanka: każda litera to przełącznik z półprzezroczystym „zakreśleniem”
+    p.querySelectorAll('.ws-grid:not(.ws-mini) .ws-row span').forEach((el) => add(el, 'mark'));
+    p.querySelectorAll('.chk-score').forEach((el) => add(el, 'score'));
+    p.querySelectorAll('.chk-btn').forEach((el) => add(el, 'btn'));
+    // kontrola: przyciski nie mogą wchodzić na stopkę
+    if (foot) p.querySelectorAll('.chk-ui').forEach((el) => {
+      if (el.getBoundingClientRect().bottom > foot.getBoundingClientRect().top - 2 * mm) warn.push(`strona ${pi + 1}: przyciski za blisko stopki`);
+    });
+  });
+  return { fields: out, warn };
+}, CHECK_BUTTONS);
+const formBase = join(ROOT, 'preview', `${slug}-interaktywny-baza.pdf`);
+await pg.pdf({ path: formBase, ...pdfOpts });
+writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(interactive.fields));
+problems.push(...interactive.warn);
+
+// ---------- Wersja internetowa (HTML) ----------
+// Te same strony, a na nich prawdziwe pola i przełączniki w miejscach pól PDF;
+// sprawdzanie działa w każdej przeglądarce (telefon, tablet, komputer).
+if (CHECK_BUTTONS) {
+const webBody = await pg.evaluate(({ fields, slug }) => {
+  const pages = [...document.querySelectorAll('.page')];
+  const hint = document.querySelector('.i-hint');
+  if (hint) hint.innerHTML = 'Wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Odpowiedzi zapisują się w tej przeglądarce.';
+  const exAttrs = (f) => ['ex', 'ans', 'item', 'grp', 'set', 'words', 'word', 'hit']
+    .filter((k) => f[k] !== undefined && f[k] !== null && f[k] !== '')
+    .map((k) => ` data-${k}="${String(f[k]).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`).join('');
+  fields.forEach((f, i) => {
+    if (f.type === 'btn' || f.type === 'score') return;
+    const inset = f.inset || 0;
+    const y = f.y + f.h * (f.padTop || 0), h = f.h * (1 - (f.padTop || 0));
+    const pos = `left:${(f.x + inset).toFixed(2)}mm;top:${y.toFixed(2)}mm;width:${(f.w - inset).toFixed(2)}mm;height:${h.toFixed(2)}mm`;
+    let html;
+    if (['check', 'mark', 'ring'].includes(f.type)) {
+      const group = f.pair ? `v${f.pair}` : f.type !== 'mark' && f.ans ? `${f.type}-${f.ex}-${f.item}` : '';
+      const label = f.type === 'mark' ? 'zaznacz literę' : f.type === 'ring' ? 'zakreśl obrazek' : 'zaznacz';
+      html = `<button type="button" id="f${i}" class="fx fx-tg fx-${f.type}" aria-pressed="false" aria-label="${label}" style="${pos}"${group ? ` data-group="${group}"` : ''}${exAttrs(f)}></button>`;
+    } else {
+      const cls = ['fx', 'fx-in'];
+      if (f.type === 'letter') cls.push('fx-letter');
+      if (f.words) cls.push('fx-cw');
+      if (f.small) cls.push('fx-small');
+      if (f.center) cls.push('fx-c');
+      const cwPos = f.words ? ` data-cx="${Math.round(f.x / f.w)}" data-cy="${Math.round(f.y / f.h)}"` : '';
+      html = `<input type="text" id="f${i}" class="${cls.join(' ')}" style="${pos}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="odpowiedź"${f.type === 'letter' ? ' maxlength="1"' : ''}${cwPos}${exAttrs(f)}>`;
+    }
+    pages[f.page].insertAdjacentHTML('beforeend', html);
+  });
+  document.querySelectorAll('.chk-ui').forEach((ui) => {
+    const ex = ui.closest('.ex').querySelector('.ex-num').textContent;
+    ui.querySelector('.chk-score').setAttribute('data-ex', ex);
+    ui.querySelector('.chk-score').setAttribute('aria-live', 'polite');
+    ui.querySelectorAll('.chk-btn').forEach((b) => { b.setAttribute('data-ex', ex); b.setAttribute('role', 'button'); b.setAttribute('tabindex', '0'); });
+  });
+  const stack = document.createElement('main');
+  stack.className = `web-stack ${document.body.className}`;
+  stack.setAttribute('data-slug', slug);
+  pages.forEach((p) => stack.appendChild(p));
+  return stack.outerHTML;
+}, { fields: interactive.fields, slug });
+{
+  const fontsLink = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">';
+  const pageCss = css.replace(/@font-face\s*\{[^}]*\}\s*/g, '');
+  const web = `<title>${esc(T.title)} ${esc(T.level)}</title>\n${fontsLink}\n<style>${pageCss}\n${readFileSync(join(ROOT, 'web.css'), 'utf8')}</style>\n${webBody}\n<script>${readFileSync(join(ROOT, 'web-client.js'), 'utf8')}</script>\n`;
+  const webPath = join(ROOT, 'out', `gettinenglish-${slug}-web.html`);
+  writeFileSync(webPath, web);
+  console.log(`Wersja internetowa: ${webPath}  (${(web.length / 1024 / 1024).toFixed(1)} MB)`);
+}
+}
+await browser.close();
+console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
+// Wersja interaktywna: ten sam PDF + pola do wpisywania i zaznaczania (PyMuPDF)
+const formPath = join(ROOT, 'out', `gettinenglish-${slug}-interaktywny.pdf`);
+console.log(execSync(`python3 "${join(ROOT, 'add-fields.py')}" "${formBase}" "${join(ROOT, 'preview', `${slug}-fields.json`)}" "${formPath}"`).toString().trim());
+if (problems.length) console.log('UWAGA:\n' + problems.join('\n'));
