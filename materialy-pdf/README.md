@@ -52,7 +52,8 @@ Build wymaga Playwright z Chromium.
   w krzyżówce (po jednej literze w kratce) i na mapie myśli. Klucz odpowiedzi nie ma pól.
 Pola dodaje `add-fields.py` (PyMuPDF) na podstawie położeń zebranych w `build.mjs`.
 
-### Sprawdzanie odpowiedzi (wersja interaktywna)
+### Sprawdzanie odpowiedzi (wersja interaktywna) — obecnie WYŁĄCZONE (`CHECK_BUTTONS = false` w build.mjs)
+Decyzja: e-booki bez automatycznego sprawdzania; kursant tylko wpisuje i zaznacza, a odpowiedzi ma w kluczu.
 Pod każdym ćwiczeniem, które da się ocenić automatycznie (1–8), są przyciski **Sprawdź** i **Wyczyść**
 oraz pole wyniku, np. `7/8   popraw: 2` albo `8/8   Brawo!`. Dobre odpowiedzi zmieniają kolor na zielony,
 błędne na czerwony. Odpowiedzi pochodzą z klucza: `build.mjs` zapisuje je w atrybutach `data-*`
@@ -60,7 +61,7 @@ błędne na czerwony. Odpowiedzi pochodzą z klucza: `build.mjs` zapisuje je w a
 a `add-fields.py` zamienia je na JavaScript przycisków. Słowniczek, zad. 9 i mapa myśli nie są oceniane.
 Działa w Adobe Acrobat Reader; w Firefoksie/Chrome/Edge zwykle też, w Podglądzie (Mac/iOS) nie.
 
-## Wersja internetowa (sprawdzanie w każdej przeglądarce)
+## Wersja internetowa (sprawdzanie w każdej przeglądarce) — obecnie WYŁĄCZONA (`CHECK_BUTTONS = false`)
 `node build.mjs <slug>` tworzy też `out/gettinenglish-<slug>-web.html`: te same strony co w PDF,
 dopasowane do szerokości ekranu, z polami do wpisywania, zaznaczaniem (wykreślanka, tak/nie, obrazki,
 znam/nowe) i przyciskami **Sprawdź** / **Wyczyść** pod ćwiczeniami. Odpowiedzi zapisują się w przeglądarce

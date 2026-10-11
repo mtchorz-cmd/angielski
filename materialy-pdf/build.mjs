@@ -452,18 +452,21 @@ const pdfOpts = { format: 'A4', printBackground: true, preferCSSPageSize: true, 
 await pg.pdf({ path: pdfPath, ...pdfOpts });
 
 // ---------- Wersja interaktywna ----------
+// Przyciski „Sprawdź” / „Wyczyść” i wersja internetowa są wyłączone (decyzja: e-booki bez automatycznego
+// sprawdzania — kursant tylko wpisuje i zaznacza). Włączenie: CHECK_BUTTONS = true.
+const CHECK_BUTTONS = false;
 // Pod każdym ćwiczeniem, które da się sprawdzić automatycznie, pojawia się pole wyniku
 // i przyciski „Sprawdź” / „Wyczyść” (rysowane w HTML, klikalne dzięki polom PDF).
 // Następnie zbieramy położenia wszystkich pól (mm od lewego górnego rogu strony)
 // razem z odpowiedziami z klucza (atrybuty data-*), a add-fields.py dodaje formularz.
-const interactive = await pg.evaluate(() => {
+const interactive = await pg.evaluate((CHECK_BUTTONS) => {
   const mm = 96 / 25.4;
   document.body.classList.add('interactive');
   const CHECKABLE = '[data-ans], [data-grp], [data-hit]';
   const head = document.querySelector('#slownictwo');
-  if (head) head.insertAdjacentHTML('beforeend', '<p class="i-hint">Wersja interaktywna: wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Sprawdzanie działa najlepiej w Adobe Acrobat Reader.</p>');
+  if (head && CHECK_BUTTONS) head.insertAdjacentHTML('beforeend', '<p class="i-hint">Wersja interaktywna: wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Sprawdzanie działa najlepiej w Adobe Acrobat Reader.</p>');
   document.querySelectorAll('.ex').forEach((ex) => {
-    if (!ex.querySelector(CHECKABLE)) return;
+    if (!CHECK_BUTTONS || !ex.querySelector(CHECKABLE)) return;
     ex.insertAdjacentHTML('beforeend', '<div class="chk-ui"><span class="chk-score"></span><span class="chk-btn" data-act="check">Sprawdź</span><span class="chk-btn chk-clear" data-act="clear">Wyczyść</span></div>');
   });
   const out = [];
@@ -503,7 +506,7 @@ const interactive = await pg.evaluate(() => {
     });
   });
   return { fields: out, warn };
-});
+}, CHECK_BUTTONS);
 const formBase = join(ROOT, 'preview', `${slug}-interaktywny-baza.pdf`);
 await pg.pdf({ path: formBase, ...pdfOpts });
 writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(interactive.fields));
@@ -512,6 +515,7 @@ problems.push(...interactive.warn);
 // ---------- Wersja internetowa (HTML) ----------
 // Te same strony, a na nich prawdziwe pola i przełączniki w miejscach pól PDF;
 // sprawdzanie działa w każdej przeglądarce (telefon, tablet, komputer).
+if (CHECK_BUTTONS) {
 const webBody = await pg.evaluate(({ fields, slug }) => {
   const pages = [...document.querySelectorAll('.page')];
   const hint = document.querySelector('.i-hint');
@@ -560,6 +564,7 @@ const webBody = await pg.evaluate(({ fields, slug }) => {
   const webPath = join(ROOT, 'out', `gettinenglish-${slug}-web.html`);
   writeFileSync(webPath, web);
   console.log(`Wersja internetowa: ${webPath}  (${(web.length / 1024 / 1024).toFixed(1)} MB)`);
+}
 }
 await browser.close();
 console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
