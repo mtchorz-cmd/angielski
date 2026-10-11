@@ -180,26 +180,26 @@ export default {
     title: 'Christmas plans',
     bank: ['spending', 'traditions', 'wafers', 'Mass', 'carols', 'Boxing', 'same'],
     lines: [
-      ['Emma', 'Where are you {spending} Christmas this year, Tom?'],
-      ['Tom', "At my grandparents' house in the mountains. The whole family will be there. And you?"],
-      ['Emma', "We're staying at home. Do you have any special {traditions}?"],
-      ['Tom', 'Yes, lots! On Christmas Eve, we share {wafers} before dinner, and then we go to Midnight {Mass}.'],
-      ['Emma', 'That sounds lovely. In my family, we always sing {carols} together after dinner.'],
-      ['Tom', 'Do you open your presents on Christmas Eve?'],
-      ['Emma', 'No, we open them on Christmas Day, in the morning. Then on {Boxing} Day, we visit our cousins.'],
-      ['Tom', 'Well, I have to go. Merry Christmas, Emma!'],
+      ['Emma', 'So, where are you {spending} Christmas this year?'],
+      ['Tom', "At my grandparents' in the mountains. The whole family's going to be there. What about you?"],
+      ['Emma', "We're staying at home this year. Do you have any family {traditions}?"],
+      ['Tom', 'Loads! On Christmas Eve, we share {wafers} before dinner, and then we all go to Midnight {Mass}.'],
+      ['Emma', 'Oh, that sounds lovely. We usually just sing {carols} and eat far too much!'],
+      ['Tom', 'That sounds like my family! When do you open your presents?'],
+      ['Emma', 'On Christmas morning. And on {Boxing} Day, we always visit our cousins.'],
+      ['Tom', "Nice! Anyway, I'd better go. Merry Christmas, Emma!"],
       ['Emma', 'Thanks, {same} to you!'],
     ],
   },
 
-  // Ćw. 9 — pytania
+  // Ćw. 9 — pytania (urodziny i święta ogólnie)
   aboutYou: [
-    ['Where are you spending Christmas this year?'],
-    ['Do you have any Christmas traditions?'],
-    ["What do you usually do on New Year's Eve?"],
-    ['When is your birthday?'],
-    ['How do you celebrate your birthday?'],
-    ['Do you send Christmas cards?'],
+    ['When is your birthday, and how do you usually celebrate it?'],
+    ['What is the best birthday present you have ever got?'],
+    ['Do you prefer big birthday parties or quiet celebrations with your family?'],
+    ['Which holiday do you enjoy most, and why?'],
+    ['Do you have any special holiday traditions in your family?'],
+    ['Have you ever celebrated a holiday abroad? What was it like?'],
   ],
 
   // Ćw. 10 — mapa myśli: [liczba linii, kategoria, ikona]
