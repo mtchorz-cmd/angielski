@@ -320,7 +320,7 @@ function dialogPage() {
     <div class="ex">
       ${exHead(T.aboutYou.some(([, h]) => h) ? 'Odpowiedz na poniższe pytania. Skorzystaj z podpowiedzi.' : 'Odpowiedz na poniższe pytania.')}
       <div class="about">${T.aboutYou
-        .map(([q, hint], i) => `<div class="about-q"><p><span class="n">${i + 1}</span>${esc(q)}${hint ? ` <span class="about-hint">${esc(hint)}</span>` : ''}</p><span class="line"></span></div>`)
+        .map(([q, hint], i) => `<div class="about-q"><p><span class="n">${i + 1}</span>${esc(q)}${hint ? ` <span class="about-hint">${esc(hint)}</span>` : ''}</p>${'<span class="line"></span>'.repeat(T.aboutLines || 1)}</div>`)
         .join('')}</div>
     </div>`);
 }

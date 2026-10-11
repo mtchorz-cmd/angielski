@@ -192,14 +192,13 @@ export default {
     ],
   },
 
-  // Ćw. 9 — pytania (urodziny i święta ogólnie)
+  // Ćw. 9 — pytania; po 2 linie na odpowiedź
+  aboutLines: 2,
   aboutYou: [
-    ['When is your birthday, and how do you usually celebrate it?'],
-    ['What is the best birthday present you have ever got?'],
-    ['Do you prefer big birthday parties or quiet celebrations with your family?'],
-    ['Which holiday do you enjoy most, and why?'],
-    ['Do you have any special holiday traditions in your family?'],
-    ['Have you ever celebrated a holiday abroad? What was it like?'],
+    ['How do you celebrate your birthday?'],
+    ['What do you like most about Christmas?'],
+    ['What are you going to do on New Year’s Eve?'],
+    ['Are New Year’s resolutions a waste of time? Why / why not?'],
   ],
 
   // Ćw. 10 — mapa myśli: [liczba linii, kategoria, ikona]
