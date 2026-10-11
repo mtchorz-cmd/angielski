@@ -41,7 +41,7 @@ export default {
         ['decorate the Christmas tree', 'ubierać choinkę', 'christmastree'], ['Christmas decorations', 'ozdoby świąteczne', 'decorations'],
         ['Christmas ball', 'bombka na choinkę', 'bauble'], ['fairy lights', 'lampki choinkowe', 'lights'],
         ['wreath', 'wieniec', 'wreath'], ['mistletoe', 'jemioła', 'mistletoe'],
-        ['Christmas stocking', 'skarpeta na prezenty', 'stocking'], ['gingerbread cookies', 'pierniczki', 'gingerbread'],
+        ['Christmas stocking', 'skarpeta na prezenty', 'stocking'], ['gingerbread biscuits', 'pierniczki', 'gingerbread'],
       ],
     },
     easter: {
@@ -133,7 +133,7 @@ export default {
     instruction: 'Dopasuj wyrazy z ramki do właściwej kolumny.',
     rows: [5, 4],
     columns: [
-      { head: 'Christmas', words: ['mistletoe', 'wreath', 'gingerbread cookies'] },
+      { head: 'Christmas', words: ['mistletoe', 'wreath', 'gingerbread biscuits'] },
       { head: 'Easter', words: ['Good Friday', 'egg hunt', 'Lent'] },
       { head: 'New Year', words: ['house party', 'toast', 'fireworks'] },
     ],
