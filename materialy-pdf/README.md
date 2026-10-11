@@ -68,7 +68,7 @@ znam/nowe) i przyciskami **Sprawdź** / **Wyczyść** pod ćwiczeniami. Odpowied
 kursanta (localStorage). Wygląd: `web.css`, logika: `web-client.js`; odpowiedzi z tych samych atrybutów `data-*`
 co wersja PDF. Plik publikuje się jako stronę (Artifact) i udostępnia kursantom link.
 
-## Holidays and celebrations A1–A2 (`topics/holidays-a1-a2.mjs`)
+## Holidays and celebrations A2–B1 (`topics/holidays-a2-b1.mjs`)
 Podział: Christmas, Easter, New Year, Other holidays, Family celebrations + 14 zwrotów/życzeń.
 Nowe opcje generatora: `matchDates` (ćw. 2 — łączenie świąt z datami), `situationsInstruction`,
 `gapFill.sep` (tekst przerywnika w dialogu), `mindMapTitle`; tytuł okładki zmniejsza się sam przy długich słowach,

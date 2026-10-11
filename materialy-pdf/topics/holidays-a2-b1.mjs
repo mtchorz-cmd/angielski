@@ -1,4 +1,4 @@
-// Temat: Holidays and celebrations · poziom A1–A2.
+// Temat: Holidays and celebrations · poziom A2–B1.
 // Kolokacja: [en, pl, ikona]. Zwrot: [en, pl].
 // Podział: osobno Boże Narodzenie, Wielkanoc, Nowy Rok, inne święta i uroczystości rodzinne.
 // Pokrycie słownictwa w ćwiczeniach (ćw. 1, 4, 6, 8 — rozłączne pule wpisywanych wyrazów):
@@ -7,11 +7,11 @@
 //  ćw. 4 – Christmas / Easter / New Year, ćw. 6 – celebrate, guests, anniversary, reception, wish, Easter, Christmas, Santa, Communion
 //  ćw. 7 – życzenia, ćw. 8 – zaproszenie na urodziny, ćw. 5 – utrwalenie rzeczowników
 export default {
-  slug: 'holidays-a1-a2',
+  slug: 'holidays-a2-b1',
   title: 'Holidays and celebrations',
   subtitle: 'Ćwiczenia leksykalne',
-  level: 'A1–A2',
-  footer: 'Holidays and celebrations · A1–A2',
+  level: 'A2–B1',
+  footer: 'Holidays and celebrations · A2–B1',
   mindMapTitle: 'Holidays',
   stackTranslations: true,
   coverSkip: [4, 6, 14],
