@@ -59,3 +59,10 @@ błędne na czerwony. Odpowiedzi pochodzą z klucza: `build.mjs` zapisuje je w a
 (`data-ans`, kolumny `data-grp`/`data-set`, krzyżówka `data-words`, wykreślanka `data-hit`),
 a `add-fields.py` zamienia je na JavaScript przycisków. Słowniczek, zad. 9 i mapa myśli nie są oceniane.
 Działa w Adobe Acrobat Reader; w Firefoksie/Chrome/Edge zwykle też, w Podglądzie (Mac/iOS) nie.
+
+## Wersja internetowa (sprawdzanie w każdej przeglądarce)
+`node build.mjs <slug>` tworzy też `out/gettinenglish-<slug>-web.html`: te same strony co w PDF,
+dopasowane do szerokości ekranu, z polami do wpisywania, zaznaczaniem (wykreślanka, tak/nie, obrazki,
+znam/nowe) i przyciskami **Sprawdź** / **Wyczyść** pod ćwiczeniami. Odpowiedzi zapisują się w przeglądarce
+kursanta (localStorage). Wygląd: `web.css`, logika: `web-client.js`; odpowiedzi z tych samych atrybutów `data-*`
+co wersja PDF. Plik publikuje się jako stronę (Artifact) i udostępnia kursantom link.

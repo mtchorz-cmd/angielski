@@ -85,12 +85,14 @@ function cover() {
 }
 
 // ---------- Słownictwo ----------
-const marks = '<span class="box"></span><span class="box"></span>';
+// para kratek znam/nowe w jednym wierszu (w wersji internetowej wykluczają się nawzajem)
+let pairNo = 0;
+const marks = () => { const id = ++pairNo; return `<span class="box" data-pair="${id}"></span><span class="box" data-pair="${id}"></span>`; };
 const colLabels = '<div class="wl-cols"><span>znam</span><span>nowe</span></div>';
 const head = (g, withCols = true) =>
   `<div class="wl-head"><div class="wl-t"><b>${esc(g.en)}</b><span class="pl">${esc(g.pl)}</span></div>${withCols ? colLabels : ''}</div>`;
 const row = ([en, pl, ic]) =>
-  `<li>${ic ? iconSvg(ic, { cls: 'wl-ic' }) : ''}<span class="wl-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks}</li>`;
+  `<li>${ic ? iconSvg(ic, { cls: 'wl-ic' }) : ''}<span class="wl-txt"><span class="wl-en">${esc(en)}</span><span class="wl-pl">${esc(pl)}</span></span>${marks()}</li>`;
 const card = (g) => `<div class="wcard">${head(g)}<ul class="wl">${g.words.map(row).join('')}</ul></div>`;
 // Karta szeroka: lista w kilku kolumnach, każda kolumna z własnymi etykietami znam/nowe
 const wideCard = (g, items, cols) => {
@@ -479,7 +481,7 @@ const interactive = await pg.evaluate(() => {
       out.push({
         page: pi, type, x: (x - P.left) / mm, y: (y - P.top) / mm, w: w / mm, h: h / mm, ...opts,
         ex: exEl ? Number(exEl.querySelector('.ex-num').textContent) : null,
-        ans: d.ans, item: d.item, grp: d.grp, set: d.set, words: d.words, word: d.word, hit: d.hit, act: d.act,
+        ans: d.ans, item: d.item, grp: d.grp, set: d.set, words: d.words, word: d.word, hit: d.hit, act: d.act, pair: d.pair,
       });
     };
     p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
@@ -506,6 +508,59 @@ const formBase = join(ROOT, 'preview', `${slug}-interaktywny-baza.pdf`);
 await pg.pdf({ path: formBase, ...pdfOpts });
 writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(interactive.fields));
 problems.push(...interactive.warn);
+
+// ---------- Wersja internetowa (HTML) ----------
+// Te same strony, a na nich prawdziwe pola i przełączniki w miejscach pól PDF;
+// sprawdzanie działa w każdej przeglądarce (telefon, tablet, komputer).
+const webBody = await pg.evaluate(({ fields, slug }) => {
+  const pages = [...document.querySelectorAll('.page')];
+  const hint = document.querySelector('.i-hint');
+  if (hint) hint.innerHTML = 'Wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Odpowiedzi zapisują się w tej przeglądarce.';
+  const exAttrs = (f) => ['ex', 'ans', 'item', 'grp', 'set', 'words', 'word', 'hit']
+    .filter((k) => f[k] !== undefined && f[k] !== null && f[k] !== '')
+    .map((k) => ` data-${k}="${String(f[k]).replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"`).join('');
+  fields.forEach((f, i) => {
+    if (f.type === 'btn' || f.type === 'score') return;
+    const inset = f.inset || 0;
+    const y = f.y + f.h * (f.padTop || 0), h = f.h * (1 - (f.padTop || 0));
+    const pos = `left:${(f.x + inset).toFixed(2)}mm;top:${y.toFixed(2)}mm;width:${(f.w - inset).toFixed(2)}mm;height:${h.toFixed(2)}mm`;
+    let html;
+    if (['check', 'mark', 'ring'].includes(f.type)) {
+      const group = f.pair ? `v${f.pair}` : f.type !== 'mark' && f.ans ? `${f.type}-${f.ex}-${f.item}` : '';
+      const label = f.type === 'mark' ? 'zaznacz literę' : f.type === 'ring' ? 'zakreśl obrazek' : 'zaznacz';
+      html = `<button type="button" id="f${i}" class="fx fx-tg fx-${f.type}" aria-pressed="false" aria-label="${label}" style="${pos}"${group ? ` data-group="${group}"` : ''}${exAttrs(f)}></button>`;
+    } else {
+      const cls = ['fx', 'fx-in'];
+      if (f.type === 'letter') cls.push('fx-letter');
+      if (f.words) cls.push('fx-cw');
+      if (f.small) cls.push('fx-small');
+      if (f.center) cls.push('fx-c');
+      const cwPos = f.words ? ` data-cx="${Math.round(f.x / f.w)}" data-cy="${Math.round(f.y / f.h)}"` : '';
+      html = `<input type="text" id="f${i}" class="${cls.join(' ')}" style="${pos}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="odpowiedź"${f.type === 'letter' ? ' maxlength="1"' : ''}${cwPos}${exAttrs(f)}>`;
+    }
+    pages[f.page].insertAdjacentHTML('beforeend', html);
+  });
+  document.querySelectorAll('.chk-ui').forEach((ui) => {
+    const ex = ui.closest('.ex').querySelector('.ex-num').textContent;
+    ui.querySelector('.chk-score').setAttribute('data-ex', ex);
+    ui.querySelector('.chk-score').setAttribute('aria-live', 'polite');
+    ui.querySelectorAll('.chk-btn').forEach((b) => { b.setAttribute('data-ex', ex); b.setAttribute('role', 'button'); b.setAttribute('tabindex', '0'); });
+  });
+  const stack = document.createElement('main');
+  stack.className = `web-stack ${document.body.className}`;
+  stack.setAttribute('data-slug', slug);
+  pages.forEach((p) => stack.appendChild(p));
+  return stack.outerHTML;
+}, { fields: interactive.fields, slug });
+{
+  const fontsLink = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+    + '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap">';
+  const pageCss = css.replace(/@font-face\s*\{[^}]*\}\s*/g, '');
+  const web = `<title>${esc(T.title)} ${esc(T.level)}</title>\n${fontsLink}\n<style>${pageCss}\n${readFileSync(join(ROOT, 'web.css'), 'utf8')}</style>\n${webBody}\n<script>${readFileSync(join(ROOT, 'web-client.js'), 'utf8')}</script>\n`;
+  const webPath = join(ROOT, 'out', `gettinenglish-${slug}-web.html`);
+  writeFileSync(webPath, web);
+  console.log(`Wersja internetowa: ${webPath}  (${(web.length / 1024 / 1024).toFixed(1)} MB)`);
+}
 await browser.close();
 console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
 // Wersja interaktywna: ten sam PDF + pola do wpisywania i zaznaczania (PyMuPDF)
