@@ -25,7 +25,7 @@ Windows: polecenia te same (PowerShell); `python` zamiast `python3`, jeśli tak 
 |---|---|---|
 | Food · A1–A2 | `food-a1-a2.mjs` | gotowy |
 | Free time · A1–A2 | `free-time-a1-a2.mjs` | gotowy |
-| Holidays and celebrations · A2–B1 | `holidays-a2-b1.mjs` | wersja 6 — gotowy (gingerbread biscuits) |
+| Holidays and celebrations · A2–B1 | `holidays-a2-b1.mjs` | wersja 7 — gotowy |
 
 Każdy build tworzy dwie wersje: do druku i `-interaktywny` (pola do wpisywania, kratki do zaznaczania,
 zakreślanie liter w wykreślance, zakreślanie obrazków; bez automatycznego sprawdzania — `CHECK_BUTTONS = false`).
@@ -54,4 +54,6 @@ zakreślanie liter w wykreślance, zakreślanie obrazków; bez automatycznego sp
 ## Decyzje autora (Holidays, 2026-10-11)
 
 - `gingerbread cookies` → `gingerbread biscuits` (BrE) — wprowadzone.
-- `Christmas ball` i `Women's Day` — zostają bez zmian.
+- `Women's Day` → `International Women's Day` (słowniczek, zad. 2, klucz zad. 10) — wprowadzone.
+- `Christmas ball` — zostaje bez zmian.
+- Dialog (zad. 8): bez „Loads!” (→ „Yes, quite a few.”), wykrzykniki tylko w życzeniach ze słowniczka.

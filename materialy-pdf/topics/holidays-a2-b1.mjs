@@ -69,7 +69,7 @@ export default {
       level: 'A1', en: 'Other holidays', pl: 'inne święta',
       words: [
         ['bank holiday', 'dzień ustawowo wolny od pracy', 'calendar'], ["Valentine's Day", 'walentynki', 'heart'],
-        ["Women's Day", 'Dzień Kobiet', 'tulip'], ["April Fool's Day", 'prima aprilis', 'jester'],
+        ["International Women's Day", 'Dzień Kobiet', 'tulip'], ["April Fool's Day", 'prima aprilis', 'jester'],
         ['Labour Day', 'Święto Pracy', 'tools'], ["Mother's Day / Father's Day", 'Dzień Matki / Ojca', 'mugheart'],
         ["Children's Day", 'Dzień Dziecka', 'teddy'], ['Corpus Christi', 'Boże Ciało', 'banner'],
         ["All Saints' Day", 'Wszystkich Świętych', 'candle'], ['Independence Day', 'Święto Niepodległości', 'flag'],
@@ -116,7 +116,7 @@ export default {
     instruction: 'Kiedy obchodzimy te święta? Połącz je z datami (a–h).',
     pairs: [
       ['Christmas Eve', '24 December'], ['Boxing Day', '26 December'], ["Valentine's Day", '14 February'],
-      ["Women's Day", '8 March'], ["April Fool's Day", '1 April'], ["Children's Day", '1 June'],
+      ["International Women's Day", '8 March'], ["April Fool's Day", '1 April'], ["Children's Day", '1 June'],
       ["All Saints' Day", '1 November'], ['Independence Day (in Poland)', '11 November'],
     ],
   },
@@ -183,11 +183,11 @@ export default {
       ['Emma', 'So, where are you {spending} Christmas this year?'],
       ['Tom', "At my grandparents' in the mountains. The whole family's going to be there. What about you?"],
       ['Emma', "We're staying at home this year. Do you have any family {traditions}?"],
-      ['Tom', 'Loads! On Christmas Eve, we share {wafers} before dinner, and then we all go to Midnight {Mass}.'],
-      ['Emma', 'Oh, that sounds lovely. We usually just sing {carols} and eat far too much!'],
-      ['Tom', 'That sounds like my family! When do you open your presents?'],
+      ['Tom', 'Yes, quite a few. On Christmas Eve, we share {wafers} before dinner, and then we all go to Midnight {Mass}.'],
+      ['Emma', 'Oh, that sounds lovely. We usually just sing {carols} and eat far too much.'],
+      ['Tom', 'Just like my family. When do you open your presents?'],
       ['Emma', 'On Christmas morning. And on {Boxing} Day, we always visit our cousins.'],
-      ['Tom', "Nice! Anyway, I'd better go. Merry Christmas, Emma!"],
+      ['Tom', "Nice. Anyway, I'd better go. Merry Christmas, Emma!"],
       ['Emma', 'Thanks, {same} to you!'],
     ],
   },
@@ -215,7 +215,7 @@ export default {
     ],
     examples: [
       'decorate the Christmas tree, sing carols, wrap gifts', 'paint Easter eggs, Easter egg hunt, Good Friday', 'make a toast, kiss at midnight',
-      'have a birthday party, blow out the candles', 'wedding reception, invite guests', 'Merry Christmas!, Same to you!', "Women's Day", 'send a card',
+      'have a birthday party, blow out the candles', 'wedding reception, invite guests', 'Merry Christmas!, Same to you!', "International Women's Day", 'send a card',
     ],
   },
 };
