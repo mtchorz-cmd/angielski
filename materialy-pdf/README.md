@@ -51,3 +51,11 @@ Build wymaga Playwright z Chromium.
   kratki znam/nowe i tak/nie do zaznaczania, litery wykreślanki do zakreślania kliknięciem (każda litera = osobny zaokrąglony kafelek, równe małe przerwy w każdym kierunku — standard dla wszystkich wykreślanek), pola tekstowe w lukach, na liniach,
   w krzyżówce (po jednej literze w kratce) i na mapie myśli. Klucz odpowiedzi nie ma pól.
 Pola dodaje `add-fields.py` (PyMuPDF) na podstawie położeń zebranych w `build.mjs`.
+
+### Sprawdzanie odpowiedzi (wersja interaktywna)
+Pod każdym ćwiczeniem, które da się ocenić automatycznie (1–8), są przyciski **Sprawdź** i **Wyczyść**
+oraz pole wyniku, np. `7/8   popraw: 2` albo `8/8   Brawo!`. Dobre odpowiedzi zmieniają kolor na zielony,
+błędne na czerwony. Odpowiedzi pochodzą z klucza: `build.mjs` zapisuje je w atrybutach `data-*`
+(`data-ans`, kolumny `data-grp`/`data-set`, krzyżówka `data-words`, wykreślanka `data-hit`),
+a `add-fields.py` zamienia je na JavaScript przycisków. Słowniczek, zad. 9 i mapa myśli nie są oceniane.
+Działa w Adobe Acrobat Reader; w Firefoksie/Chrome/Edge zwykle też, w Podglądzie (Mac/iOS) nie.

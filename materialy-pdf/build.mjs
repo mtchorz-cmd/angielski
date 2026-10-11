@@ -39,7 +39,7 @@ const bankRows = (words, sizes, cls = '') => {
   return `<div class="bank bank-fit bank-rows ${cls}">${sizes.map((n) => `<div>${words.slice(i, (i += n)).map((w) => `<span>${esc(w)}</span>`).join('')}</div>`).join('')}</div>`;
 };
 // Luka w tekście: blady box z niebieskim numerem w środku
-const gapBox = (n, cls = '') => `<span class="gap ${cls}">${n ? `<i>${n}</i>` : ''}</span>`;
+const gapBox = (n, cls = '', ans = '', item = n) => `<span class="gap ${cls}"${ans ? ` data-ans="${esc(ans)}" data-item="${item}"` : ''}>${n ? `<i>${n}</i>` : ''}</span>`;
 
 let pageNo = 0;
 const page = (body, { cls = '' } = {}) => {
@@ -125,10 +125,10 @@ function vocabPage2() {
 // ---------- Ćw. 1 + 2 ----------
 function picturesPage() {
   const cells = T.labelPictures
-    .map((ic, i) => `<div class="lp-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'lp-ic' })}<span class="line"></span></div>`)
+    .map((ic, i) => `<div class="lp-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'lp-ic' })}<span class="line" data-ans="${esc(iconToWord[ic])}" data-item="${i + 1}"></span></div>`)
     .join('');
   const odd = (T.oddOneOut || [])
-    .map((r, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${r.icons.map((ic) => `<span class="oo-cell">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
+    .map((r, i) => `<div class="oo-row"><span class="n">${letter(i)}</span>${r.icons.map((ic, k) => `<span class="oo-cell" data-ans="${k === r.answer ? 'on' : 'off'}" data-item="${letter(i)}">${iconSvg(ic, { cls: 'oo-ic' })}</span>`).join('')}</div>`)
     .join('');
   return page(`
     <div class="ex">
@@ -145,7 +145,7 @@ function picturesPage() {
 // Ćw. 2 (wariant): czy podpis pasuje do obrazka? [ikona, podpis, poprawny podpis | null]
 function tfExercise() {
   const cells = T.pictureTrueFalse
-    .map(([ic, cap], i) => `<div class="tf-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'tf-ic' })}<p class="tf-cap">${esc(cap)}</p><div class="tf-yn"><span><i class="box"></i>tak</span><span><i class="box"></i>nie</span></div></div>`)
+    .map(([ic, cap, fix], i) => `<div class="tf-cell"><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'tf-ic' })}<p class="tf-cap">${esc(cap)}</p><div class="tf-yn"><span><i class="box" data-ans="${fix ? 'off' : 'on'}" data-item="${i + 1}"></i>tak</span><span><i class="box" data-ans="${fix ? 'on' : 'off'}" data-item="${i + 1}"></i>nie</span></div></div>`)
     .join('');
   return `<div class="ex">
       ${exHead('Czy podpis pasuje do obrazka? Zaznacz TAK albo NIE.')}
@@ -159,7 +159,7 @@ function lettersPage() {
   const items = (T.missingLetters || [])
     .map((w, i) => {
       const letters = hideVowels(w)
-        .map((ch) => (ch ? `<span class="ml-l">${ch}</span>` : '<span class="ml-l ml-gap"></span>'))
+        .map((ch, k) => (ch ? `<span class="ml-l">${ch}</span>` : `<span class="ml-l ml-gap" data-ans="${w[k]}" data-word="${i + 1}"></span>`))
         .join('');
       return `<div class="ml-item"><span class="n">${i + 1}</span>${iconSvg(wordToIcon[w], { cls: 'ml-ic' })}<span class="ml-word">${letters}</span></div>`;
     })
@@ -167,7 +167,7 @@ function lettersPage() {
   let n = 0;
   const adjWords = (T.adjectivesGap || []).map(([t]) => t.match(/\{([^}]+)\}/)[1]);
   const sentences = (T.adjectivesGap || [])
-    .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox(''))}</p></li>`)
+    .map(([t]) => `<li><span class="n">${++n}</span><p>${esc(t).replace(/\{[^}]+\}/, gapBox('', '', t.match(/\{([^}]+)\}/)[1], n))}</p></li>`)
     .join('');
   return page(`
     ${T.matchPairs ? matchExercise() : `<div class="ex">
@@ -185,7 +185,7 @@ function lettersPage() {
 const MP_ORDER = T.matchPairs ? shuffle(T.matchPairs.pairs.map((_, i) => i), 13) : [];
 function matchExercise() {
   const M = T.matchPairs;
-  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box"></span></li>`).join('');
+  const left = M.pairs.map(([a], i) => `<li><span class="n">${i + 1}</span><span class="mp-w">${esc(a)}</span><span class="st-box mp-box" data-ans="${letter(MP_ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`).join('');
   const right = MP_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span class="mp-w">${esc(M.pairs[idx][1])}</span></li>`).join('');
   return `<div class="ex">
       ${exHead(esc(M.instruction))}
@@ -198,7 +198,7 @@ function sortExercise() {
   const S = T.sortColumns;
   const all = shuffle(S.columns.flatMap((c) => c.words), 6);
   const cols = S.columns
-    .map((c) => `<div class="sc-col"><p class="sc-head">${esc(c.head)}</p>${c.words.map(() => '<span class="line"></span>').join('')}</div>`)
+    .map((c) => `<div class="sc-col"><p class="sc-head">${esc(c.head)}</p>${c.words.map(() => `<span class="line" data-grp="${esc(c.head)}" data-set="${esc(c.words.join('|'))}"></span>`).join('')}</div>`)
     .join('');
   return `<div class="ex">
       ${exHead(esc(S.instruction))}
@@ -212,9 +212,12 @@ const wsWord = (e) => (Array.isArray(e) ? e[0] : e);
 const wsIcon = (e) => (Array.isArray(e) ? e[1] : wordToIcon[e]);
 const WS = wordSearch(T.wordSearch.words.map((e) => wsWord(e).toUpperCase()), T.wordSearch.size, T.wordSearch.seed);
 function wordSearchPage() {
-  const grid = WS.grid.map((r) => `<div class="ws-row">${r.map((ch) => `<span>${ch}</span>`).join('')}</div>`).join('');
+  // do sprawdzania: które ukryte słowa przechodzą przez literę
+  const hit = {};
+  for (const p of WS.placed) for (let i = 0; i < p.word.length; i++) (hit[`${p.r + p.dr * i},${p.c + p.dc * i}`] = hit[`${p.r + p.dr * i},${p.c + p.dc * i}`] || []).push(p.word.toLowerCase());
+  const grid = WS.grid.map((r, ri) => `<div class="ws-row">${r.map((ch, ci) => `<span data-hit="${(hit[`${ri},${ci}`] || []).join(',')}">${ch}</span>`).join('')}</div>`).join('');
   const clues = T.wordSearch.words
-    .map((e) => `<li>${iconSvg(wsIcon(e), { cls: 'ws-ic' })}<span class="dashes">${wsWord(e).split('').map(() => '<i></i>').join('')}</span></li>`)
+    .map((e, k) => `<li>${iconSvg(wsIcon(e), { cls: 'ws-ic' })}<span class="dashes" data-ans="${esc(wsWord(e))}" data-item="${k + 1}">${wsWord(e).split('').map(() => '<i></i>').join('')}</span></li>`)
     .join('');
   return page(`
     <div class="ex ex-fill">
@@ -229,12 +232,19 @@ const CW = crossword(Object.keys(T.crossword.clues).map((w) => w.toUpperCase()),
 function crosswordSvg(cellMm) {
   const nums = {};
   for (const it of CW.items) nums[`${it.r},${it.c}`] = it.n;
+  // do sprawdzania: które hasła przechodzą przez kratkę
+  const words = {};
+  for (const it of CW.items)
+    for (let k = 0; k < it.word.length; k++) {
+      const key = it.dir === 'across' ? `${it.r},${it.c + k}` : `${it.r + k},${it.c}`;
+      (words[key] = words[key] || []).push(it.n);
+    }
   const s = 10;
   let out = '';
   for (let r = 0; r < CW.rows; r++)
     for (let c = 0; c < CW.cols; c++) {
       if (!CW.grid[r][c]) continue;
-      out += `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="#fff" stroke="#20242D" stroke-width="0.3"/>`;
+      out += `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="#fff" stroke="#20242D" stroke-width="0.3" data-ans="${CW.grid[r][c].toLowerCase()}" data-words="${words[`${r},${c}`].join(',')}"/>`;
       const n = nums[`${r},${c}`];
       if (n) out += `<text x="${c * s + 0.9}" y="${r * s + 2.9}" class="cw-n">${n}</text>`;
     }
@@ -263,7 +273,7 @@ function crosswordPage() {
 const SIT_ORDER = shuffle(T.situations.map((_, i) => i), 9);
 function situationsPage() {
   const left = T.situations
-    .map(([pl, , ic], i) => `<li><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'st-ic' })}<span class="st-pl">${esc(pl)}</span><span class="st-box"></span></li>`)
+    .map(([pl, , ic], i) => `<li><span class="n">${i + 1}</span>${iconSvg(ic, { cls: 'st-ic' })}<span class="st-pl">${esc(pl)}</span><span class="st-box" data-ans="${letter(SIT_ORDER.indexOf(i))}" data-item="${i + 1}"></span></li>`)
     .join('');
   const right = SIT_ORDER.map((idx, k) => `<li><span class="n">${letter(k)}</span><span>${esc(T.situations[idx][1])}</span></li>`).join('');
   return page(`
@@ -280,7 +290,7 @@ function dialogPage() {
   const lines = D.lines
     .map(([who, text]) =>
       who
-        ? `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, () => gapBox(++n))}</p></div>`
+        ? `<div class="dl-line"><span class="who">${esc(who)}</span><p>${esc(text).replace(/\{([^}]+)\}/g, (_, w) => gapBox(++n, '', w))}</p></div>`
         : '<div class="dl-sep"><span>40 minut później</span></div>'
     )
     .join('');
@@ -435,41 +445,70 @@ const problems = await pg.evaluate(() => {
   });
   return out;
 });
-// Pola formularza do wersji interaktywnej (mm względem lewego górnego rogu strony).
-// Strona z kluczem odpowiedzi nie dostaje pól.
-const fields = await pg.evaluate(() => {
+const pdfPath = join(ROOT, 'out', `gettinenglish-${slug}.pdf`);
+const pdfOpts = { format: 'A4', printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } };
+await pg.pdf({ path: pdfPath, ...pdfOpts });
+
+// ---------- Wersja interaktywna ----------
+// Pod każdym ćwiczeniem, które da się sprawdzić automatycznie, pojawia się pole wyniku
+// i przyciski „Sprawdź” / „Wyczyść” (rysowane w HTML, klikalne dzięki polom PDF).
+// Następnie zbieramy położenia wszystkich pól (mm od lewego górnego rogu strony)
+// razem z odpowiedziami z klucza (atrybuty data-*), a add-fields.py dodaje formularz.
+const interactive = await pg.evaluate(() => {
   const mm = 96 / 25.4;
+  document.body.classList.add('interactive');
+  const CHECKABLE = '[data-ans], [data-grp], [data-hit]';
+  const head = document.querySelector('#slownictwo');
+  if (head) head.insertAdjacentHTML('beforeend', '<p class="i-hint">Wersja interaktywna: wpisuj i zaznaczaj odpowiedzi,<br>a potem kliknij „Sprawdź” pod ćwiczeniem.<br>Sprawdzanie działa najlepiej w Adobe Acrobat Reader.</p>');
+  document.querySelectorAll('.ex').forEach((ex) => {
+    if (!ex.querySelector(CHECKABLE)) return;
+    ex.insertAdjacentHTML('beforeend', '<div class="chk-ui"><span class="chk-score"></span><span class="chk-btn" data-act="check">Sprawdź</span><span class="chk-btn chk-clear" data-act="clear">Wyczyść</span></div>');
+  });
   const out = [];
+  const warn = [];
   document.querySelectorAll('.page').forEach((p, pi) => {
     if (p.querySelector('.key') || p.classList.contains('cover')) return;
     const P = p.getBoundingClientRect();
+    const foot = p.querySelector('.foot');
     const add = (el, type, opts = {}) => {
       const r = el.getBoundingClientRect();
       let { left: x, top: y, width: w, height: h } = r;
       if (opts.above) { y = r.bottom - opts.above * mm; h = opts.above * mm + 0.4 * mm; }
-      out.push({ page: pi, type, x: (x - P.left) / mm, y: (y - P.top) / mm, w: w / mm, h: h / mm, ...opts });
+      const exEl = el.closest('.ex');
+      const d = el.dataset || {};
+      out.push({
+        page: pi, type, x: (x - P.left) / mm, y: (y - P.top) / mm, w: w / mm, h: h / mm, ...opts,
+        ex: exEl ? Number(exEl.querySelector('.ex-num').textContent) : null,
+        ans: d.ans, item: d.item, grp: d.grp, set: d.set, words: d.words, word: d.word, hit: d.hit, act: d.act,
+      });
     };
     p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
     p.querySelectorAll('.st-box, .ml-gap').forEach((el) => add(el, 'letter', { center: true }));
-    // „co nie pasuje”: kliknięcie obrazka rysuje wokół niego niebieską obwódkę (zakreślenie)
-    p.querySelectorAll('.oo-cell').forEach((el) => add(el, 'ring'));
-    // wykreślanka: każda litera to przełącznik z półprzezroczystym „zakreśleniem”
-    p.querySelectorAll('.ws-grid:not(.ws-mini) .ws-row span').forEach((el) => add(el, 'mark'));
     p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));
     p.querySelectorAll('.lp-cell .line, .sc-col .line, .about-q .line').forEach((el) => add(el, 'text', { above: 6.5 }));
     p.querySelectorAll('.dashes').forEach((el) => add(el, 'text', { above: 6, center: true }));
     p.querySelectorAll('.gap').forEach((el) => add(el, 'text', { inset: 3.2 }));
     p.querySelectorAll('.mm line').forEach((el) => add(el, 'text', { above: 6, small: true }));
+    // „co nie pasuje”: kliknięcie obrazka rysuje wokół niego niebieską obwódkę (zakreślenie)
+    p.querySelectorAll('.oo-cell').forEach((el) => add(el, 'ring'));
+    // wykreślanka: każda litera to przełącznik z półprzezroczystym „zakreśleniem”
+    p.querySelectorAll('.ws-grid:not(.ws-mini) .ws-row span').forEach((el) => add(el, 'mark'));
+    p.querySelectorAll('.chk-score').forEach((el) => add(el, 'score'));
+    p.querySelectorAll('.chk-btn').forEach((el) => add(el, 'btn'));
+    // kontrola: przyciski nie mogą wchodzić na stopkę
+    if (foot) p.querySelectorAll('.chk-ui').forEach((el) => {
+      if (el.getBoundingClientRect().bottom > foot.getBoundingClientRect().top - 2 * mm) warn.push(`strona ${pi + 1}: przyciski za blisko stopki`);
+    });
   });
-  return out;
+  return { fields: out, warn };
 });
-writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(fields));
-
-const pdfPath = join(ROOT, 'out', `gettinenglish-${slug}.pdf`);
-await pg.pdf({ path: pdfPath, format: 'A4', printBackground: true, preferCSSPageSize: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } });
+const formBase = join(ROOT, 'preview', `${slug}-interaktywny-baza.pdf`);
+await pg.pdf({ path: formBase, ...pdfOpts });
+writeFileSync(join(ROOT, 'preview', `${slug}-fields.json`), JSON.stringify(interactive.fields));
+problems.push(...interactive.warn);
 await browser.close();
 console.log(`PDF: ${pdfPath}  (stron: ${pages.length}, krzyżówka ${CW.cols}×${CW.rows})`);
 // Wersja interaktywna: ten sam PDF + pola do wpisywania i zaznaczania (PyMuPDF)
 const formPath = join(ROOT, 'out', `gettinenglish-${slug}-interaktywny.pdf`);
-console.log(execSync(`python3 "${join(ROOT, 'add-fields.py')}" "${pdfPath}" "${join(ROOT, 'preview', `${slug}-fields.json`)}" "${formPath}"`).toString().trim());
+console.log(execSync(`python3 "${join(ROOT, 'add-fields.py')}" "${formBase}" "${join(ROOT, 'preview', `${slug}-fields.json`)}" "${formPath}"`).toString().trim());
 if (problems.length) console.log('UWAGA:\n' + problems.join('\n'));
