@@ -451,6 +451,8 @@ const fields = await pg.evaluate(() => {
     };
     p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
     p.querySelectorAll('.st-box, .ml-gap').forEach((el) => add(el, 'letter', { center: true }));
+    // „co nie pasuje”: kliknięcie obrazka rysuje wokół niego niebieską obwódkę (zakreślenie)
+    p.querySelectorAll('.oo-cell').forEach((el) => add(el, 'ring'));
     // wykreślanka: każda litera to przełącznik z półprzezroczystym „zakreśleniem”
     p.querySelectorAll('.ws-grid:not(.ws-mini) .ws-row span').forEach((el) => add(el, 'mark'));
     p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));

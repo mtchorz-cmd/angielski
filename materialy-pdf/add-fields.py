@@ -14,7 +14,7 @@ BRAND = (0.149, 0.388, 0.922)
 
 doc = pymupdf.open(src)
 fields = json.load(open(fields_path, encoding='utf-8'))
-count = {'check': 0, 'text': 0, 'letter': 0, 'mark': 0}
+count = {'check': 0, 'text': 0, 'letter': 0, 'mark': 0, 'ring': 0}
 
 for i, f in enumerate(fields):
     page = doc[f['page']]
@@ -29,7 +29,7 @@ for i, f in enumerate(fields):
     wd.border_width = 0
     wd.border_color = None
     wd.fill_color = None
-    if f['type'] == 'mark':
+    if f['type'] in ('mark', 'ring'):
         # wykreślanka: przełącznik bez znaku ✓ — wygląd „włączony” podmieniamy niżej na zakreślenie
         wd.field_type = pymupdf.PDF_WIDGET_TYPE_CHECKBOX
         wd.field_value = False
@@ -58,6 +58,33 @@ for i, f in enumerate(fields):
 #   przez co w części przeglądarek kratki na różnych stronach „kolidowały”),
 # - odwołanie /P do strony, na której leży pole,
 # - wspólne zasoby formularza (czcionki Helvetica i ZapfDingbats dla znaku ✓).
+def rounded(x0, y0, x1, y1, rr):
+    k = rr * 0.5523
+    return (f'{x0 + rr:.2f} {y0:.2f} m {x1 - rr:.2f} {y0:.2f} l '
+            f'{x1 - rr + k:.2f} {y0:.2f} {x1:.2f} {y0 + rr - k:.2f} {x1:.2f} {y0 + rr:.2f} c '
+            f'{x1:.2f} {y1 - rr:.2f} l '
+            f'{x1:.2f} {y1 - rr + k:.2f} {x1 - rr + k:.2f} {y1:.2f} {x1 - rr:.2f} {y1:.2f} c '
+            f'{x0 + rr:.2f} {y1:.2f} l '
+            f'{x0 + rr - k:.2f} {y1:.2f} {x0:.2f} {y1 - rr + k:.2f} {x0:.2f} {y1 - rr:.2f} c '
+            f'{x0:.2f} {y0 + rr:.2f} l '
+            f'{x0:.2f} {y0 + rr - k:.2f} {x0 + rr - k:.2f} {y0:.2f} {x0 + rr:.2f} {y0:.2f} c h')
+
+
+def toggle_look(w, on_content, resources=''):
+    """Przełącznik z własnym wyglądem: wyłączony = nic, włączony = on_content."""
+    bw, bh = w.rect.width, w.rect.height
+    off = doc.get_new_xref()
+    doc.update_object(off, f'<</Type/XObject/Subtype/Form/BBox[0 0 {bw:.2f} {bh:.2f}]>>')
+    doc.update_stream(off, b' ')
+    on = doc.get_new_xref()
+    doc.update_object(on, f'<</Type/XObject/Subtype/Form/BBox[0 0 {bw:.2f} {bh:.2f}]{resources}>>')
+    doc.update_stream(on, on_content.encode())
+    doc.xref_set_key(w.xref, 'AP', f'<</N<</Off {off} 0 R/Yes {on} 0 R>>/D<</Off {off} 0 R/Yes {on} 0 R>>>>')
+    doc.xref_set_key(w.xref, 'MK', '<<>>')
+    doc.xref_set_key(w.xref, 'AS', '/Off')
+    doc.xref_set_key(w.xref, 'V', '/Off')
+
+
 cat = doc.pdf_catalog()
 helv = doc.get_new_xref()
 doc.update_object(helv, '<</Type/Font/Subtype/Type1/BaseFont/Helvetica/Encoding/WinAnsiEncoding>>')
@@ -72,7 +99,14 @@ for page in doc:
         n += 1
         doc.xref_set_key(w.xref, 'NM', f'(ge-field-{n})')
         doc.xref_set_key(w.xref, 'P', f'{page.xref} 0 R')
-        if w.field_name.startswith('mark'):
+        if w.field_name.startswith('ring'):
+            # „zakreśl obrazek”: niebieska obwódka po obrysie kafelka + bardzo jasne tło
+            bw, bh = w.rect.width, w.rect.height
+            p = rounded(1.6, 1.6, bw - 1.6, bh - 1.6, 9)
+            toggle_look(w, f'q /G0 gs 0.149 0.388 0.922 rg {p} f Q q 0.149 0.388 0.922 RG 2.2 w {p} S Q',
+                        '/Resources<</ExtGState<</G0<</Type/ExtGState/ca 0.08>>>>>>')
+            doc.xref_set_key(w.xref, 'TU', '(zakreśl obrazek)')
+        elif w.field_name.startswith('mark'):
             # wygląd: wyłączony = nic, włączony = półprzezroczysty niebieski kafelek pod literą
             r = w.rect
             bw, bh = r.width, r.height
@@ -106,4 +140,4 @@ for page in doc:
             doc.xref_set_key(w.xref, 'MK', '<</CA(4)>>')
 
 doc.save(dst, garbage=3, deflate=True)
-print(f"Interaktywny PDF: {dst}  (pola tekstowe: {count['text']}, litery: {count['letter']}, kratki: {count['check']}, wykreślanka: {count['mark']})")
+print(f"Interaktywny PDF: {dst}  (pola tekstowe: {count['text']}, litery: {count['letter']}, kratki: {count['check']}, wykreślanka: {count['mark']}, obrazki: {count['ring']})")
