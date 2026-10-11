@@ -120,11 +120,21 @@ function vocabPage1() {
     </header>
     ${vocabGrid(T.vocabLayout.page1)}`);
 }
+// Opcjonalna trzecia strona słowniczka (dłuższe tematy): vocabLayout.page3 / wide3 — wtedy zwroty trafiają na nią.
+const HAS_P3 = !!(T.vocabLayout.page3 || T.vocabLayout.wide3);
+const VOCAB_LAST = HAS_P3 ? 4 : 3;
+const phrasesCard = () => wideCard({ level: 'A2', en: 'Useful phrases', pl: 'przydatne zwroty' }, T.phrases, 2);
 function vocabPage2() {
   return page(`
     ${vocabGrid(T.vocabLayout.page2)}
     ${(T.vocabLayout.wide || []).map(([id, cols]) => wideCard(G[id], G[id].words, cols)).join('')}
-    ${wideCard({ level: 'A2', en: 'Useful phrases', pl: 'przydatne zwroty' }, T.phrases, 2)}`);
+    ${HAS_P3 ? '' : phrasesCard()}`);
+}
+function vocabPage3() {
+  return page(`
+    ${vocabGrid(T.vocabLayout.page3)}
+    ${(T.vocabLayout.wide3 || []).map(([id, cols]) => wideCard(G[id], G[id].words, cols)).join('')}
+    ${phrasesCard()}`);
 }
 
 // ---------- Ćw. 1 + 2 ----------
@@ -410,12 +420,12 @@ function keyPage() {
     </div>
     <div class="finish">
       <p class="finish-big">Well done<span class="dot">.</span></p>
-      <p>Wróć do <a class="to-vocab" href="#slownictwo">listy słów na stronach 2–3</a> i sprawdź, ile pamiętasz.</p>
+      <p>Wróć do <a class="to-vocab" href="#slownictwo">listy słów na stronach 2–${VOCAB_LAST}</a> i sprawdź, ile pamiętasz.</p>
     </div>`);
 }
 
 // ---------- Złożenie ----------
-const pages = [cover(), vocabPage1(), vocabPage2(), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), gamePage(), keyPage()];
+const pages = [cover(), vocabPage1(), vocabPage2(), ...(HAS_P3 ? [vocabPage3()] : []), picturesPage(), lettersPage(), wordSearchPage(), crosswordPage(), situationsPage(), dialogPage(), gamePage(), keyPage()];
 const css = readFileSync(join(ROOT, 'style.css'), 'utf8');
 const html = `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>gettinenglish · ${esc(T.title)} ${esc(T.level)}</title>
 <style>${css}</style></head><body class="${T.stackTranslations ? 'stacked' : ''}">${pages.join('\n')}</body></html>`;
