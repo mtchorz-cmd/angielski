@@ -379,7 +379,7 @@ function keyPage() {
   const cw = (dir) => CW.items.filter((i) => i.dir === dir).sort((a, b) => a.n - b.n).map((i) => `<span class="nw">${i.n} ${i.word.toLowerCase()}</span>`).join(', ');
   const block = (n, body) => `<div class="kb"><span class="kn">${n}</span><div class="kb-body">${body}</div></div>`;
   return page(`
-    <h2 class="pg-title">Odpowiedzi<span class="dot">.</span></h2>
+    <h2 class="pg-title">Klucz odpowiedzi<span class="dot">.</span></h2>
     <div class="key">
       <div class="key-col">
         ${block(1, ol(T.labelPictures.map((ic) => esc(iconToWord[ic]))))}
@@ -488,7 +488,8 @@ const interactive = await pg.evaluate((CHECK_BUTTONS) => {
       });
     };
     p.querySelectorAll('.wl li .box, .tf-yn .box').forEach((el) => add(el, 'check'));
-    p.querySelectorAll('.st-box, .ml-gap').forEach((el) => add(el, 'letter', { center: true }));
+    p.querySelectorAll('.st-box').forEach((el) => add(el, 'letter', { center: true }));
+    p.querySelectorAll('.ml-gap').forEach((el) => add(el, 'letter', { center: true, fs: 10.5 }));
     p.querySelectorAll('.cw-svg rect').forEach((el) => add(el, 'letter', { center: true, padTop: 0.22 }));
     p.querySelectorAll('.lp-cell .line, .sc-col .line, .about-q .line').forEach((el) => add(el, 'text', { above: 6.5 }));
     p.querySelectorAll('.dashes').forEach((el) => add(el, 'text', { above: 6, center: true }));

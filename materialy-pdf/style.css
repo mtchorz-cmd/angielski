@@ -117,8 +117,9 @@ b { font-weight: 700; }
 .ml-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm 12mm; }
 .ml-item { display: flex; align-items: center; gap: 4mm; }
 .ml-ic { width: var(--ex-ic); height: var(--ex-ic); flex: none; }
-.ml-word { display: flex; gap: 1mm; }
-.ml-l { width: 5.4mm; height: 7mm; display: grid; place-items: end center; font-size: var(--task); font-weight: 600; line-height: 1; padding-bottom: 1mm; }
+/* litery i luki tej samej wysokości, wyśrodkowane w pionie — wpisana litera stoi w jednej linii z drukowanymi */
+.ml-word { display: flex; gap: .3mm; }
+.ml-l { width: 4.3mm; height: 6.2mm; display: grid; place-items: center; font-size: var(--task); font-weight: 600; line-height: 1; }
 .ml-gap { background: var(--brand-soft); border-bottom: 1.4px solid var(--brand-line); border-radius: 3px 3px 0 0; }
 
 /* ---------- ćw. 4: zdania ---------- */
@@ -167,10 +168,10 @@ b { font-weight: 700; }
 .dl-sep::before, .dl-sep::after { content: ''; height: 1px; width: 12mm; background: var(--line2); }
 
 /* ---------- ćw. 9: o sobie ---------- */
-.about { display: flex; flex-direction: column; gap: 2.4mm; }
+.about { display: flex; flex-direction: column; gap: 1.8mm; }
 .about-q p { font-size: var(--task); font-weight: 500; display: flex; gap: 2.5mm; align-items: baseline; flex-wrap: wrap; }
 .about-hint { color: var(--muted); font-weight: 400; font-size: 9pt; font-style: italic; }
-.about-q .line { height: 6mm; margin-left: 5mm; }
+.about-q .line { height: 5.6mm; margin-left: 5mm; }
 
 /* ---------- klucz ---------- */
 .page .body:has(.key) { gap: 8mm; }
@@ -247,3 +248,5 @@ b { font-weight: 700; }
 .ex-fill > .chk-ui { top: auto; bottom: 0; }
 .interactive .pg-head { position: relative; }
 .i-hint { position: absolute; right: 0; top: 1mm; text-align: right; font-size: 7.6pt; line-height: 1.45; color: var(--muted); }
+/* Treść pod ramką ze słowami zaczyna się nieco niżej (spójnie we wszystkich ćwiczeniach z ramką) */
+.ex > .bank + * { margin-top: 3mm; }

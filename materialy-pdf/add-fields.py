@@ -81,7 +81,7 @@ for i, f in enumerate(fields):
         wd.text_color = INK
         if t == 'letter':
             wd.text_maxlen = 1
-            wd.text_fontsize = 11
+            wd.text_fontsize = f.get('fs', 11)
         elif t == 'score':
             wd.text_color = BRAND
             wd.text_fontsize = 8

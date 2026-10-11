@@ -71,7 +71,7 @@ export default {
     ['Do you like seafood?', 'Lubisz owoce morza?'],
     ["It's delicious!", 'To jest pyszne!'],
     ["I'm full.", 'Jestem najedzony / najedzona.'],
-    ['Can I have the bill, please?', 'Poproszę rachunek.'],
+    ['Can I have the bill, please?', 'Czy mogę prosić o rachunek?'],
   ],
 
   // Ćw. 1 — podpisz obrazki
