@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>A2 Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 0; }
+:root{
+  --parch:#F7F6F2; --sea:#E1EBF6; --ink:#2A3140; --ink2:#5E6B80; --ink3:#9AA6B8;
+  --red:#3768D8; --gold:#3768D8; --hair:#D5DDE8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--parch);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Onest,system-ui,sans-serif;color:var(--ink);font-size:10.5px;line-height:1.42}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;background:var(--parch);page-break-after:always}
+.page:last-of-type{page-break-after:auto}
+.en{font-style:normal}
+[lang=en]{hyphens:manual}
+
+/* ---------- MAPA ---------- */
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.cin{font-family:Cinzel,serif}
+
+/* ---------- ETAP ---------- */
+.stage{padding:46px 54px 40px;display:flex;flex-direction:column;background:#FBFAF7}
+.nav{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--red)}
+.nav a{color:var(--red);text-decoration:none}
+.nav .meta{color:var(--ink2);font-weight:600}
+.head{display:flex;align-items:flex-end;gap:22px;margin-top:20px}
+.head .num{font-family:Cinzel,serif;font-weight:700;font-size:64px;line-height:.8;color:var(--red)}
+.head h1{font-family:Cinzel,serif;font-weight:700;font-size:34px;line-height:1;letter-spacing:.01em;white-space:nowrap}
+.head .sub{font-size:12.5px;color:var(--ink2);margin-top:6px}
+.head .sub b{color:var(--ink)}
+.head svg{margin-left:auto;flex:none}
+.rule{height:12px;margin:16px 0 14px;background:
+  linear-gradient(var(--ink),var(--ink)) left center/calc(50% - 12px) 1px no-repeat,
+  linear-gradient(var(--ink),var(--ink)) right center/calc(50% - 12px) 1px no-repeat;position:relative}
+.rule::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;background:var(--red);transform:translate(-50%,-50%) rotate(45deg)}
+.quest{font-size:12px;line-height:1.5;color:var(--ink);max-width:560px}
+.quest b{color:var(--red)}
+h2{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--red);display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+h2 small{font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--ink2);font-size:10px}
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:34px;margin-top:22px}
+.item{display:flex;gap:9px;align-items:flex-start;padding:6px 0}
+.item + .item{border-top:1px dashed var(--hair)}
+.item .t{font-weight:700;font-size:11px}
+.item .ex{color:var(--ink2);font-size:10.3px;margin-top:1px}
+.item .ex i{font-style:normal;color:var(--ink)}
+.cb{flex:none;width:12px;height:12px;border:1.3px solid var(--ink);border-radius:2px;margin-top:1px;background:transparent}
+.cb.lg{width:15px;height:15px}
+.challenge{margin-top:18px}
+.challenge p{font-size:10.5px}
+.tf{display:inline-block;height:15px;border-bottom:1.1px dotted var(--ink2);vertical-align:bottom}
+.line{padding-right:74px;display:flex;align-items:flex-end;gap:7px;margin-top:8px;font-size:10px;color:var(--ink2)}
+.line .tf{flex:1}
+.loot{margin-top:24px}
+.words{display:grid;grid-template-columns:1fr 1fr 1.22fr;column-gap:22px}
+.wh{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);padding-bottom:3px;border-bottom:1px solid var(--ink)}
+.w{display:grid;grid-template-columns:13px 1fr;gap:7px;align-items:start;padding:3.4px 0;border-bottom:1px dashed var(--hair);font-size:10px;line-height:1.25}
+.w b{display:block}
+.w .cb{margin-top:1px}
+.w b{font-weight:700}
+.w div span{color:var(--ink2);font-size:9.2px}
+.gate{margin-top:auto;display:grid;grid-template-columns:86px 1fr;gap:20px;align-items:start}
+.tally{display:flex;gap:4px;flex-wrap:wrap;align-items:flex-end;font-size:10.5px}
+.tally .slot{display:flex;align-items:flex-end;gap:4px;margin-right:12px}
+.tally .tf{width:24px;text-align:center}
+.tally .sum{font-weight:800;color:var(--red)}
+.need{margin-top:7px;font-size:10.5px}
+.need b{color:var(--red)}
+.oath{padding-right:84px;display:flex;gap:9px;align-items:flex-start;margin-top:11px;font-size:10.5px;line-height:1.45}
+.oath em{font-style:normal;font-weight:700}
+.done{display:flex;align-items:flex-end;gap:9px;margin-top:11px;font-weight:700;font-size:11px}
+.done .tf{width:96px}
+.done .lbl{font-weight:500;color:var(--ink2);font-size:10px;margin-left:10px}
+.foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:11px;border-top:1px solid var(--ink);font-size:10.5px;font-weight:700}
+.foot a{color:var(--red);text-decoration:none}
+.foot .pg{color:var(--ink2);font-weight:500}
+.dd{position:absolute;overflow:visible}
+.head .hero{margin-left:auto;flex:none;width:112px;height:104px;position:relative;top:10px;margin-top:-20px}
+.quest{position:relative}
+</style>
+</head>
+<body>
+
+<!-- ======================= STRONA: MAPA ======================= -->
+<section class="page map" id="mapa">
+<svg id="mapsvg" viewBox="0 0 794 1123" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="seaClip"><path id="seaShape"/></clipPath>
+    <clipPath id="landClip"><path id="landShape2"/></clipPath>
+    <pattern id="fhL" patternUnits="userSpaceOnUse" width="2.6" height="2.6" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="2.6" stroke="#2A3140" stroke-width=".55"/></pattern>
+    <pattern id="fhD" patternUnits="userSpaceOnUse" width="2" height="2" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="2" stroke="#2A3140" stroke-width=".6"/><line x1="0" y1="0" x2="2" y2="0" stroke="#2A3140" stroke-width=".45"/></pattern>
+  </defs>
+  <rect width="794" height="1123" fill="#E1EBF6"/>
+  <g id="rhumb" clip-path="url(#seaClip)"></g>
+  <g id="waves" clip-path="url(#seaClip)"></g>
+  <g id="coast"></g>
+  <g id="terrain"></g>
+  <g id="river"></g>
+  <g id="borders"></g>
+  <g id="route"></g>
+  <g id="places"></g>
+  <g id="deco"></g>
+  <g id="labels"></g>
+</svg>
+</section>
+
+<div id="stages"></div>
+
+<script type="application/json" id="fieldsjson"></script>
+<script>
+/* ===================== DANE ===================== */
+const STAGES = [
+  {n:1,  name:"Wioska Startowa",        p:[560,1012], ic:"village", lab:[0,34]},
+  {n:2,  name:"Targ Kupiecki",          p:[398,968],  ic:"market",  lab:[0,34]},
+  {n:3,  name:"Karczma pod Smokiem",    p:[262,900],  ic:"tavern",  lab:[0,34]},
+  {n:4,  name:"Miasto Gildii",          p:[438,838],  ic:"city",    lab:[30,5,"start"]},
+  {n:5,  name:"Stara Biblioteka",       p:[612,770],  ic:"book", lab:[0,34]},
+  {n:6,  name:"Port",                   p:[262,712],  ic:"port",    lab:[0,34]},
+  {n:7,  name:"Mglisty Las",            p:[392,628],  ic:"forest",  lab:[0,34]},
+  {n:8,  name:"Wieża Luster",           p:[600,578],  ic:"mirror",   lab:[0,34]},
+  {n:9,  name:"Świątynia Uzdrowicieli", p:[470,488],  ic:"temple",  lab:[0,34]},
+  {n:10, name:"Krąg Wróżbitów",        p:[276,410],  ic:"seer",    lab:[0,34]},
+  {n:11, name:"Kuźnia Run",             p:[452,322],  ic:"forge",   lab:[0,34]},
+  {n:12, name:"Smocza Twierdza",        p:[598,262],  ic:"fortress",lab:[0,40]}
+];
+const NS="http://www.w3.org/2000/svg";
+/* ===================== ETAPY (dane) ===================== */
+const REGION=n=>n<=4?"Dolina Nowicjuszy":n<=8?"Pogranicze":"Smocze Ziemie";
+const ROMAN=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
+const STAGE_DATA=[
+ {n:1, topic:"rodzina i codzienna rutyna", gram:"Present Simple",
+  quest:`Każda wielka wyprawa zaczyna się w domu. W tym tygodniu nauczysz się mówić o <b>sobie, swojej rodzinie i zwykłym dniu</b>. To fundament, na którym zbudujesz wszystkie kolejne etapy.`,
+  g:[["Present Simple: zdania twierdzące","I live with my parents. My sister works in a bakery."],
+     ["Pytania i przeczenia z do / does","Do you have any brothers or sisters? He doesn’t drive."],
+     ["Przysłówki częstotliwości","I usually get up at seven. We never have breakfast together."],
+     ["my / your / his / her i dopełniacz ’s","This is my brother’s flat. Tom is Anna’s cousin."]],
+  u:[["Opowiesz o swojej rodzinie","kto to jest, czym się zajmuje, gdzie mieszka"],["Opiszesz swój zwykły dzień","od pobudki do pójścia spać, z godzinami"]],
+  ch:`Nagraj na telefonie minutę o swoim poniedziałku: <i lang="en">“My typical Monday”</i>. Użyj co najmniej trzech przysłówków częstotliwości. Odsłuchaj i popraw jedną rzecz.`,
+  w:{words:[["relatives","krewni"],["twins","bliźnięta"],["stepbrother","przybrany brat"],["nephew","bratanek, siostrzeniec"],["niece","bratanica, siostrzenica"],["flatmate","współlokator/ka"],["neighbour","sąsiad, sąsiadka"],["routine","rutyna, stały rytm dnia"],["weekday","dzień roboczy"],["alarm clock","budzik"]],
+   coll:[["get on well with","dobrze się dogadywać z"],["look after","opiekować się"],["look like","być podobnym do (z wyglądu)"],["grow up","dorastać"],["get married","brać ślub"],["set the alarm","nastawić budzik"],["catch the bus","złapać autobus"],["do the washing-up","zmywać naczynia"],["have a lie-in","pospać dłużej"],["be in a hurry","spieszyć się"]],
+   phr:[["How’s your family?","Co słychać u rodziny?"],["We’re very close.","Jesteśmy sobie bardzo bliscy."],["I’m an only child.","Jestem jedynakiem / jedynaczką."],["It depends.","To zależy."],["Not really.","Nie bardzo."],["Me neither.","Ja też nie."],["Lucky you!","Ale masz szczęście!"],["I’m not a morning person.","Nie jestem rannym ptaszkiem."],["Same as usual.","Jak zwykle."],["That sounds tiring.","Brzmi męcząco."]]},
+  art:{hero:"village", side:"alarm", loot:"mug", gate:"chest"}},
+ {n:2, topic:"zakupy i jedzenie", gram:"some / any · much / many",
+  quest:`Na targu kupcy mówią szybko, a ceny rosną dla tych, którzy się wahają. Nauczysz się <b>kupować, pytać o ilość i cenę</b> oraz mówić, czego potrzebujesz.`,
+  g:[["Rzeczowniki policzalne i niepoliczalne","an apple, two apples · some bread, some water"],
+     ["some / any","There’s some milk in the fridge. Have we got any eggs?"],
+     ["much / many / a lot of","How much sugar do you need? How many people are coming?"],
+     ["Opakowania i ilości","a bottle of water, a loaf of bread, a kilo of apples"]],
+  u:[["Zrobisz zakupy w sklepie lub na targu","zapytasz o cenę, ilość i zapłacisz"],["Zamówisz coś do jedzenia i picia","w kawiarni, grzecznie: Could I have…?"]],
+  ch:`Napisz po angielsku listę zakupów na ten tydzień: co najmniej 10 produktów z ilościami (<i lang="en">a carton of milk, two kilos of potatoes</i>). W sklepie powiedz w myślach każdą rzecz z listy.`,
+  w:{words:[["receipt","paragon"],["change","reszta (pieniądze)"],["queue","kolejka"],["trolley","wózek sklepowy"],["discount","zniżka, rabat"],["bargain","okazja (dobra cena)"],["shop assistant","sprzedawca, sprzedawczyni"],["cash","gotówka"],["fresh","świeży"],["frozen","mrożony"]],
+   coll:[["a loaf of bread","bochenek chleba"],["a carton of milk","karton mleka"],["a tin of tomatoes","puszka pomidorów"],["a packet of crisps","paczka chipsów"],["a bar of chocolate","tabliczka czekolady"],["half a kilo of","pół kilo (czegoś)"],["pay by card","płacić kartą"],["pay in cash","płacić gotówką"],["be on offer","być w promocji"],["run out of","skończyć się (komuś coś)"]],
+   phr:[["How much are they?","Ile one kosztują?"],["I’m just looking, thanks.","Tylko się rozglądam, dziękuję."],["Anything else?","Coś jeszcze?"],["That’s all, thanks.","To wszystko, dziękuję."],["Could I have…, please?","Czy mogę prosić o…?"],["Have you got this in a bigger size?","Czy jest w większym rozmiarze?"],["Can I pay by card?","Czy mogę zapłacić kartą?"],["That’s a bit expensive.","To trochę drogo."],["Here you are.","Proszę (podając coś)."],["Keep the change.","Reszty nie trzeba."]]},
+  art:{hero:"market", side:"scales", loot:"pouch", gate:"chest"}},
+ {n:3, topic:"hobby i czas wolny", gram:"Present Continuous · like + -ing · can",
+  quest:`W karczmie pod Smokiem wieczorem gra muzyka, ktoś rzuca kośćmi, ktoś opowiada historie. Nauczysz się mówić o tym, <b>co lubisz robić, co umiesz i co robisz właśnie teraz</b>.`,
+  g:[["Present Continuous: co dzieje się teraz","I’m reading a great book at the moment. They aren’t playing today."],
+     ["Present Simple czy Continuous?","She usually swims on Mondays, but today she’s playing tennis."],
+     ["love / like / don’t mind / hate + -ing","I love cooking, but I hate washing up."],
+     ["can / can’t: umiejętności","Can you play the guitar? I can’t swim very well."]],
+  u:[["Opowiesz o swoich zainteresowaniach","co lubisz robić w wolnym czasie i dlaczego"],["Powiesz, co robisz teraz i co umiesz","a czego jeszcze nie umiesz"]],
+  ch:`Wyślij komuś (albo sobie) trzy krótkie wiadomości po angielsku: rano, po południu i wieczorem napisz, co właśnie robisz. Użyj Present Continuous.`,
+  w:{words:[["exhibition","wystawa"],["hiking","wędrówki piesze"],["photography","fotografia"],["instrument","instrument"],["board game","gra planszowa"],["member","członek, członkini"],["fan","fan/ka, kibic"],["match","mecz"],["team","drużyna"],["gym","siłownia"]],
+   coll:[["in my spare time","w wolnym czasie"],["play the guitar","grać na gitarze"],["do yoga","ćwiczyć jogę"],["go for a run","iść pobiegać"],["take photos","robić zdjęcia"],["join a club","zapisać się do klubu"],["be good at","być dobrym w"],["be interested in","interesować się"],["be into","lubić, kręcić (kogoś) coś"],["hang out with friends","spędzać czas ze znajomymi"]],
+   phr:[["What do you do in your free time?","Co robisz w wolnym czasie?"],["What are you up to?","Co porabiasz?"],["Fancy a game?","Masz ochotę zagrać?"],["Sounds fun!","Brzmi super!"],["It’s not my thing.","To nie dla mnie."],["I’m not very good at it.","Nie idzie mi to najlepiej."],["Count me in!","Wchodzę w to!"],["Maybe another time.","Może innym razem."],["I can’t stand it.","Nie znoszę tego."],["How about you?","A ty?"]]},
+  art:{hero:"tavern", side:"lute", loot:"dice", gate:"chest"}}
+];
+const GATE_SVG=`<svg data-doodle="gate" viewBox="-6 -6 112 112" width="86" height="96"></svg>`;
+const stageName=n=>STAGES[n-1].name;
+function stageHTML(d){
+  const nw=d.w.words.length+d.w.coll.length+d.w.phr.length, n=d.n, total=d.g.length+d.u.length+1+nw, need=Math.ceil(total*0.8);
+  const item=([t,ex],en)=>`<div class="item"><span class="cb" data-f="cb"></span><div><div class="t">${t}</div><div class="ex"${en?' lang="en"':''}>${en?`<i>${ex}</i>`:ex}</div></div></div>`;
+  const col=(title,list)=>`<div class="wcol"><div class="wh">${title}</div>${list.map(([en,pl])=>`<div class="w"><span class="cb" data-f="cb"></span><div><b lang="en">${en}</b><span>${pl}</span></div></div>`).join("")}</div>`;
+  const words=col("Słowa",d.w.words)+col("Kolokacje",d.w.coll)+col("Zwroty i reakcje",d.w.phr);
+  const next=n<12?`<a data-link="etap-${n+1}">Ruszaj dalej: ${stageName(n+1)} →</a>`:`<a data-link="sala-chwaly">Sala Chwały →</a>`;
+  return `<section class="page stage" id="etap-${n}">
+  <div class="nav"><a data-link="mapa">← Mapa wyprawy</a><span class="meta">${REGION(n)} · Tydzień ${n} z 12</span></div>
+  <div class="head"><div class="num">${ROMAN[n]}</div><div><h1${stageName(n).length>16?' style="font-size:29px"':''}>${stageName(n)}</h1><div class="sub"><b>${d.gram}</b> · ${d.topic}</div></div>
+    <svg class="hero" data-doodle="${d.art.hero}+" viewBox="-12 -12 124 114"></svg></div>
+  <div class="rule"></div>
+  <p class="quest">${d.quest}</p>
+  <svg class="dd" data-doodle="${d.art.side}" viewBox="0 0 100 100" style="width:64px;height:64px;right:58px;top:206px;transform:rotate(-5deg)"></svg>
+  <div class="cols">
+    <div><h2>Gramatyka <small>${d.g.length} zwoje</small></h2>${d.g.map(x=>item(x,true)).join("")}</div>
+    <div><h2>Umiejętności <small>${d.u.length} moce</small></h2>${d.u.map(x=>item(x,false)).join("")}
+      <div class="challenge"><h2>Wyzwanie tygodnia</h2>
+        <div class="item" style="padding-top:0"><span class="cb" data-f="cb"></span><div><p>${d.ch}</p></div></div></div>
+    </div>
+  </div>
+  <div class="loot" style="position:relative"><h2>Łup etapu <small>${nw} słów i zwrotów · odhacz te, których używasz bez zastanowienia</small></h2>
+    <svg class="dd" data-doodle="${d.art.loot}" viewBox="0 0 100 100" style="width:48px;height:48px;right:2px;top:-30px;transform:rotate(5deg)"></svg>
+    <div class="words">${words}</div></div>
+  <div class="gate" style="margin-top:26px;position:relative">${GATE_SVG}
+    <div><h2>Brama etapu <small>przejdziesz dalej, gdy zdobędziesz 80% punktów</small></h2>
+      <div class="tally">
+        <span class="slot">Gramatyka <span class="tf" data-f="txt" data-n="e${n}_g"></span>/ ${d.g.length}</span>
+        <span class="slot">Umiejętności <span class="tf" data-f="txt" data-n="e${n}_u"></span>/ ${d.u.length}</span>
+        <span class="slot">Wyzwanie <span class="tf" data-f="txt" data-n="e${n}_w"></span>/ 1</span>
+        <span class="slot">Słownictwo <span class="tf" data-f="txt" data-n="e${n}_s"></span>/ ${nw}</span>
+        <span class="slot sum">Razem <span class="tf" data-f="txt" data-n="e${n}_razem"></span>/ ${total}</span></div>
+      <div class="need">Brama otwiera się od <b>${need} punktów</b>. Mniej? Zostań tu jeszcze kilka dni i powtórz to, czego nie odhaczyłeś/aś.</div>
+      <div class="oath"><span class="cb lg" data-f="cb"></span><span><em>Kodeks bohatera.</em> Odhaczyłem/am tylko to, co naprawdę umiem: bez zaglądania do notatek i bez naciągania. Oszukać mogę tylko siebie.</span></div>
+      <div class="done"><span class="cb lg" data-f="cb"></span>Etap zaliczony<span class="lbl">data</span><span class="tf" data-f="txt" data-n="e${n}_data"></span></div>
+    </div>
+    <svg class="dd" data-doodle="${d.art.gate}" viewBox="0 0 100 100" style="width:70px;height:70px;right:2px;bottom:-2px;transform:rotate(3deg)"></svg>
+  </div>
+  <div class="foot"><a data-link="mapa">← Mapa</a><span class="pg">Etap ${n} z 12</span>${next}</div>
+</section>`;
+}
+document.getElementById("stages").innerHTML=STAGE_DATA.map(stageHTML).join("");
+
+/* ===================== ILUSTRACJE: gruby kontur, biel, ciężka krawędź (styl jak skrzynia z kluczem) ===================== */
+// układ 100×100; prefiks: w = biel, b = jasny błękit, i = atrament, n = sama kreska, bn = niebieska kreska
+const pine=(cx,b,h,w,k="i")=>`${k}:<path d="M${cx-2},${b} V${b-6} H${cx-w/2} L${cx-w*.28},${b-h*.36} H${cx-w*.4} L${cx-w*.18},${b-h*.68} H${cx-w*.28} L${cx},${b-h} L${cx+w*.28},${b-h*.68} H${cx+w*.18} L${cx+w*.4},${b-h*.36} H${cx+w*.28} L${cx+w/2},${b-6} H${cx+2} V${b}Z"/>`;
+const star=(x,y,r,k="b")=>(r*=.75,0)||`${k}:<path d="M${x},${y-r} L${x+r*.3},${y-r*.3} L${x+r},${y} L${x+r*.3},${y+r*.3} L${x},${y+r} L${x-r*.3},${y+r*.3} L${x-r},${y} L${x-r*.3},${y-r*.3}Z"/>`;
+const DD={
+ spring:[`w:<path d="M16 92 Q16 76 50 76 Q84 76 84 92Z"/>`,`b:<ellipse cx="50" cy="78" rx="30" ry="4"/>`,`bn:<path d="M50 76 Q44 58 50 46 Q56 58 50 76 M40 74 Q34 66 36 60 M60 74 Q66 66 64 60"/>`,star(50,36,5),star(30,52,3),star(72,50,3)],
+ village:[`n:<path d="M2 92 H98 M30 92 Q40 86 50 92"/>`,`w:<path d="M50 60 V76 H76 V60Z"/>`,`b:<path d="M45 62 Q63 38 81 62Z"/>`,`w:<path d="M60 76 V68 H66 V76"/>`,
+   `w:<path d="M8 64 V90 H40 V64Z"/>`,`b:<path d="M3 66 Q24 36 45 66Z"/>`,`n:<path d="M12 58 Q16 52 22 49 M28 49 Q34 52 37 58"/>`,`w:<path d="M20 90 V78 Q24 72 28 78 V90"/>`,`b:<path d="M31 72 H37 V78 H31Z"/>`,
+   `w:<path d="M70 80 V90 H92 V80Z"/>`,`n:<path d="M72 80 V66 M90 80 V66 M81 66 V73"/>`,`w:<path d="M67 68 L81 57 L95 68Z"/>`,`b:<ellipse cx="81" cy="80" rx="11" ry="3"/>`,star(44,34,3),star(56,24,2.4),star(30,26,2)],
+ market:[`n:<path d="M20 50 V88 M80 50 V88"/>`,`w:<path d="M14 64 H86 V88 H14Z"/>`,`b:<path d="M10 50 L26 22 H74 L90 50Z"/>`,`n:<path d="M50 22 V50 M38 22 L34 50 M62 22 L66 50"/>`,
+   `w:<path d="M10 50 Q18 60 26 50 Q34 60 42 50 Q50 60 58 50 Q66 60 74 50 Q82 60 90 50Z"/>`,`n:<path d="M50 22 V8"/>`,`b:<path d="M50 6 L64 10 L50 14Z"/>`,`b:<circle cx="30" cy="76" r="6"/>`,`b:<circle cx="44" cy="76" r="6"/>`,`n:<path d="M58 72 H76 M58 80 H72"/>`],
+ tavern:[`w:<path d="M58 28 V10 H65 V32"/>`,`w:<path d="M14 90 V62 H66 V90Z"/>`,`w:<path d="M8 62 V38 H72 V62Z"/>`,`n:<path d="M8 50 H72 M24 38 V62 M56 38 V62 M8 62 L14 66 M72 62 L66 66"/>`,
+   `i:<path d="M3 40 L40 8 L77 40Z"/>`,`b:<path d="M14 42 H20 V48 H14Z"/>`,`b:<path d="M60 42 H66 V48 H60Z"/>`,`w:<path d="M33 90 V72 Q40 65 47 72 V90"/>`,`b:<path d="M19 70 H27 V79 H19Z"/>`,`b:<path d="M53 70 H61 V79 H53Z"/>`,
+   `n:<path d="M72 46 H94 M88 46 V52"/>`,`w:<path d="M80 52 H96 V64 Q88 72 80 64Z"/>`,`bn:<path d="M83 62 Q85 56 88 59 Q90 62 93 56"/>`,`w:<path d="M72 90 V77 Q78 74 84 77 V90Z"/>`,`n:<path d="M72 81 H84 M72 86 H84 M2 92 H98"/>`,`bn:<path d="M62 6 Q56 0 62 -6"/>`],
+ city:[`w:<path d="M10 90 V40 H18 V32 H24 V40 H32 V90"/>`,`w:<path d="M68 90 V40 H76 V32 H82 V40 H90 V90"/>`,`w:<path d="M32 90 V54 H68 V90Z"/>`,`b:<path d="M40 90 V70 Q50 56 60 70 V90Z"/>`,
+   `n:<path d="M45 90 V64 M50 90 V62 M55 90 V64 M40 78 H60"/>`,`n:<path d="M21 32 V14 M79 32 V14"/>`,`b:<path d="M21 12 L32 16 L21 20Z"/>`,`b:<path d="M79 12 L90 16 L79 20Z"/>`,`n:<path d="M21 52 V60 M79 52 V60 M32 54 V48 H38 V54 M62 54 V48 H68 V54"/>`],
+ book:[`w:<path d="M12 92 V46 H88 V92Z"/>`,`b:<path d="M6 48 L50 20 L94 48Z"/>`,`w:<path d="M28 92 V62 Q50 40 72 62 V92Z"/>`,
+   `n:<path d="M28 71 H72 M28 81 H72 M33 62 V71 M37 60 V71 M41 59 V71 M46 58 V71 M54 58 V71 M59 59 V71 M63 60 V71 M67 62 V71 M32 73 V81 M36 74 V81 M41 73 V81 M45 73 V81 M55 74 V81 M60 73 V81 M65 73 V81 M28 92 H72"/>`,
+   `b:<path d="M16 56 H23 V68 H16Z"/>`,`b:<path d="M77 56 H84 V68 H77Z"/>`,`w:<path d="M50 14 Q42 8 32 11 L34 2 Q44 0 50 5Z"/>`,`w:<path d="M50 14 Q58 8 68 11 L66 2 Q56 0 50 5Z"/>`,
+   `bn:<path d="M50 14 V5 M28 4 L24 0 M72 4 L76 0"/>`,star(84,10,4),star(16,14,3)],
+ port:[`bn:<path d="M2 94 Q9 89 16 94 Q23 99 30 94"/>`,`w:<path d="M24 92 Q26 80 38 82 H70 Q80 80 84 92Z"/>`,`w:<path d="M40 82 L46 36 H62 L68 82Z"/>`,`b:<path d="M44 52 H64 L65 62 H43Z"/>`,`w:<path d="M44 36 V24 H64 V36Z"/>`,
+   `i:<path d="M42 24 L54 10 L66 24Z"/>`,`b:<path d="M49 36 V27 H59 V36"/>`,`bn:<path d="M36 26 L24 21 M36 32 L24 36 M72 26 L84 21 M72 32 L84 36"/>`,`n:<path d="M54 82 V72"/>`],
+ forest:[pine(14,90,46,26),pine(88,90,48,28),pine(30,92,64,34),pine(72,92,68,36),pine(50,96,86,44),`b:<ellipse cx="40" cy="84" rx="2.8" ry="1.8"/>`,`b:<ellipse cx="46" cy="84" rx="2.8" ry="1.8"/>`,
+   `b:<ellipse cx="62" cy="80" rx="2.4" ry="1.6"/>`,`b:<ellipse cx="67" cy="80" rx="2.4" ry="1.6"/>`,`bn:<path d="M-2 96 Q12 90 26 96 Q40 102 54 96 Q68 90 82 96 Q92 100 102 96 M10 88 Q20 84 30 88"/>`,`w:<path d="M78 14 A9 9 0 1 0 88 26 A7 7 0 1 1 78 14Z"/>`],
+ mirror:[`n:<path d="M30 92 H70"/>`,`w:<path d="M38 92 L42 42 H58 L62 92Z"/>`,`n:<path d="M45 58 H53 M48 74 H56"/>`,`w:<path d="M36 42 H64 V36 H36Z"/>`,`b:<path d="M50 4 L63 20 L50 36 L37 20Z"/>`,`n:<path d="M50 4 V36 M37 20 H63"/>`,
+   `bn:<path d="M30 12 L23 7 M70 12 L77 7 M28 24 H19 M72 24 H81"/>`],
+ temple:[`n:<path d="M8 92 H88 M14 86 H82"/>`,`w:<path d="M18 86 V48 H26 V86Z"/>`,`w:<path d="M34 86 V48 H42 V86Z"/>`,`w:<path d="M54 86 V48 H62 V86Z"/>`,`w:<path d="M70 86 V48 H78 V86Z"/>`,
+   `w:<path d="M12 48 H84 V40 H12Z"/>`,`w:<path d="M12 40 L48 18 L84 40Z"/>`,`b:<circle cx="48" cy="31" r="4"/>`,`b:<path d="M48 14 C 40 6 46 0 48 -8 C 52 0 58 6 48 14Z"/>`],
+ seer:[`bn:<ellipse cx="50" cy="82" rx="44" ry="11"/>`,`bn:<path d="M18 82 l3 -2 M30 89 l3 2 M70 89 l-3 2 M82 82 l-3 -2" />`,`w:<path d="M28 76 V54 Q33 49 38 54 V76Z"/>`,`w:<path d="M62 76 V54 Q67 49 72 54 V76Z"/>`,`w:<path d="M45 72 V50 Q50 45 55 50 V72Z"/>`,
+   `w:<path d="M8 92 V58 Q14 51 20 58 V92Z"/>`,`w:<path d="M80 92 V58 Q86 51 92 58 V92Z"/>`,`n:<path d="M12 66 L16 70 L12 74 M84 66 L88 70 M86 76 V80"/>`,`b:<circle cx="50" cy="28" r="12"/>`,`n:<path d="M43 24 Q44 19 49 18"/>`,
+   `bn:<path d="M50 10 V4 M36 18 L31 14 M64 18 L69 14 M34 30 H28 M66 30 H72"/>`,star(20,20,4),star(84,36,3)],
+ forge:[`n:<path d="M4 92 H96"/>`,`b:<path d="M8 92 L12 62 Q20 54 28 62 L32 92Z"/>`,`n:<path d="M16 68 L22 74 L16 80"/>`,`w:<path d="M38 56 H86 Q84 64 74 66 L70 78 H80 V92 H44 V78 H54 L50 66 Q42 64 38 60 Q32 58 30 54 Q34 56 38 56Z"/>`,
+   `n:<path d="M58 50 L80 24"/>`,`w:<path d="M74 16 L88 30 L94 24 L80 10Z"/>`,`bn:<path d="M56 46 L50 38 M64 44 L66 36 M48 50 L40 46"/>`],
+ fortress:[   `w:<path d="M45 26 V12 H55 V26"/>`,`i:<path d="M43 12 L50 -4 L57 12Z"/>`,`n:<path d="M50 -4 V-14"/>`,`b:<path d="M50 -14 L61 -10 L50 -6Z"/>`,
+   `w:<path d="M37 72 V32 H63 V72Z"/>`,`w:<path d="M35 32 V25 H40 V29 H45 V25 H55 V29 H60 V25 H65 V32Z"/>`,`b:<path d="M46 44 V39 Q50 35 54 39 V44Z"/>`,`b:<path d="M46 58 V53 Q50 49 54 53 V58Z"/>`,`n:<path d="M40 38 H44 M57 48 H61 M40 64 H44"/>`,
+   `w:<path d="M12 86 V42 H27 V86Z"/>`,`i:<path d="M9 42 L19.5 20 L30 42Z"/>`,`n:<path d="M19.5 20 V11"/>`,`b:<path d="M19.5 11 L27 14 L19.5 17Z"/>`,
+   `w:<path d="M73 86 V42 H88 V86Z"/>`,`i:<path d="M70 42 L80.5 20 L91 42Z"/>`,`n:<path d="M80.5 20 V11"/>`,`b:<path d="M80.5 11 L88 14 L80.5 17Z"/>`,
+   `b:<path d="M17 52 V48 Q19.5 45 22 48 V52Z"/>`,`b:<path d="M78 52 V48 Q80.5 45 83 48 V52Z"/>`,`n:<path d="M19.5 62 V68 M80.5 62 V68 M15 76 H21 M79 74 H85"/>`,
+   `w:<path d="M27 86 V64 H73 V86Z"/>`,`w:<path d="M27 64 V58 H32 V61 H37 V58 H42 V61 H47 V58 H53 V61 H58 V58 H63 V61 H68 V58 H73 V64Z"/>`,
+   `b:<path d="M43 86 V74 Q50 65 57 74 V86Z"/>`,`n:<path d="M46.5 86 V71 M50 86 V69 M53.5 86 V71 M43 79 H57 M31 72 H37 M63 78 H69"/>`],
+ stones:[`b:<ellipse cx="50" cy="82" rx="46" ry="12"/>`,`w:<path d="M34 72 V46 H44 V72Z"/>`,`w:<path d="M58 72 V46 H68 V72Z"/>`,`w:<path d="M30 46 H72 V38 H30Z"/>`,star(51,60,5),
+   `w:<path d="M10 88 V58 Q16 52 22 58 V88Z"/>`,`w:<path d="M78 88 V58 Q84 52 90 58 V88Z"/>`,`w:<path d="M42 96 V68 Q50 62 58 68 V96Z"/>`],
+ obelisk:[`w:<path d="M32 92 V82 H68 V92Z"/>`,`w:<path d="M42 82 L46 24 H54 L58 82Z"/>`,`i:<path d="M46 24 L50 12 L54 24Z"/>`,`bn:<path d="M50 36 V46 M46 56 L50 62 L54 56 M47 70 H53"/>`],
+ cave:[`w:<path d="M4 92 Q8 48 40 38 Q72 30 96 92Z"/>`,`i:<path d="M28 92 V76 Q44 52 62 76 V92Z"/>`,`b:<ellipse cx="40" cy="80" rx="3" ry="2"/>`,`b:<ellipse cx="49" cy="80" rx="3" ry="2"/>`,`n:<path d="M72 56 L78 64 M18 64 L24 58 M48 46 L54 44"/>`],
+ ruins:[`n:<path d="M4 92 H96"/>`,`w:<path d="M12 92 V40 L18 34 L24 40 V92Z"/>`,`w:<path d="M24 52 Q40 34 54 46 L50 52 Q40 44 24 60Z"/>`,`w:<path d="M66 92 V56 L72 50 L78 58 V92Z"/>`,`w:<circle cx="44" cy="86" r="6"/>`,`w:<circle cx="88" cy="88" r="4"/>`,`b:<path d="M30 92 Q34 82 38 92"/>`],
+ windmill:[`w:<path d="M36 92 L40 50 H60 L64 92Z"/>`,`i:<path d="M38 50 L50 38 L62 50Z"/>`,`b:<path d="M50 42 L22 26 L26 20 L52 38Z"/>`,`b:<path d="M50 42 L74 16 L80 20 L54 44Z"/>`,`b:<path d="M50 42 L76 58 L72 64 L48 46Z"/>`,`b:<path d="M50 42 L26 68 L20 64 L46 40Z"/>`,
+   `w:<circle cx="50" cy="42" r="4"/>`,`w:<path d="M46 92 V80 Q50 74 54 80 V92"/>`],
+ gate:[`w:<path d="M10 94 V38 H18 V30 H26 V38 H36 V30 H44 V38 H56 V30 H64 V38 H74 V30 H82 V38 H90 V94Z"/>`,`b:<path d="M32 94 V62 Q50 40 68 62 V94Z"/>`,`n:<path d="M41 94 V54 M50 94 V50 M59 94 V54 M32 72 H68 M32 84 H68"/>`,`n:<path d="M50 30 V8"/>`,`b:<path d="M50 6 L64 10 L50 14Z"/>`,`w:<path d="M16 50 H24 V58 H16Z"/>`,`w:<path d="M76 50 H84 V58 H76Z"/>`],
+ chest:[`w:<path d="M10 52 Q10 22 44 22 Q78 22 78 52Z"/>`,`w:<path d="M10 52 H78 V88 H10Z"/>`,`n:<path d="M26 24 V52 M62 24 V52"/>`,`b:<path d="M37 46 H51 V62 H37Z"/>`,`i:<path d="M44 51 a2.6 2.6 0 1 1 0.1 0 L46 58 H42Z"/>`,
+   `n:<path d="M18 36 Q20 30 26 28"/>`,`n:<path d="M58 80 H86 M66 80 V86 M72 80 V86"/>`,`w:<circle cx="90" cy="80" r="8"/>`,`n:<path d="M18 66 V74"/>`],
+ alarm:[`b:<circle cx="26" cy="26" r="11"/>`,`b:<circle cx="74" cy="26" r="11"/>`,`n:<path d="M30 82 L22 94 M70 82 L78 94"/>`,`w:<circle cx="50" cy="56" r="32"/>`,`n:<path d="M50 56 V36 M50 56 L64 64"/>`,`i:<circle cx="50" cy="56" r="3"/>`,
+   `n:<path d="M30 48 Q32 40 40 35"/>`,`bn:<path d="M8 50 L2 46 M8 62 H1 M92 50 L98 46 M92 62 H99"/>`],
+ mug:[`n:<path d="M72 46 Q92 46 92 62 Q92 78 72 78"/>`,`w:<path d="M22 34 V82 Q22 90 30 90 H64 Q72 90 72 82 V34Z"/>`,`b:<ellipse cx="47" cy="34" rx="25" ry="6"/>`,`n:<path d="M32 50 V70"/>`,`bn:<path d="M38 24 Q32 16 38 8 M54 24 Q48 16 54 8"/>`],
+ scales:[`n:<path d="M50 22 V86 M16 32 L84 28 M16 32 L8 58 M16 32 L24 58 M84 28 L76 52 M84 28 L92 52"/>`,`w:<path d="M32 94 H68 L60 86 H40Z"/>`,`w:<path d="M2 58 Q14 72 30 58Z"/>`,`w:<path d="M70 52 Q82 66 98 52Z"/>`,
+   `w:<circle cx="50" cy="18" r="5"/>`,`b:<circle cx="84" cy="44" r="8"/>`,`i:<path d="M10 50 H22 V58 H10Z"/>`],
+ pouch:[`w:<path d="M32 40 Q8 62 18 84 Q26 94 50 94 Q74 94 82 84 Q92 62 68 40Z"/>`,`w:<path d="M30 40 Q50 48 70 40 L66 30 Q50 36 34 30Z"/>`,`n:<path d="M36 30 L30 18 M50 34 V18 M64 30 L70 18"/>`,`b:<path d="M44 66 L50 58 L56 66 L50 74Z"/>`,
+   `n:<path d="M26 60 Q24 68 26 74"/>`,`b:<circle cx="86" cy="88" r="9"/>`,`b:<circle cx="12" cy="90" r="7"/>`],
+ lute:[`w:<path d="M56 42 L84 14 L90 20 L62 48Z"/>`,`w:<path d="M84 14 L90 4 L98 12 L90 20Z"/>`,`b:<ellipse cx="38" cy="66" rx="28" ry="26"/>`,`i:<circle cx="40" cy="62" r="6"/>`,`n:<path d="M24 78 L88 16 M30 82 L90 20"/>`,`n:<path d="M20 52 Q22 44 30 40"/>`],
+ dice:[`w:<path d="M10 46 L36 34 L60 46 L34 58Z"/>`,`b:<path d="M10 46 V76 L34 90 V58Z"/>`,`w:<path d="M34 58 V90 L60 76 V46Z"/>`,`i:<circle cx="35" cy="46" r="3.5"/>`,`i:<circle cx="43" cy="68" r="3.5"/>`,`i:<circle cx="52" cy="78" r="3.5"/>`,
+   `w:<path d="M66 70 L82 62 L96 72 L80 80Z"/>`,`b:<path d="M66 70 V86 L80 96 V80Z"/>`,`w:<path d="M80 80 V96 L96 86 V72Z"/>`,`i:<circle cx="81" cy="71" r="3"/>`]
+};
+const DDC={ink:"#2A3140", paper:"#FBFAF7", light:"#DCE7F5", blue:"#3768D8"};
+// styl ryciny: cienki kontur, cieniowanie kreskami z prawej strony białych brył, „atrament” = gęste krzyżowe kreskowanie
+let ddUid=0;
+function ddPatterns(id,ppu){
+  const g=3.3/ppu, lw=.62/ppu, gd=1.9/ppu;
+  return `<pattern id="hl${id}" patternUnits="userSpaceOnUse" width="${g}" height="${g}" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="${g}" stroke="${DDC.ink}" stroke-width="${lw}"/></pattern>
+    <pattern id="hd${id}" patternUnits="userSpaceOnUse" width="${gd}" height="${gd}" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="${gd}" stroke="${DDC.ink}" stroke-width="${lw*1.35}"/><line x1="0" y1="0" x2="${gd}" y2="0" stroke="${DDC.ink}" stroke-width="${lw*1.1}"/></pattern>`;
+}
+const VIGNETTE=[`n:<path d="M-6 92 H106"/>`,`n:<path d="M-2 92 l2 -5 l2 5 M6 92 l1.5 -4 l1.5 4 M98 92 l2 -5 l2 5 M90 92 l1.5 -4 l1.5 4"/>`,
+  `n:<path d="M-4 97 H18 M30 98 H60 M76 97 H100"/>`];
+function ddInner(name,ppu,id,paper=DDC.paper){
+  const hero=name.endsWith("+"); if(hero) name=name.slice(0,-1);
+  const sw=1.25/ppu;
+  const parts=[...(hero?VIGNETTE:[]),...(DD[name]||[]),...(hero?[pine(-2,92,30,16,"w"),pine(8,92,22,12,"w")]:[])].map(s=>{const k=s.slice(0,s.indexOf(":")); return [k,s.slice(s.indexOf(":")+1)];});
+  let out=`<defs>${ddPatterns(id,ppu)}</defs><g stroke="${DDC.ink}" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="round">`;
+  parts.forEach(([k,e])=>{
+    if(k==="w") out+=`<g fill="${paper}" class="sh" data-hl="hl${id}">${e}</g>`;
+    else if(k==="b") out+=`<g fill="${DDC.light}">${e}</g>`;
+    else if(k==="i") out+=`<g fill="${paper}">${e}</g><g fill="url(#hd${id})" stroke="none">${e}</g><g fill="none">${e}</g>`;
+    else if(k==="bn") out+=`<g fill="none" stroke="#7FA0D4" stroke-width="${sw*.6}">${e}</g>`;
+    else out+=`<g fill="none" stroke-width="${sw*.8}">${e}</g>`;
+  });
+  return out+"</g>";
+}
+function ddShade(root){ // kreskowanie prawych 40% każdej białej bryły
+  root.querySelectorAll("g.sh").forEach(g=>{
+    const shape=g.firstElementChild; if(!shape) return;
+    const b=shape.getBBox(); if(b.width<6||b.height<6) return;
+    const cid="c"+(++ddUid);
+    const clip=document.createElementNS(NS,"clipPath"); clip.id=cid;
+    const r=document.createElementNS(NS,"rect"); r.setAttribute("x",b.x+b.width*.6); r.setAttribute("y",b.y-2); r.setAttribute("width",b.width*.45); r.setAttribute("height",b.height+4);
+    clip.appendChild(r); g.appendChild(clip);
+    const over=shape.cloneNode(); over.setAttribute("fill",`url(#${g.dataset.hl})`); over.setAttribute("stroke","none"); over.setAttribute("clip-path",`url(#${cid})`); over.setAttribute("opacity",".5");
+    shape.after(over);
+  });
+}
+function drawDoodles(){ document.querySelectorAll("svg[data-doodle]").forEach(svg=>{
+  const vb=svg.viewBox.baseVal, ppu=svg.getBoundingClientRect().width/vb.width, id="p"+(++ddUid);
+  svg.innerHTML=ddInner(svg.dataset.doodle,ppu,id); ddShade(svg);
+}); }
+drawDoodles();
+
+/* ===================== MAPA ===================== */
+const INK="#2A3140", INK2="#5E6B80", RED="#3768D8", PARCH="#F7F6F2", SEA="#E1EBF6", SEAINK="#6F92C6";
+let seed=7; const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+const R=(a,b)=>a+rnd()*(b-a);
+const el=(id)=>document.getElementById(id);
+function add(g,html){el(g).insertAdjacentHTML("beforeend",html);}
+function smooth(p,closed){ // catmull-rom -> bezier
+  const n=p.length; let d=`M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  const last=closed?n:n-1;
+  for(let i=0;i<last;i++){
+    const p0=p[(i-1+n)%n], p1=p[i], p2=p[(i+1)%n], p3=p[(i+2)%n];
+    const q0=closed||i>0?p0:p1, q3=closed||i<n-2?p3:p2;
+    const c1=[p1[0]+(p2[0]-q0[0])/6,p1[1]+(p2[1]-q0[1])/6], c2=[p2[0]-(q3[0]-p1[0])/6,p2[1]-(q3[1]-p1[1])/6];
+    d+=` C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d+(closed?"Z":"");
+}
+function roughen(pts,step,amp){ // podział + szum, żeby wybrzeże było postrzępione
+  const out=[];
+  for(let i=0;i<pts.length-1;i++){
+    const [x1,y1]=pts[i],[x2,y2]=pts[i+1], L=Math.hypot(x2-x1,y2-y1), k=Math.max(1,Math.round(L/step));
+    const nx=-(y2-y1)/L, ny=(x2-x1)/L;
+    for(let j=0;j<k;j++){const t=j/k, a=(j===0?0:R(-amp,amp)); out.push([x1+(x2-x1)*t+nx*a, y1+(y2-y1)*t+ny*a]);}
+  }
+  out.push(pts[pts.length-1]); return out;
+}
+
+/* wybrzeże: morze na zachodzie i w lewym dolnym rogu */
+const coastKey=[[-10,-10],[132,-10],[152,70],[128,150],[170,236],[146,316],[196,392],[168,466],[134,548],[178,626],[214,680],[226,716],[196,752],[150,800],[122,866],[166,934],[150,990],[222,1046],[300,1090],[318,1133],[-10,1133]];
+const coastLine=roughen(coastKey.slice(1,-1),16,4.5);
+const landPts=[...coastLine,[804,1133],[804,-10]];
+const landD=smooth(landPts,true);
+const seaD=`M-10,-10 H804 V1133 H-10Z `+landD;
+el("seaShape").setAttribute("d",landD);  // używane odwrotnie niżej
+el("seaShape").parentNode.innerHTML=`<path clip-rule="evenodd" fill-rule="evenodd" d="${seaD}"/>`;
+
+/* linie portolanu z róży wiatrów */
+const CR=[86,1018];
+for(let i=0;i<32;i++){const a=i*Math.PI/16; add("rhumb",`<line x1="${CR[0]}" y1="${CR[1]}" x2="${CR[0]+Math.cos(a)*1400}" y2="${CR[1]+Math.sin(a)*1400}" stroke="${SEAINK}" stroke-width="${i%4?0.35:0.6}" opacity=".6"/>`);}
+const CR2=[96,250];
+for(let i=0;i<16;i++){const a=i*Math.PI/8+0.2; add("rhumb",`<line x1="${CR2[0]}" y1="${CR2[1]}" x2="${CR2[0]+Math.cos(a)*1400}" y2="${CR2[1]+Math.sin(a)*1400}" stroke="${SEAINK}" stroke-width=".35" opacity=".5"/>`);}
+
+/* fale na morzu */
+for(let k=0;k<70;k++){
+  const x=R(10,150), y=R(20,1110);
+  if(Math.hypot(x-CR[0],y-CR[1])<62) continue;
+  add("waves",`<path d="M${x},${y} q4,-3 8,0 q4,3 8,0" fill="none" stroke="${SEAINK}" stroke-width=".8" stroke-linecap="round" opacity=".85"/>`);
+}
+
+/* linie falowania przy brzegu (koncentryczne obrysy) + ląd */
+[[30,.25],[22,.35],[14,.5],[7,.7]].forEach(([w,o])=>{
+  add("coast",`<path d="${landD}" fill="none" stroke="${SEAINK}" stroke-width="${w}" opacity="${o*0.8}"/>`);
+  add("coast",`<path d="${landD}" fill="none" stroke="${SEA}" stroke-width="${w-2.2}"/>`);
+});
+add("coast",`<path d="${landD}" fill="${PARCH}" stroke="${INK}" stroke-width="1.6"/>`);
+
+/* wysepka */
+const isl=smooth(roughen([[48,560],[78,548],[102,566],[96,596],[62,604],[42,586],[48,560]],10,3),true);
+[[14,.35],[7,.6]].forEach(([w,o])=>{add("coast",`<path d="${isl}" fill="none" stroke="${SEAINK}" stroke-width="${w}" opacity="${o*.8}"/><path d="${isl}" fill="none" stroke="${SEA}" stroke-width="${w-2.2}"/>`);});
+add("coast",`<path d="${isl}" fill="${PARCH}" stroke="${INK}" stroke-width="1.3"/>`);
+add("deco",tree(60,580,5.5)+tree(68,576,6.5)+tree(56,590,4.5)+`<g stroke="${INK}" stroke-width=".9" stroke-linejoin="round">
+  <path d="M84,592 l2,-12 h4 l2,12Z" fill="${PARCH}"/><path d="M86,580 l2,-4 l2,4" fill="${PARCH}"/>
+  <path d="M72,596 l3,3 M75,596 l-3,3" stroke="${RED}" stroke-width="1.1"/>
+  <path d="M108,600 q3,-5 7,-1 q2,-3 4,1Z M30,572 q3,-4 6,0Z" fill="${PARCH}"/></g>
+  <g fill="none" stroke="${SEAINK}" stroke-width=".8" stroke-linecap="round"><path d="M104,570 a8,8 0 0 1 0,14 M109,566 a13,13 0 0 1 0,22 M114,562 a18,18 0 0 1 0,30"/></g>`);
+
+/* strefy zakazane dla ozdób: punkty etapów, napisy, kartusz */
+const keep=[];
+STAGES.forEach(s=>{keep.push([s.p[0]-62,s.p[1]-104,124,154]);});
+const LMK=[[228,292],[350,800],[738,846],[452,1082],[684,712]]; LMK.forEach(([x,y])=>keep.push([x-40,y-56,80,78]));
+keep.push([420,10,360,118]);                       // kartusz
+keep.push([650,160,110,75]); keep.push([530,110,140,140]); keep.push([505,262,190,42]); // smok, duża twierdza i jej napis
+keep.push([600,1040,190,80]);                      // legenda
+keep.push([600,975,180,55]); keep.push([760,550,30,180]); keep.push([170,140,300,45]); // napisy regionów
+function free(x,y,r){
+  if(x<0||x>794||y<0||y>1123) return false;
+  if(!document.getElementById("landShape2")) return true;
+  for(const [kx,ky,kw,kh] of keep){ if(x+r>kx && x-r<kx+kw && y+r>ky && y-r<ky+kh) return false; }
+  return true;
+}
+el("landClip").innerHTML=`<path id="landShape2" d="${landD}"/>`;
+const svgEl=el("mapsvg"), landPath=el("landShape2");
+function onLand(x,y,m=10){
+  const pt=svgEl.createSVGPoint();
+  for(const [dx,dy] of [[0,0],[m,0],[-m,0],[0,m],[0,-m]]){pt.x=x+dx;pt.y=y+dy; if(!landPath.isPointInFill(pt)) return false;}
+  return true;
+}
+const placed=[];
+function spaced(x,y,r){for(const [px,py,pr] of placed){if(Math.hypot(x-px,y-py)<r+pr) return false;} return true;}
+
+/* góry: kreskowane trójkąty, cieniowana prawa strona */
+function mountain(x,y,s){
+  const h=s*R(1.0,1.35), w=s*R(0.95,1.2), px=x+R(-s*.15,s*.15), py=y-h;
+  const mx=px+R(-2,2), my=y; // grań schodzi do podstawy
+  let d=`<path d="M${x-w},${y} Q${(x-w+px)/2},${py+h*.35} ${px},${py} Q${(px+x+w)/2+2},${py+h*.4} ${x+w},${y}Z" fill="${PARCH}" stroke="none"/>`;
+  const n=Math.max(4,Math.round(s/2.2));
+  for(let i=1;i<=n;i++){const t=i/(n+1); const ax=px+(x+w-px)*t, ay=py+(y-py)*t+R(-1,1);
+    d+=`<line x1="${(ax-1).toFixed(1)}" y1="${(ay+1.5).toFixed(1)}" x2="${(px+(ax-px)*0.5).toFixed(1)}" y2="${(y-1).toFixed(1)}" stroke="${INK}" stroke-width=".75" opacity=".85"/>`;}
+  d+=`<path d="M${x-w},${y} Q${(x-w+px)/2},${py+h*.35} ${px},${py} Q${(px+x+w)/2+2},${py+h*.4} ${x+w},${y}" fill="none" stroke="${INK}" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/>`;
+  d+=`<path d="M${px},${py} Q${px+w*.08},${py+h*.5} ${px+w*.15},${y-1}" fill="none" stroke="${INK}" stroke-width=".8"/>`;
+  return d;
+}
+function tree(x,y,s){ // drzewo iglaste; im bliżej Mglistego Lasu, tym gęstsze kreskowanie
+  const d=Math.hypot(x-392,y-628), lvl=d<95?2:d<150?1:(d<185&&rnd()<.4)?1:0;
+  if(lvl){ s*=lvl===2?R(1.15,1.45):R(1,1.25);
+    const tri=rnd()<.5?`M${x},${y-s*1.7} L${x-s*.62},${y-s*.2} L${x+s*.62},${y-s*.2}Z`
+      :`M${x},${y-s*1.8} L${x-s*.42},${y-s*1.05} L${x-s*.25},${y-s*1.05} L${x-s*.66},${y-s*.2} L${x+s*.66},${y-s*.2} L${x+s*.25},${y-s*1.05} L${x+s*.42},${y-s*1.05}Z`;
+    return `<path d="${tri}" fill="${PARCH}"/><path d="${tri}" fill="url(#${lvl===2?"fhD":"fhL"})"/><path d="${tri}" fill="none" stroke="${INK}" stroke-width=".9" stroke-linejoin="round"/><line x1="${x}" y1="${y-s*.2}" x2="${x}" y2="${y+s*.25}" stroke="${INK}" stroke-width=".9"/>`; }
+  return `<path d="M${x},${y-s*1.6} L${x-s*.6},${y-s*.2} L${x+s*.6},${y-s*.2}Z" fill="${PARCH}" stroke="${INK}" stroke-width=".9" stroke-linejoin="round"/><line x1="${x}" y1="${y-s*.2}" x2="${x}" y2="${y+s*.25}" stroke="${INK}" stroke-width=".9"/>`;
+}
+function oak(x,y,s){
+  return `<path d="M${x-s*.75},${y-s*.5} a${s*.75},${s*.7} 0 1 1 ${s*1.5},0 q0,${s*.45} -${s*.75},${s*.45} q-${s*.75},0 -${s*.75},-${s*.45}Z" fill="${PARCH}" stroke="${INK}" stroke-width=".9"/><line x1="${x}" y1="${y-s*.05}" x2="${x}" y2="${y+s*.35}" stroke="${INK}" stroke-width=".9"/>`;
+}
+function hill(x,y,s){
+  return `<path d="M${x-s},${y} q${s},-${s*1.1} ${s*2},0" fill="${PARCH}" stroke="${INK}" stroke-width="1"/><path d="M${x+s*.25},${y-s*.45} q${s*.35},${s*.2} ${s*.45},${s*.45}" fill="none" stroke="${INK}" stroke-width=".6"/>`;
+}
+function scatter(fn,count,area,size,minR,tries=4000){
+  const items=[]; let k=0;
+  while(items.length<count && k++<tries){
+    const x=R(area[0],area[2]), y=R(area[1],area[3]);
+    if(!onLand(x,y,size) || !free(x,y,size) || !spaced(x,y,minR)) continue;
+    placed.push([x,y,minR*0.55]); items.push([x,y]);
+  }
+  items.sort((a,b)=>a[1]-b[1]).forEach(([x,y])=>add("terrain",fn(x,y,size*R(.85,1.15))));
+}
+/* Smocze Ziemie: pasma górskie (zachodzące na siebie, od tyłu do przodu) */
+const RANGES=[[[190,215],[290,250],[360,215],[470,205],[540,180]],[[170,120],[250,95],[340,90]],
+  [[545,355],[640,310],[720,285],[800,300]],[[300,330],[370,375],[400,420]],[[540,430],[640,420],[720,400],[800,420]],
+  [[680,200],[740,175],[800,190]],[[170,300],[220,330]],[[660,120],[720,110],[800,120]]];
+const peaks=[];
+RANGES.forEach(r=>{for(let i=0;i<r.length-1;i++){const [x1,y1]=r[i],[x2,y2]=r[i+1],L=Math.hypot(x2-x1,y2-y1);
+  for(let t=0;t<L;t+=R(17,24)){const x=x1+(x2-x1)*t/L+R(-6,6), y=y1+(y2-y1)*t/L+R(-10,10), sz=R(15,25);
+    if(onLand(x,y,8)&&free(x,y-sz*.6,sz*1.15)){peaks.push([x,y,sz]);placed.push([x,y,sz*.8]);}}}});
+peaks.sort((a,b)=>a[1]-b[1]).forEach(([x,y,sz])=>add("terrain",mountain(x,y,sz)));
+scatter(mountain,18,[150,70,794,470],10,20);
+scatter(mountain,6,[650,480,794,560],9,20);
+/* Pogranicze: las wokół Mglistego Lasu i dalej */
+scatter(tree,90,[260,540,560,720],7,11);
+scatter(tree,30,[560,640,794,720],6.5,11);
+/* Dolina: wzgórza i dęby */
+scatter(hill,16,[180,800,794,1100],9,34);
+/* pola uprawne w dolinie */
+function field(x,y,s){const a=R(-.18,.18), w=s*2.2, h=s*1.2, c=Math.cos(a), si=Math.sin(a);
+  const P=(u,v)=>`${(x+u*c-v*si).toFixed(1)},${(y+u*si+v*c).toFixed(1)}`;
+  let d=`<path d="M${P(-w/2,-h/2)} L${P(w/2,-h/2)} L${P(w/2,h/2)} L${P(-w/2,h/2)}Z" fill="${PARCH}" stroke="${INK}" stroke-width=".9"/>`;
+  for(let v=-h/2+3;v<h/2;v+=3) d+=`<path d="M${P(-w/2+2,v)} L${P(w/2-2,v)}" stroke="${INK}" stroke-width=".5" opacity=".7"/>`;
+  return d;}
+scatter(field,8,[300,880,700,1100],8,40);
+scatter(oak,26,[200,860,794,1110],6.5,16);
+
+/* rzeka: od gór do zatoki przy porcie */
+const riverPts=[[520,420],[500,470],[530,530],[480,600],[440,660],[360,690],[300,700],[232,716]];
+const riverD=smooth(roughen(riverPts,14,3),false);
+add("river",`<path d="${riverD}" fill="none" stroke="${SEA}" stroke-width="5"/><path d="${riverD}" fill="none" stroke="${INK}" stroke-width="1"/><path d="${riverD}" fill="none" stroke="${INK}" stroke-width="1" transform="translate(2.6,2.6)"/>`);
+
+/* granice regionów (kropkowane) */
+[[[150,800],[300,795],[420,782],[520,730],[650,700],[804,690]],
+ [[160,480],[300,470],[400,452],[560,440],[680,470],[804,470]]].forEach(b=>{
+  add("borders",`<path d="${smooth(roughen(b,30,6),false)}" fill="none" stroke="${SEAINK}" stroke-width="1.2" stroke-dasharray="1 5" stroke-linecap="round"/>`);
+});
+
+/* trasa czerwonym tuszem */
+const routePts=STAGES.map(s=>s.p);
+(function(){ // ślady stóp wzdłuż trasy, jak na mapie skarbów
+  const tmp=document.createElementNS(NS,"path"); tmp.setAttribute("d",smooth(routePts,false)); el("route").appendChild(tmp);
+  const L=tmp.getTotalLength(); let side=1, out="";
+  for(let t=8;t<L;t+=26){
+    const a=tmp.getPointAtLength(t), b=tmp.getPointAtLength(Math.min(L,t+1));
+    if(STAGES.some(s=>{const [dx,dy,anc]=s.lab, ly=s.p[1]+dy-(anc?4:16), lx=anc?s.p[0]+dx+s.name.length*3:s.p[0];
+      return Math.hypot(s.p[0]-a.x,s.p[1]-a.y)<20 || (Math.abs(a.x-lx)<s.name.length*(s.n===12?5.2:3.4)+8 && Math.abs(a.y-ly)<(s.n===12?16:10));})) continue;
+    const ang=Math.atan2(b.y-a.y,b.x-a.x)*180/Math.PI, ox=-Math.sin(ang*Math.PI/180)*4*side, oy=Math.cos(ang*Math.PI/180)*4*side;
+    out+=`<g transform="translate(${(a.x+ox).toFixed(1)},${(a.y+oy).toFixed(1)}) rotate(${ang.toFixed(0)})"><ellipse cx="2" cy="0" rx="3.7" ry="2.4"/><circle cx="-4" cy="0" r="1.7"/></g>`;
+    side=-side;
+  }
+  tmp.remove(); add("route",`<g fill="${RED}">${out}</g>`);
+})();
+
+/* punkty orientacyjne (bez numerów) */
+const LANDMARKS=[{p:[228,292],ic:"cave",name:"Jaskinia Trolli"},{p:[350,800],ic:"obelisk",name:"Obelisk"},{p:[738,846],ic:"spring",name:"Magiczne Źródło"},
+ {p:[452,1082],ic:"windmill",name:"Stary Wiatrak"},{p:[684,712],ic:"ruins",name:"Ruiny Strażnicy"}];
+const mapIcon=(name,x,y,size)=>{const sc=size/100, id="m"+(++ddUid); return `<g class="mi" data-ic="${name}" transform="translate(${x-size/2},${y-size}) scale(${sc})">${ddInner(name,sc,id,PARCH)}</g>`;};
+LANDMARKS.forEach(l=>{const [x,y]=l.p; add("places",mapIcon(l.ic,x,y+4,54)); add("labels",`<text x="${x}" y="${y+(l.ly||14)}" text-anchor="middle" font-family="Onest" font-style="italic" font-weight="500" font-size="9" fill="${INK2}" paint-order="stroke" stroke="${PARCH}" stroke-width="3">${l.name}</text>`);});
+/* znaczniki etapów: ikona nad punktem, medalion z numerem, napis pod */
+STAGES.forEach(s=>{
+  const [x,y]=s.p, [dx,dy,anchor]=s.lab;
+  const fin=s.n===12;
+  add("places",mapIcon(s.ic,x,fin?y+11:y-15,fin?118:78));
+  if(s.n===11){ const R1=(rx,ry,d,rot)=>`<g transform="translate(${rx},${ry}) rotate(${rot})"><path d="${d}"/></g>`;
+    add("places",`<g fill="none" stroke="#7FA0D4" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round">
+      ${R1(x-50,y-62,"M0,-5 V5 M0,-5 L3.5,-2 L0,1 M0,1 L3.5,5",-8)}${R1(x+48,y-72,"M0,-5 V5 M-3,-1 L0,-5 L3,-1",10)}
+      ${R1(x-44,y-34,"M-3,-4 L3,4 M3,-4 L-3,4 M0,-5 V5",6)}${R1(x+52,y-44,"M0,-5 V5 M0,-4 L3,-1 M0,0 L3,3",-6)}
+      ${R1(x-8,y-92,"M-3,5 L0,-5 L3,5 M-2,1 H2",0)}
+      <circle cx="${x-56}" cy="${y-48}" r=".9" fill="#7FA0D4" stroke="none"/><circle cx="${x+40}" cy="${y-56}" r=".9" fill="#7FA0D4" stroke="none"/><circle cx="${x+10}" cy="${y-100}" r=".8" fill="#7FA0D4" stroke="none"/></g>`);}
+  const g=`<g data-link="etap-${s.n}">
+    ${s.n===12?`<circle cx="${x}" cy="${y}" r="18" fill="${PARCH}" stroke="${RED}" stroke-width="1" stroke-dasharray="2 2.5"/>`:""}
+    <circle cx="${x}" cy="${y}" r="13" fill="${PARCH}" stroke="${RED}" stroke-width="2"/>
+    <text x="${x}" y="${y+4.4}" text-anchor="middle" font-family="Onest" font-weight="800" font-size="12.5" fill="${RED}">${s.n}</text>
+    <text x="${x+dx}" y="${y+dy-(anchor?0:12)+(s.n===12?6:0)}" text-anchor="${anchor||"middle"}" font-family="${s.n===12?"Cinzel":"Onest"}" font-weight="700" font-size="${s.n===12?14:11}" fill="${INK}" paint-order="stroke" stroke="${PARCH}" stroke-width="4" stroke-linejoin="round">${s.name}</text>
+  </g>`;
+  add("labels",g);
+});
+
+/* napisy regionów */
+const region=(x,y,t,size=19,rot=0)=>add("labels",`<text x="${x}" y="${y}" transform="rotate(${rot} ${x} ${y})" text-anchor="middle" class="cin" font-family="Cinzel" font-weight="700" font-size="${size}" letter-spacing="${size*0.32}" fill="${INK}" opacity=".62">${t}</text>`);
+region(690,1000,"DOLINA",17); region(690,1022,"NOWICJUSZY",12);
+region(774,640,"POGRANICZE",14,-90);
+region(318,168,"SMOCZE ZIEMIE",18,-3);
+add("labels",`<text x="72" y="470" transform="rotate(-90 72 470)" text-anchor="middle" font-family="Cinzel" font-weight="600" font-size="13" letter-spacing="5" fill="${INK2}">MORZE MGIEŁ</text>`);
+add("labels",`<text x="72" y="626" text-anchor="middle" font-family="Onest" font-style="italic" font-size="9" fill="${INK2}">Wyspa Echa</text>`);
+
+/* róża wiatrów */
+(function(){
+  const [x,y]=CR; let d=`<circle cx="${x}" cy="${y}" r="40" fill="${SEA}" stroke="${INK}" stroke-width="1"/><circle cx="${x}" cy="${y}" r="34" fill="none" stroke="${INK}" stroke-width=".6"/>`;
+  for(let i=0;i<8;i++){
+    const a=i*Math.PI/4 - Math.PI/2, L=i%2?24:38, w=i%2?4:6.5;
+    const tip=[x+Math.cos(a)*L,y+Math.sin(a)*L], l=[x+Math.cos(a-Math.PI/2)*w,y+Math.sin(a-Math.PI/2)*w], r=[x+Math.cos(a+Math.PI/2)*w,y+Math.sin(a+Math.PI/2)*w];
+    d+=`<path d="M${l} L${tip} L${x},${y}Z" fill="${i===0?RED:INK}"/><path d="M${r} L${tip} L${x},${y}Z" fill="${PARCH}" stroke="${INK}" stroke-width=".8" stroke-linejoin="round"/>`;
+  }
+  d+=`<circle cx="${x}" cy="${y}" r="3" fill="${PARCH}" stroke="${INK}"/><text x="${x}" y="${y-46}" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="12" fill="${RED}">N</text>`;
+  add("deco",d);
+})();
+
+/* statek: galeon */
+(function(){
+  const x=84,y=318, L=`stroke="${INK}" stroke-width=".5" fill="none" opacity=".8"`;
+  const sail=(x1,y1,x2,y2,b)=>`<path d="M${x1},${y1} Q${(x1+x2)/2},${y1+3} ${x2},${y1} Q${x2+b},${(y1+y2)/2} ${x2},${y2} Q${(x1+x2)/2},${y2+3} ${x1},${y2} Q${x1+b},${(y1+y2)/2} ${x1},${y1}Z" fill="${PARCH}"/><path d="M${x2-3},${y1+3} Q${x2+b-2},${(y1+y2)/2} ${x2-3},${y2-1}" fill="none" stroke-width=".5"/>`;
+  add("deco",`<g stroke="${INK2}" stroke-width=".8" opacity=".85" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M${x-14},${y-14} L${x-14},${y-44} M${x+2},${y-7} L${x+2},${y-56} M${x+17},${y-7} L${x+17},${y-44} M${x+31},${y-12} L${x+44},${y-19}" fill="none"/>
+    <path d="M${x-14},${y-44} L${x-30},${y-14} M${x+2},${y-56} L${x-28},${y-15} M${x+2},${y-56} L${x+30},${y-12} M${x+17},${y-44} L${x+43},${y-18}" ${L}/>
+    ${sail(x-6,y-50,x+10,y-38,3)}${sail(x-9,y-35,x+13,y-20,4)}${sail(x+10,y-40,x+24,y-30,3)}${sail(x+8,y-27,x+26,y-15,3)}
+    <path d="M${x-14},${y-42} L${x-14},${y-17} L${x-27},${y-19}Z" fill="${SEA}"/>
+    <path d="M${x+19},${y-42} L${x+42},${y-19} L${x+21},${y-16}Z" fill="${PARCH}"/>
+    <path d="M${x-31},${y-16} H${x-19} V${y-7} H${x+20} L${x+33},${y-12} Q${x+29},${y-1} ${x+18},${y+4} H${x-23} Q${x-29},${y-4} ${x-31},${y-16}Z" fill="${PARCH}"/>
+    <path d="M${x-26},${y-1} H${x+24} M${x-25},${y+1.8} H${x+20}" fill="none" stroke-width=".5"/>
+    <path d="M${x-30},${y-12} H${x-20}" fill="none" stroke-width=".6"/>
+    <rect x="${x-1}" y="${y-48}" width="6" height="3" fill="${PARCH}" stroke-width=".7"/>
+    <path d="M${x+2},${y-56} l9,2.5 l-9,2.5" fill="none" stroke="${INK2}" stroke-width=".6"/>
+    <path d="M${x-14},${y-44} l6,1.6 l-6,1.6" fill="none" stroke="${INK2}" stroke-width=".5"/>
+    <path d="M${x-36},${y+9} q5,-3 10,0 q5,3 10,0 M${x+22},${y+9} q5,-3 10,0 q5,3 10,0 M${x-8},${y+13} q4,-2.5 8,0" fill="none" stroke="${SEAINK}" stroke-width=".9"/>
+  </g>`);
+  [-11,-4,3,10].forEach(d=>add("deco",`<circle cx="${x+d}" cy="${y-3.4}" r=".8" fill="${INK2}"/>`));
+})();
+
+/* wąż morski */
+(function(){
+  const x=60,y=860;
+  add("deco",`<g stroke="${INK}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M${x-30},${y+8} c6,-22 18,-22 22,0" fill="${PARCH}"/>
+    <path d="M${x+2},${y+8} c5,-18 16,-18 20,0" fill="${PARCH}"/>
+    <path d="M${x+30},${y+8} c0,-20 6,-34 18,-36 c8,-1 12,6 8,10 c-4,3 -9,2 -12,6 c-3,6 -2,14 -2,20" fill="${PARCH}"/>
+    <circle cx="${x+50}" cy="${y-24}" r="1.4" fill="${RED}" stroke="none"/>
+    <path d="M${x-26},${y-2} l-3,-6 M${x-20},${y-9} l-1,-6 M${x+8},${y-3} l-2,-6 M${x+14},${y-7} l0,-6" fill="none" stroke-width=".9"/>
+    <path d="M${x-40},${y+9} h96" fill="none" stroke-width=".8" stroke-dasharray="6 4"/>
+  </g>`);
+  add("labels",`<text x="${x+8}" y="${y+28}" text-anchor="middle" font-family="Cinzel" font-weight="600" font-size="8.5" letter-spacing="1" fill="${INK2}">HIC SUNT DRACONES</text>`);
+})();
+
+/* tytuł: bez wstęgi, ornament + linia + podtytuł */
+(function(){
+  const cx=600, y=74;
+  add("deco",`<rect x="${cx-168}" y="${y-56}" width="336" height="98" fill="${PARCH}"/>`);
+  add("labels",`<g transform="translate(${cx},${y-40})"><path d="M0,-10 L3,-3 L10,0 L3,3 L0,10 L-3,3 L-10,0 L-3,-3Z" fill="${RED}"/><circle r="15" fill="none" stroke="${INK}" stroke-width=".8" stroke-dasharray="1.5 3"/></g>
+    <text x="${cx}" y="${y+4}" text-anchor="middle" font-family="Cinzel" font-weight="700" font-size="31" letter-spacing="8" fill="${INK}">A2 QUEST</text>
+    <path d="M${cx-150},${y+17} H${cx-12} M${cx+12},${y+17} H${cx+150}" stroke="${INK}" stroke-width="1"/>
+    <path d="M${cx-150},${y+17} q-8,-6 -2,-10 q5,-2 6,4 M${cx+150},${y+17} q8,-6 2,-10 q-5,-2 -6,4" fill="none" stroke="${INK}" stroke-width="1"/>
+    <path d="M${cx},${y+12} l5,5 l-5,5 l-5,-5Z" fill="${RED}"/>
+    <text x="${cx}" y="${y+36}" text-anchor="middle" font-family="Onest" font-weight="700" font-size="8.5" letter-spacing="2.4" fill="${RED}">MAPA WYPRAWY · 12 ETAPÓW · 12 TYGODNI</text>`);
+})();
+
+/* smoki-strażnicy: próba na końcu każdej krainy */
+function dragon(x,y,sc,flip,tag){
+  const t=`translate(${x},${y}) scale(${flip?-sc:sc},${sc}) translate(-70,-45)`;
+  add("deco",`<g transform="${t}" stroke="${INK}" stroke-width="${1.3/sc}" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M62,40 L74,16 Q82,22 92,16 Q88,30 84,40Z" fill="#C7D7EE"/>
+    <path d="M10,42 L20,35 Q26,29 33,31 L42,22 L38,32 Q45,36 51,42 Q61,40 72,42 Q88,44 100,39 Q116,33 127,39 L138,32 L135,43 L126,44 Q114,41 101,47 Q86,55 72,55 Q58,55 50,51 Q42,47 34,43 Q26,46 19,47Z" fill="${PARCH}"/>
+    <path d="M56,52 L54,63 L50,64 M54,63 L57,65 M80,54 L84,64 L80,66 M84,64 L88,65" fill="none"/>
+    <path d="M54,42 L49,6 Q60,12 72,2 Q80,14 98,9 Q91,24 99,33 Q88,33 78,44Z" fill="${PARCH}"/>
+    <path d="M55,41 L72,3 M57,42 L98,10 M60,43 L99,33" fill="none" stroke-width="${0.7/sc}"/>
+    <path d="M66,43 l3,-4 l3,4 M76,43 l3,-4 l3,4 M86,42 l3,-4 l3,4" fill="none" stroke-width="${0.7/sc}"/>
+    <circle cx="24" cy="36.5" r="1.4" fill="${INK}" stroke="none"/>
+    <path d="M9,43 Q1,40 -6,44 M9,44 Q2,47 -4,50 M10,43 Q4,43 -1,40" fill="none" stroke="${RED}" stroke-width="${1.1/sc}"/>
+  </g>`);
+  if(tag) add("labels",`<text x="${x}" y="${y+45*sc+14}" text-anchor="middle" font-family="Onest" font-style="italic" font-weight="500" font-size="9" fill="${INK2}">${tag}</text>`);
+}
+dragon(704,200,.6,false,null);
+
+/* legenda */
+add("labels",`<g font-family="Onest" font-size="9.5" fill="${INK}">
+  <circle cx="614" cy="1066" r="8" fill="${PARCH}" stroke="${RED}" stroke-width="1.6"/><text x="614" y="1069.5" text-anchor="middle" font-weight="800" font-size="9" fill="${RED}">1</text>
+  <text x="630" y="1069.5">kliknij numer, by przejść do etapu</text>
+  <g fill="${RED}"><g transform="translate(608,1088)"><ellipse cx="1.6" rx="2.9" ry="1.9"/><circle cx="-3.3" r="1.35"/></g><g transform="translate(619,1084)"><ellipse cx="1.6" rx="2.9" ry="1.9"/><circle cx="-3.3" r="1.35"/></g></g><text x="630" y="1089.5">ślady: jeden etap = jeden tydzień</text>
+  <path d="M606,1106 h16" stroke="${SEAINK}" stroke-width="1.2" stroke-dasharray="1 4" stroke-linecap="round"/><text x="630" y="1109.5">granica krainy</text>
+</g>`);
+
+/* proste linie, zaokrąglone narożniki (tylko ścieżki z odcinków; krzywe bez zmian; bez lasu i twierdzy) */
+function roundPoly(d,r0){
+  if(/[QqCcSsTtAa]/.test(d)) return d;
+  const tok=d.match(/[MLHVZmlhvz]|-?\d*\.?\d+(?:e-?\d+)?/g)||[]; let i=0, cmd="", x=0, y=0, sx=0, sy=0;
+  const subs=[]; let cur=null;
+  const num=()=>parseFloat(tok[i++]);
+  while(i<tok.length){
+    if(/[A-Za-z]/.test(tok[i])) cmd=tok[i++];
+    const c=cmd;
+    if(c==="Z"||c==="z"){ if(cur){cur.closed=true;} x=sx;y=sy; cmd=""; continue; }
+    if(c==="M"||c==="m"){ const nx=num(),ny=num(); x=c==="m"?x+nx:nx; y=c==="m"?y+ny:ny; sx=x;sy=y; cur={pts:[[x,y]],closed:false}; subs.push(cur); cmd=c==="m"?"l":"L"; continue; }
+    if(c==="L"||c==="l"){ const nx=num(),ny=num(); x=c==="l"?x+nx:nx; y=c==="l"?y+ny:ny; }
+    else if(c==="H"||c==="h"){ const nx=num(); x=c==="h"?x+nx:nx; }
+    else if(c==="V"||c==="v"){ const ny=num(); y=c==="v"?y+ny:ny; }
+    else return d;
+    cur.pts.push([x,y]);
+  }
+  return subs.map(({pts,closed})=>{
+    if(closed && pts.length>1){const f=pts[0],l=pts[pts.length-1]; if(Math.hypot(f[0]-l[0],f[1]-l[1])<.01) pts.pop();}
+    const n=pts.length; if(n<3) return "M"+pts.map(p=>p.map(v=>v.toFixed(2)).join(",")).join(" L");
+    const corner=(k)=>{const p=pts[k], a=pts[(k-1+n)%n], b=pts[(k+1)%n];
+      const la=Math.hypot(p[0]-a[0],p[1]-a[1]), lb=Math.hypot(b[0]-p[0],b[1]-p[1]), r=Math.min(r0,la/3,lb/3);
+      const p1=[p[0]+(a[0]-p[0])/la*r, p[1]+(a[1]-p[1])/la*r], p2=[p[0]+(b[0]-p[0])/lb*r, p[1]+(b[1]-p[1])/lb*r];
+      return [p1,p,p2];};
+    const f=(q)=>q[0].toFixed(2)+","+q[1].toFixed(2);
+    let out="";
+    if(closed){ const c0=corner(0); out="M"+f(c0[2]);
+      for(let k=1;k<n;k++){const [p1,p,p2]=corner(k); out+=` L${f(p1)} Q${f(p)} ${f(p2)}`;}
+      out+=` L${f(c0[0])} Q${f(c0[1])} ${f(c0[2])}Z`; }
+    else { out="M"+f(pts[0]);
+      for(let k=1;k<n-1;k++){const [p1,p,p2]=corner(k); out+=` L${f(p1)} Q${f(p)} ${f(p2)}`;}
+      out+=" L"+f(pts[n-1]); }
+    return out;
+  }).join(" ");
+}
+function inkify(root){
+  root.querySelectorAll("g.mi").forEach(icon=>{
+    if(["forest","fortress"].includes(icon.dataset.ic)) return;
+    icon.querySelectorAll("path").forEach(path=>path.setAttribute("d",roundPoly(path.getAttribute("d")||"",2.2)));
+  });
+}
+inkify(el("places"));
+ddShade(el("places"));
+/* ===================== EKSPORT PÓL I LINKÓW ===================== */
+document.fonts.ready.then(()=>{
+  const pages=[...document.querySelectorAll(".page")], ids=pages.map(p=>p.id), out=[], links=[]; let k=0;
+  pages.forEach((p,pi)=>{
+    const pr=p.getBoundingClientRect(), s=595.2756/pr.width;
+    const box=r=>({x:(r.left-pr.left)*s,y:(r.top-pr.top)*s,w:r.width*s,h:r.height*s});
+    p.querySelectorAll("[data-f]").forEach(e=>out.push({page:pi,type:e.dataset.f,name:e.dataset.n||`${e.dataset.f}_${++k}`,...box(e.getBoundingClientRect())}));
+    p.querySelectorAll("[data-link]").forEach(e=>{
+      const r=e.getBoundingClientRect(), b=box(r), pad=3;
+      links.push({page:pi,target:ids.indexOf(e.dataset.link),to:e.dataset.link,x:b.x-pad,y:b.y-pad,w:b.w+2*pad,h:b.h+2*pad});
+    });
+  });
+  el("fieldsjson").textContent=JSON.stringify({pages:pages.length,fields:out,links});
+  document.body.dataset.ready="1";
+});
+</script>
+</body>
+</html>

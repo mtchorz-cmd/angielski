@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>A2 Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+@page { size: A4; margin: 0; }
+:root{
+  --bg:#FAF6EF; --card:#FFFFFF; --warm:#FCFAF5;
+  --ink:#20242D; --ink2:#5C5850; --muted:#9BA2B1; --line:#DDD6C9; --hair:#EEE8DD;
+  --brand:#2663EB; --brand-ink:#1C4FC4; --brand-tint:#EAF0FD;
+  --plum:#9D2257; --indigo:#312E81; --green:#047857; --amber:#B45309;
+  --gold:#E9B949; --sea:#E4ECEF; --land:#F6EEDC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Onest,system-ui,sans-serif;color:var(--ink);font-size:10.5px;line-height:1.4;hyphens:auto}
+.page{width:210mm;height:297mm;position:relative;overflow:hidden;padding:44px 48px 40px;background:var(--bg);page-break-after:always;display:flex;flex-direction:column}
+.page:last-of-type{page-break-after:auto}
+/* rama jak w starej mapie */
+.page::before{content:"";position:absolute;inset:18px;border:1.3px solid rgba(32,36,45,.7);border-radius:16px;pointer-events:none}
+.page::after{content:"";position:absolute;inset:23px;border:.6px solid rgba(32,36,45,.35);border-radius:12px;pointer-events:none}
+.corner{position:absolute;width:14px;height:14px;z-index:2}
+.corner.tl{left:11px;top:11px}.corner.tr{right:11px;top:11px}.corner.bl{left:11px;bottom:11px}.corner.br{right:11px;bottom:11px}
+
+.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;position:relative;z-index:1}
+.hd img{height:20px;display:block}
+.chapter{font-size:9.5px;font-weight:600;color:var(--ink2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.chapter b{color:var(--brand)}
+.ft{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:8.5px;color:var(--muted);padding-top:8px;position:relative;z-index:1}
+.ft .pg{font-weight:700;color:var(--ink2);letter-spacing:.1em}
+
+h1{font-size:58px;font-weight:800;letter-spacing:-.035em;line-height:.95}
+h2{font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1.05}
+h3{font-size:14px;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.dot{color:var(--brand)}
+.lead{font-size:12px;color:var(--ink2);line-height:1.5;max-width:540px}
+.kicker{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
+.titleblock{margin-bottom:16px;position:relative;z-index:1}
+.titleblock .lead{margin-top:8px}
+
+.card{background:var(--card);border:1px solid var(--hair);border-radius:20px;box-shadow:0 1px 2px rgba(32,36,45,.05),0 6px 18px -8px rgba(32,36,45,.12);position:relative}
+
+/* pola formularza (widoczne w druku, klikalne w PDF) */
+.cb{display:inline-block;width:12px;height:12px;border:1.4px solid var(--ink);border-radius:3px;background:#fff;flex:none;vertical-align:middle}
+.cb.lg{width:17px;height:17px;border-radius:4px;border-width:1.8px}
+.tf{display:inline-block;height:16px;border-bottom:1.2px solid var(--ink);vertical-align:bottom;flex:none}
+.star{display:inline-block;width:17px;height:17px;flex:none;position:relative}
+.star svg{width:17px;height:17px;display:block;fill:#fff;stroke:var(--amber);stroke-width:1.7;stroke-linejoin:round}
+svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;display:block}
+
+/* medalion */
+.medal{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;flex:none;position:relative;box-shadow:inset 0 0 0 3px rgba(255,255,255,.35),0 0 0 2px #fff,0 0 0 3.2px currentColor}
+.medal svg.ic{width:22px;height:22px;stroke:#fff}
+
+/* ===== STRONA 1 ===== */
+.p1 .hero{display:grid;grid-template-columns:1fr 150px;gap:16px;align-items:end;margin-bottom:16px;position:relative;z-index:1}
+.p1 .hero .lead{margin-top:10px;font-size:12.5px}
+.seal-mini{width:150px;height:110px}
+.row2{display:grid;grid-template-columns:1.08fr 1fr;gap:12px;margin-bottom:12px;position:relative;z-index:1}
+.char{padding:14px 16px}
+.char .title,.rules .title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.lbl{font-size:8.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.fieldrow{display:flex;align-items:flex-end;gap:8px;margin-bottom:7px;font-size:10px;font-weight:600}
+.fieldrow span:first-child{white-space:nowrap}
+.track{display:flex;align-items:center;margin:12px 0 12px;position:relative}
+.track .lv{display:flex;flex-direction:column;align-items:center;gap:3px;z-index:1;width:56px}
+.track .bub{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;background:#fff;border:2px solid var(--line);color:var(--muted)}
+.track .done .bub{background:var(--green);border-color:var(--green);color:#fff}
+.track .now .bub{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 0 0 4px var(--brand-tint)}
+.track .lv small{font-size:8px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.track .bar{flex:1;height:4px;border-radius:2px;background:var(--hair);margin:0 -10px 16px}
+.track .bar.full{background:var(--green)}
+.stats{display:grid;grid-template-columns:1fr;gap:5px}
+.stat{display:grid;grid-template-columns:132px 1fr;align-items:center;font-size:10px;font-weight:600}
+.stat em{font-style:normal;color:var(--muted);font-weight:500}
+.pips{display:flex;gap:5px}
+.note{font-size:8.5px;color:var(--ink2);margin-top:8px}
+.rules{padding:14px 16px}
+.rule{display:grid;grid-template-columns:30px 1fr auto;gap:9px;align-items:start;padding:7px 0;border-top:1px dashed var(--line)}
+.rule:first-of-type{border-top:0;padding-top:0}
+.rule .n{width:26px;height:26px;border-radius:50%;background:var(--brand-tint);color:var(--brand);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:11px}
+.rule b{font-size:11px;display:block}
+.rule p{font-size:9.3px;color:var(--ink2);line-height:1.35}
+.xp{font-size:9px;font-weight:800;color:var(--amber);background:#FBF0E2;border-radius:999px;padding:2px 7px;white-space:nowrap}
+.rules .max{margin-top:6px;font-size:9.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center;background:var(--warm);border-radius:10px;padding:6px 10px}
+.mapcard{padding:10px;flex:1;display:flex;flex-direction:column;background:var(--sea);border-color:#D3DEE3;position:relative;z-index:1;overflow:hidden}
+.mapcard svg.map{width:100%;flex:1;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px;padding:8px 4px 2px}
+.chip{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid #D3DEE3;border-radius:999px;padding:3px 9px 3px 4px;font-size:8.8px;font-weight:600}
+.chip i{font-style:normal;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800}
+.chip span{color:var(--muted);font-weight:500}
+
+/* ===== STRONA 2: drzewko ===== */
+.tree{position:relative;flex:1;display:flex;flex-direction:column;justify-content:space-between;z-index:1;padding:4px 0 2px}
+.tree svg.links{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0}
+.tier{position:relative;z-index:1}
+.tier .tl{font-size:8.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);text-align:center;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+.tier .tl span{background:var(--bg);padding:2px 8px;border-radius:6px}
+.tier .tl::before,.tier .tl::after{content:"";height:1px;width:46px;background:var(--line)}
+.nodes{display:flex;justify-content:center;gap:12px}
+.node{width:165px;padding:10px 11px 9px;display:flex;flex-direction:column;gap:5px}
+.node .top{display:flex;gap:8px;align-items:center}
+.node .num{width:26px;height:26px;border-radius:50%;border:2px solid var(--brand);color:var(--brand);font-weight:800;font-size:10.5px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+.node h4{hyphens:manual;font-size:11px;font-weight:800;letter-spacing:-.01em;line-height:1.15}
+.node .pl{font-size:8.6px;color:var(--ink2);line-height:1.3}
+.node .ex{hyphens:manual;font-size:8.8px;background:var(--brand-tint);border-radius:8px;padding:5px 7px;line-height:1.35;color:#1d2a4a}
+.node .ex b{color:var(--brand-ink)}
+.node .stars{display:flex;justify-content:space-between;align-items:flex-end;margin-top:2px}
+.node .stars div{display:flex;flex-direction:column;align-items:center;gap:1px;font-size:6.8px;color:var(--muted);font-weight:600}
+.node.crown{width:300px;border:1.5px solid var(--gold);box-shadow:0 0 0 4px #FBF3DC,0 8px 20px -10px rgba(180,83,9,.4)}
+.node.crown .num{border-color:var(--amber);color:var(--amber)}
+.starlegend{display:flex;gap:16px;align-items:center;margin-top:10px;font-size:9.5px;color:var(--ink2);font-weight:600}
+.starlegend span{display:flex;align-items:center;gap:5px}
+.tip{margin-top:14px;padding:10px 14px;background:var(--warm);border:1px solid var(--hair);border-radius:14px;font-size:9.5px;color:var(--ink2);display:flex;gap:10px;align-items:center;position:relative;z-index:1}
+.tip b{color:var(--ink)}
+
+/* ===== STRONY 3–4: krainy ===== */
+.lands{display:flex;flex-direction:column;gap:11px;flex:1;position:relative;z-index:1}
+.land{display:grid;grid-template-columns:172px 1fr;padding:12px 14px 12px 12px;gap:14px;flex:1}
+.land .side{display:flex;flex-direction:column;gap:6px;border-right:1px dashed var(--line);padding-right:12px}
+.land .side .top{display:flex;align-items:center;gap:10px}
+.land .side small{font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.land .side h3{font-size:14.5px}
+.land .side .topic{font-size:9.5px;color:var(--ink2);font-weight:500}
+.land .side .score{margin-top:auto;display:flex;align-items:flex-end;gap:5px;font-size:9px;font-weight:700;color:var(--ink2)}
+.loot{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;column-gap:16px;align-content:center}
+.w{display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--hair);min-height:24px}
+.w:nth-last-child(-n+2){border-bottom:0}
+.w b{hyphens:manual;font-size:10.6px;font-weight:700;white-space:nowrap}
+.w span{font-size:9px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ===== STRONA 5: bossy ===== */
+.bosses{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:11px;flex:1;position:relative;z-index:1}
+.boss{padding:12px 14px;display:flex;flex-direction:column;gap:7px}
+.boss .top{display:flex;gap:10px;align-items:center}
+.boss small{font-size:8px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);display:block}
+.boss h3{font-size:14px}
+.boss .mis{font-size:9.6px;color:var(--ink2);line-height:1.4}
+.boss .mis b{color:var(--ink)}
+.spell{hyphens:manual;background:var(--brand-tint);border-radius:10px;padding:7px 10px;font-size:10px;color:#1d2a4a;line-height:1.4}
+.spell em{font-style:normal;display:block;font-size:7.6px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin-bottom:1px}
+.boss .bot{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:9.3px;font-weight:700}
+.boss .bot .sp{flex:1}
+.hp{display:flex;gap:2px;align-items:center;font-size:7.5px;color:var(--muted);font-weight:700;letter-spacing:.08em}
+.hp i{width:9px;height:5px;border-radius:2px;background:#E5A0B8;display:block}
+
+/* ===== STRONA 6: sala chwały ===== */
+.hall{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;position:relative;z-index:1}
+.ledger{padding:14px 16px}
+.lrow{display:grid;grid-template-columns:1fr 46px 50px 16px 60px;align-items:end;gap:6px;padding:14px 0;border-bottom:1px dashed var(--line);font-size:10.5px;font-weight:600}
+.lrow .mult{color:var(--amber);font-weight:800;font-size:9.5px;text-align:center}
+.lrow .eq{text-align:center;color:var(--muted)}
+.lrow small{display:block;font-size:8.5px;color:var(--ink2);font-weight:500}
+.lrow.sum{border-bottom:0;font-size:12.5px;font-weight:800;grid-template-columns:1fr 60px 46px}
+.lrow.sum .of{font-size:9.5px;color:var(--ink2);font-weight:700}
+.ranks{padding:14px 16px}
+.rank{display:grid;grid-template-columns:34px 1fr auto 18px;gap:9px;align-items:center;padding:9px 0;border-top:1px dashed var(--line)}
+.rank:first-of-type{border-top:0}
+.rank .rm{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.rank b{font-size:11px;display:block}
+.rank span{font-size:8.6px;color:var(--ink2)}
+.rank .need{font-size:9px;font-weight:800;color:var(--ink2);white-space:nowrap}
+.cert{margin-top:16px;padding:28px 24px;display:grid;grid-template-columns:150px 1fr;gap:20px;align-items:center;position:relative;z-index:1;border:1.5px solid var(--gold);box-shadow:0 0 0 5px #FBF3DC}
+.cert h3{font-size:20px;letter-spacing:-.03em}
+.cert p{font-size:10.5px;color:var(--ink2);margin:6px 0 12px;line-height:1.5}
+.cert .sig{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:8.5px;color:var(--ink2);font-weight:600}
+.cert .sig div{display:flex;flex-direction:column;gap:3px}
+.cert .who{display:flex;align-items:flex-end;gap:6px;font-size:11px;font-weight:700}
+.next{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;position:relative;z-index:1}
+.saves{margin-top:16px;padding:16px 16px;position:relative;z-index:1}
+.saves .row{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:8px}
+.saves .slot{border:1px dashed var(--line);border-radius:12px;padding:10px 6px 10px;gap:8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:8px;font-weight:700;color:var(--ink2);letter-spacing:.08em}
+.saves .slot .tf{width:100%}
+.saves .slot small{font-size:7px;color:var(--muted);font-weight:600;letter-spacing:0}
+.mine{display:flex;align-items:flex-end;gap:6px;font-size:9px;font-weight:600;color:var(--ink2)}
+.gate{padding:24px 18px;display:flex;gap:14px;align-items:center;background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.gate h3{color:#fff;font-size:15px}
+.gate p{font-size:9.5px;color:#D6D4F2;margin-top:4px;line-height:1.45}
+.gate .lockbub{width:50px;height:50px;border-radius:50%;border:2px dashed rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;flex:none}
+.gate .lockbub svg.ic{stroke:#fff;width:22px;height:22px}
+.cta{padding:24px 18px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.cta h3{font-size:15px}
+.cta p{font-size:9.5px;color:var(--ink2);line-height:1.45}
+.cta .btn{align-self:flex-start;margin-top:4px;background:var(--brand);color:#fff;font-weight:700;font-size:10px;padding:7px 14px;border-radius:10px;box-shadow:0 4px 14px -4px rgba(38,99,235,.55)}
+</style>
+</head>
+<body>
+
+<!-- ikony: siatka 24, kreska 2.1, zakończenia round -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="i-house" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
+    <symbol id="i-basket" viewBox="0 0 24 24"><path d="M3 9h18l-2 11H5z"/><path d="M8 9l4-6 4 6"/><path d="M9.5 13v4M14.5 13v4"/></symbol>
+    <symbol id="i-anchor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M12 7v14"/><path d="M5 13a7 7 0 0 0 14 0"/><path d="M8.5 10h7"/></symbol>
+    <symbol id="i-tower" viewBox="0 0 24 24"><path d="M6 21V8l2-2V3h2v2h4V3h2v3l2 2v13z"/><path d="M10 21v-4a2 2 0 0 1 4 0v4"/><path d="M11 10.5h2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z"/><path d="M4 20a2 2 0 0 0 2 1h13v-3"/><path d="M9 8h6"/></symbol>
+    <symbol id="i-potion" viewBox="0 0 24 24"><path d="M9 3h6M10 3v5l-5 8a3 3 0 0 0 2.6 5h8.8A3 3 0 0 0 19 16l-5-8V3"/><path d="M7.5 14h9"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/><path d="M12 14v4M8 21h8"/></symbol>
+    <symbol id="i-mountain" viewBox="0 0 24 24"><path d="M2 20l7-12 4 6 3-4 6 10z"/><path d="M7.2 11l1.8 1.4 1.6-1.4"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-8.5-9A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8.5 4c-1.5 4.5-8.5 9-8.5 9z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+    <symbol id="i-cup" viewBox="0 0 24 24"><path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 2 2 2 2 4M12 3c0 2 2 2 2 4"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-scroll" viewBox="0 0 24 24"><path d="M7 4h11a2 2 0 0 1 0 4h-1v10a2 2 0 0 1-2 2H6a2 2 0 0 1 0-4h1z"/><path d="M10 9h4M10 13h4"/></symbol>
+    <symbol id="i-orb" viewBox="0 0 24 24"><circle cx="12" cy="10" r="7"/><path d="M6.5 21h11l-2-3.5h-7z"/><path d="M9 8.5a3 3 0 0 1 3-2.5"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></symbol>
+    <symbol id="i-scales" viewBox="0 0 24 24"><path d="M12 3v17M7 21h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9.5l6.4-.9z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="corner" viewBox="0 0 14 14"><path d="M7 0l2.2 4.8L14 7l-4.8 2.2L7 14l-2.2-4.8L0 7l4.8-2.2z" fill="#20242D"/><circle cx="7" cy="7" r="1.6" fill="#FAF6EF"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= STRONA 1 ================= -->
+<section class="page p1">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział I · <b>Karta postaci i mapa</b></div></div>
+
+  <div class="hero">
+    <div>
+      <div class="kicker">Mapa bohatera · poziom A2</div>
+      <h1>A2 Quest<span class="dot">.</span></h1>
+      <p class="lead">Wszystko, co musisz umieć na poziomie A2, w jednej grze. Zbieraj słówka, zdobywaj gwiazdki za gramatykę i pokonuj bossów, aż odblokujesz następny świat: B1.</p>
+    </div>
+    <svg class="seal-mini" viewBox="0 0 150 110" aria-hidden="true">
+      <g transform="translate(75,55)">
+        <circle r="44" fill="#fff" stroke="#20242D" stroke-width="1.6"/>
+        <circle r="38" fill="none" stroke="#20242D" stroke-width=".7" stroke-dasharray="2 3"/>
+        <path d="M0,-30 L5,-14 L22,-14 L8,-4 L13,13 L0,3 L-13,13 L-8,-4 L-22,-14 L-5,-14 Z" fill="#2663EB"/>
+        <text y="28" text-anchor="middle" font-size="11" font-weight="800" fill="#20242D" letter-spacing="1">A2</text>
+      </g>
+      <path d="M8,98 C40,86 110,86 142,98" fill="none" stroke="#B45309" stroke-width="1.4" stroke-dasharray="1 4" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="row2">
+    <div class="card char">
+      <div class="title"><span class="lbl">Karta postaci</span><span class="xp">Level 2 · A2</span></div>
+      <div class="fieldrow"><span>Imię bohatera</span><span class="tf" style="flex:1" data-f="txt" data-n="bohater"></span></div>
+      <div class="fieldrow"><span>Start przygody</span><span class="tf" style="width:84px" data-f="txt" data-n="start"></span><span>Cel: zdać do</span><span class="tf" style="flex:1" data-f="txt" data-n="cel"></span></div>
+      <div class="track">
+        <div class="lv done"><div class="bub"><svg class="ic" style="width:15px;height:15px;stroke-width:3"><use href="#i-check"/></svg></div><small>A1 zaliczone</small></div>
+        <div class="bar full"></div>
+        <div class="lv now"><div class="bub">A2</div><small>tu jesteś</small></div>
+        <div class="bar"></div>
+        <div class="lv"><div class="bub"><svg class="ic" style="width:14px;height:14px"><use href="#i-lock"/></svg></div><small>B1 zablokowane</small></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>Grammar <em>· gramatyka</em></span><div class="pips"><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span></div></div>
+        <div class="stat"><span>Vocabulary <em>· słówka</em></span><div class="pips"><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span></div></div>
+        <div class="stat"><span>Speaking <em>· mówienie</em></span><div class="pips"><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span></div></div>
+        <div class="stat"><span>Listening <em>· słuchanie</em></span><div class="pips"><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span></div></div>
+        <div class="stat"><span>Writing <em>· pisanie</em></span><div class="pips"><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span><span class="cb" data-f="cb"></span></div></div>
+      </div>
+      <p class="note">Oceń się na starcie od 1 do 5. Po przejściu całej mapy oceń się jeszcze raz i porównaj.</p>
+    </div>
+
+    <div class="card rules">
+      <div class="title"><span class="lbl">Jak grać</span></div>
+      <div class="rule"><div class="n">1</div><div><b>Zbieraj słówka</b><p>Zaznacz słowo, kiedy użyjesz go we własnym zdaniu. Samo rozpoznanie się nie liczy.</p></div><span class="xp">+5 XP</span></div>
+      <div class="rule"><div class="n">2</div><div><b>Zdobywaj gwiazdki</b><p>Każda umiejętność ma 3 gwiazdki: rozumiem, używam, mówię bez błędów.</p></div><span class="xp">+10 XP</span></div>
+      <div class="rule"><div class="n">3</div><div><b>Pokonuj bossów</b><p>Boss to prawdziwe zadanie: rozmowa, wiadomość albo krótka opowieść.</p></div><span class="xp">+50 XP</span></div>
+      <div class="rule"><div class="n">4</div><div><b>Policz swoje XP</b><p>Na ostatniej stronie zsumuj punkty i sprawdź, jaką masz rangę.</p></div><span class="xp">str. 6</span></div>
+      <div class="max"><span>Cała mapa A2</span><span>1260 XP</span></div>
+    </div>
+  </div>
+
+  <div class="card mapcard">
+    <svg class="map" viewBox="0 0 700 400" preserveAspectRatio="xMidYMid meet" aria-label="Mapa krainy A2">
+      <defs>
+        <pattern id="waves" width="40" height="18" patternUnits="userSpaceOnUse">
+          <path d="M2,10 q5,-5 10,0 t10,0" fill="none" stroke="#B9CBD3" stroke-width="1.1" stroke-linecap="round"/>
+        </pattern>
+        <filter id="soft" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#20242D" flood-opacity=".12"/></filter>
+      </defs>
+      <rect width="700" height="400" fill="url(#waves)" opacity=".8"/>
+      <g transform="translate(36,14) scale(.9)">
+        <path id="island" filter="url(#soft)" d="M40,380 C28,330 58,265 48,212 C38,150 78,80 158,62 C238,44 300,78 380,60 C460,44 520,36 600,44 C668,54 690,98 672,150 C652,205 682,248 652,300 C622,360 562,394 482,394 C422,394 382,410 322,406 C242,402 162,410 102,402 C70,398 45,392 40,380 Z" fill="#F6EEDC" stroke="#20242D" stroke-width="2"/>
+        <path d="M40,380 C28,330 58,265 48,212 C38,150 78,80 158,62 C238,44 300,78 380,60 C460,44 520,36 600,44 C668,54 690,98 672,150 C652,205 682,248 652,300 C622,360 562,394 482,394 C422,394 382,410 322,406 C242,402 162,410 102,402 C70,398 45,392 40,380 Z" fill="none" stroke="#9FB6C0" stroke-width="1" stroke-dasharray="3 5" transform="translate(-6,4) scale(1.012)"/>
+        <!-- rzeka -->
+        <path d="M412,64 C398,130 470,170 440,240 C420,290 460,340 448,396" fill="none" stroke="#9EC3D3" stroke-width="5" stroke-linecap="round"/>
+        <path d="M412,64 C398,130 470,170 440,240 C420,290 460,340 448,396" fill="none" stroke="#E4ECEF" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="4 7"/>
+        <!-- góry północne -->
+        <g stroke="#20242D" stroke-width="1.6" stroke-linejoin="round">
+          <path d="M236,96 l18,-32 l18,32 Z" fill="#fff"/><path d="M248,74 l6,-10 l6,10 l-3,3 l-3,-3 l-3,3 Z" fill="#DCE6F5" stroke-width="1"/>
+          <path d="M262,100 l22,-40 l22,40 Z" fill="#fff"/><path d="M276,74 l8,-14 l8,14 l-4,4 l-4,-4 l-4,4 Z" fill="#DCE6F5" stroke-width="1"/>
+          <path d="M296,98 l16,-28 l16,28 Z" fill="#fff"/>
+          <!-- góry przy leżu -->
+          <path d="M520,124 l20,-36 l20,36 Z" fill="#fff"/><path d="M596,124 l18,-30 l18,30 Z" fill="#fff"/>
+          <path d="M606,104 l8,-10 l6,9" fill="none" stroke-width="1"/>
+        </g>
+        <!-- lasy -->
+        <g stroke="#20242D" stroke-width="1.4" fill="#D9E9DE">
+          <g transform="translate(78,232)"><path d="M0,10 v6" fill="none"/><circle r="9"/></g>
+          <g transform="translate(96,246)"><path d="M0,10 v6" fill="none"/><circle r="8"/></g>
+          <g transform="translate(66,254)"><path d="M0,10 v6" fill="none"/><circle r="7"/></g>
+          <g transform="translate(206,176)"><path d="M0,10 v6" fill="none"/><circle r="8"/></g>
+          <g transform="translate(224,186)"><path d="M0,10 v6" fill="none"/><circle r="7"/></g>
+          <g transform="translate(380,246)"><path d="M0,10 v6" fill="none"/><circle r="8"/></g>
+          <g transform="translate(396,232)"><path d="M0,10 v6" fill="none"/><circle r="7"/></g>
+          <g transform="translate(560,350)"><path d="M0,10 v6" fill="none"/><circle r="8"/></g>
+          <g transform="translate(578,340)"><path d="M0,10 v6" fill="none"/><circle r="7"/></g>
+        </g>
+        <!-- ścieżka (rysuje skrypt) -->
+        <path id="route" fill="none" stroke="#2663EB" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+
+        <!-- start -->
+        <g transform="translate(70,362)"><circle r="10" fill="#047857" stroke="#fff" stroke-width="2"/><path d="M-4,0 l3,3 l5,-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g>
+        <text class="ml" x="56" y="388">Start (A1)</text>
+
+        <!-- landmarki -->
+        <g transform="translate(545,290)" stroke="#20242D" stroke-width="1.8" stroke-linejoin="round">
+          <rect x="-16" y="-6" width="32" height="22" fill="#fff"/>
+          <rect x="-24" y="-18" width="11" height="34" fill="#fff"/><rect x="13" y="-18" width="11" height="34" fill="#fff"/>
+          <path d="M-24,-18 v-4 h3 v3 h2.5 v-3 h3 v4 M13,-18 v-4 h3 v3 h2.5 v-3 h3 v4" fill="none"/>
+          <path d="M-5,16 v-9 a5,5 0 0 1 10,0 v9" fill="#20242D"/>
+          <path d="M18.5,-22 v-14 l10,4 l-10,4" fill="#2663EB"/>
+        </g>
+        <g transform="translate(560,150)" stroke="#20242D" stroke-width="1.8" stroke-linejoin="round">
+          <path d="M-30,16 L-8,-22 L2,-8 L10,-18 L32,16 Z" fill="#fff"/>
+          <path d="M-9,16 a10,10 0 0 1 20,0" fill="#20242D"/>
+          <circle cx="-2" cy="11" r="1.6" fill="#E9B949" stroke="none"/><circle cx="4.5" cy="11" r="1.6" fill="#E9B949" stroke="none"/>
+          <path d="M-14,-8 c4,-2 6,2 10,0" fill="none" stroke="#9D2257" stroke-width="1.4"/>
+        </g>
+        <g transform="translate(640,74)" stroke="#20242D" stroke-width="1.8" stroke-linejoin="round">
+          <path d="M-15,8 L-17,-10 L-7,-1 L0,-15 L7,-1 L17,-10 L15,8 Z" fill="#E9B949"/>
+          <rect x="-15" y="8" width="30" height="5" rx="1" fill="#fff"/>
+        </g>
+
+        <!-- krainy 1–10 -->
+        <g id="markers"></g>
+      </g>
+
+      <!-- kartusz -->
+      <g transform="translate(14,14)">
+        <rect width="132" height="34" rx="9" fill="#fff" stroke="#20242D" stroke-width="1.4"/>
+        <text x="66" y="15" text-anchor="middle" font-size="8" font-weight="700" letter-spacing="1.6" fill="#5C5850">MAPA ŚWIATA</text>
+        <text x="66" y="27" text-anchor="middle" font-size="11" font-weight="800" fill="#20242D">Kraina A2</text>
+      </g>
+      <!-- róża wiatrów -->
+      <g transform="translate(662,360)" stroke="#20242D" stroke-width="1.2">
+        <circle r="20" fill="#fff"/>
+        <path d="M0,-17 L4,0 L0,17 L-4,0 Z" fill="#20242D"/>
+        <path d="M-17,0 L0,-4 L17,0 L0,4 Z" fill="#fff"/>
+        <text y="-23" text-anchor="middle" font-size="8" font-weight="800" stroke="none" fill="#20242D">N</text>
+      </g>
+      <!-- statek -->
+      <g transform="translate(22,300)" stroke="#20242D" stroke-width="1.3" stroke-linejoin="round">
+        <path d="M-12,4 h26 l-5,7 h-16 z" fill="#fff"/><path d="M1,4 v-20" fill="none"/><path d="M1,-15 l11,9 h-11z" fill="#fff"/><path d="M1,-3 l-9,0 l9,-9z" fill="#EAF0FD"/>
+      </g>
+    </svg>
+    <div class="legend">
+      <span class="chip"><i style="background:#2663EB">1</i>Krainy 1–5 słownictwa <span>str. 3</span></span>
+      <span class="chip"><i style="background:#2663EB">6</i>Krainy 6–10 <span>str. 4</span></span>
+      <span class="chip"><i style="background:#20242D">G</i>Twierdza Gramatyki <span>str. 2</span></span>
+      <span class="chip"><i style="background:#9D2257">B</i>Leże Bossów <span>str. 5</span></span>
+      <span class="chip"><i style="background:#B45309">★</i>Sala Chwały <span>str. 6</span></span>
+    </div>
+  </div>
+  <div class="ft"><span>A2 Quest · mapa bohatera</span><span class="pg">1 / 6</span><span>szkolajezykowa.gettinenglish.com</span></div>
+</section>
+
+<!-- ================= STRONA 2 ================= -->
+<section class="page p2">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział II · <b>Twierdza Gramatyki</b></div></div>
+  <div class="titleblock">
+    <div class="kicker">Drzewko umiejętności</div>
+    <h2>12 umiejętności, które otwierają A2<span class="dot">.</span></h2>
+    <p class="lead">Idź od dołu drzewa w górę: każdy poziom korzysta z poprzedniego. Gwiazdkę zaznaczasz dopiero wtedy, gdy naprawdę ją masz.</p>
+    <div class="starlegend">
+      <span><span class="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>1 · rozumiem regułę</span>
+      <span><span class="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>2 · używam w ćwiczeniach</span>
+      <span><span class="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>3 · mówię bez błędów</span>
+      <span class="xp">każda gwiazdka +10 XP</span>
+    </div>
+  </div>
+
+  <div class="tree" id="tree">
+    <svg class="links" id="links"></svg>
+
+    <div class="tier"><div class="tl"><span>Poziom IV · Korona</span></div>
+      <div class="nodes">
+        <div class="card node crown" id="n12">
+          <div class="top"><div class="num">12</div><div><h4>First Conditional</h4><div class="pl">Okres warunkowy pierwszy: realne „jeśli…, to…”</div></div></div>
+          <div class="ex">If it <b>rains</b> tomorrow, we<b>'ll stay</b> at home.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier"><div class="tl"><span>Poziom III · Doświadczenia i plany</span></div>
+      <div class="nodes">
+        <div class="card node" id="n8" data-to="n12">
+          <div class="top"><div class="num">8</div><div><h4>Present Perfect</h4><div class="pl">ever / never, just / already / yet</div></div></div>
+          <div class="ex"><b>Have</b> you ever <b>been</b> to London? I<b>'ve just finished</b>.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n9" data-to="n12">
+          <div class="top"><div class="num">9</div><div><h4>Future forms</h4><div class="pl">going to, will, Present Continuous na plany</div></div></div>
+          <div class="ex">I<b>'m going to</b> learn to swim. I<b>'m meeting</b> Tom on Friday.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n10" data-to="n12">
+          <div class="top"><div class="num">10</div><div><h4>Verb + -ing / to</h4><div class="pl">like doing, want to do</div></div></div>
+          <div class="ex">I <b>enjoy reading</b>, but I <b>want to travel</b> more.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n11" data-to="n12">
+          <div class="top"><div class="num">11</div><div><h4>Too / enough + adverbs</h4><div class="pl">za dużo, wystarczająco; jak coś robimy</div></div></div>
+          <div class="ex">It's <b>too cold</b> to swim. He speaks <b>slowly</b>.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier"><div class="tl"><span>Poziom II · Przeszłość i porównania</span></div>
+      <div class="nodes">
+        <div class="card node" id="n4" data-to="n8">
+          <div class="top"><div class="num">4</div><div><h4>Past Simple</h4><div class="pl">czasowniki regularne i nieregularne</div></div></div>
+          <div class="ex">We <b>went</b> to Kraków and <b>saw</b> the castle.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n5" data-to="n9">
+          <div class="top"><div class="num">5</div><div><h4>Past Continuous</h4><div class="pl">tło wydarzeń: co się działo, gdy…</div></div></div>
+          <div class="ex">I <b>was cooking</b> when you <b>called</b>.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n6" data-to="n11">
+          <div class="top"><div class="num">6</div><div><h4>Comparatives &amp; superlatives</h4><div class="pl">stopniowanie przymiotników</div></div></div>
+          <div class="ex">This hotel is <b>cheaper</b>, but that one is <b>the best</b>.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n7" data-to="n10">
+          <div class="top"><div class="num">7</div><div><h4>Modal verbs</h4><div class="pl">can, could, must, have to, should</div></div></div>
+          <div class="ex">You <b>should</b> rest. You <b>don't have to</b> come today.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier"><div class="tl"><span>Poziom I · Fundamenty</span></div>
+      <div class="nodes">
+        <div class="card node" id="n1" data-to="n4 n5 n7">
+          <div class="top"><div class="num">1</div><div><h4>Present Simple vs Continuous</h4><div class="pl">zwyczaje kontra „teraz, w tej chwili”</div></div></div>
+          <div class="ex">I usually <b>walk</b> to work, but today I<b>'m taking</b> the bus.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n2" data-to="n4">
+          <div class="top"><div class="num">2</div><div><h4>Adverbs of frequency</h4><div class="pl">always, usually, sometimes, never</div></div></div>
+          <div class="ex">She <b>never</b> drinks coffee after six.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+        <div class="card node" id="n3" data-to="n6">
+          <div class="top"><div class="num">3</div><div><h4>Countable / uncountable</h4><div class="pl">some / any, much / many, a lot of</div></div></div>
+          <div class="ex">Is there <b>any</b> milk? There isn't <b>much</b> left.</div>
+          <div class="stars"><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>rozumiem</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>używam</div><div><span class="star" data-f="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></span>bez błędów</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip"><span class="xp">wskazówka</span><span><b>Trzecia gwiazdka to test w rozmowie.</b> Poproś lektora albo znajomego, żeby zadał Ci 3 pytania wymagające tej konstrukcji. Odpowiesz bez błędu, więc gwiazdka jest Twoja.</span></div>
+  <div class="ft"><span>A2 Quest · Twierdza Gramatyki</span><span class="pg">2 / 6</span><span>12 umiejętności × 3 gwiazdki = 360 XP</span></div>
+</section>
+
+<!-- ================= STRONA 3 ================= -->
+<section class="page p3">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział III · <b>Krainy słownictwa 1–5</b></div></div>
+  <div class="titleblock">
+    <div class="kicker">Skrzynie ze słówkami</div>
+    <h2>Każda kraina skrywa 10 słów do zebrania<span class="dot">.</span></h2>
+    <p class="lead">Słowo jest Twoje, kiedy użyjesz go we własnym zdaniu: na głos, na czacie albo w zeszycie. Za każde zaznaczone słowo dostajesz 5 XP.</p>
+  </div>
+  <div class="lands" data-lands="1-5"></div>
+  <div class="ft"><span>A2 Quest · krainy słownictwa</span><span class="pg">3 / 6</span><span>50 słów × 5 XP = 250 XP</span></div>
+</section>
+
+<!-- ================= STRONA 4 ================= -->
+<section class="page p4">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział III · <b>Krainy słownictwa 6–10</b></div></div>
+  <div class="titleblock">
+    <div class="kicker">Skrzynie ze słówkami, ciąg dalszy</div>
+    <h2>Druga połowa mapy<span class="dot">.</span></h2>
+    <p class="lead">Wracaj tu co tydzień. Słowa bez zaznaczenia to Twoja lista powtórek na najbliższe dni.</p>
+  </div>
+  <div class="lands" data-lands="6-10"></div>
+  <div class="ft"><span>A2 Quest · krainy słownictwa</span><span class="pg">4 / 6</span><span>50 słów × 5 XP = 250 XP</span></div>
+</section>
+
+<!-- ================= STRONA 5 ================= -->
+<section class="page p5">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział IV · <b>Leże Bossów</b></div></div>
+  <div class="titleblock">
+    <div class="kicker">Walki z bossami</div>
+    <h2>8 sytuacji z prawdziwego życia<span class="dot">.</span></h2>
+    <p class="lead">Boss to zadanie, które na A2 wykonasz po angielsku bez podpowiedzi. „Zaklęcie” to przykład na start, a niżej wpisz własną wersję.</p>
+  </div>
+  <div class="bosses" id="bosses"></div>
+  <div class="ft"><span>A2 Quest · Leże Bossów</span><span class="pg">5 / 6</span><span>8 bossów × 50 XP = 400 XP</span></div>
+</section>
+
+<!-- ================= STRONA 6 ================= -->
+<section class="page p6">
+  <svg class="corner tl"><use href="#corner"/></svg><svg class="corner tr"><use href="#corner"/></svg><svg class="corner bl"><use href="#corner"/></svg><svg class="corner br"><use href="#corner"/></svg>
+  <div class="hd"><img src="gettinenglish-lockup.svg" alt="gettinenglish"><div class="chapter">Rozdział V · <b>Sala Chwały</b></div></div>
+  <div class="titleblock">
+    <div class="kicker">Podsumowanie przygody</div>
+    <h2>Policz XP i odbierz swoją rangę<span class="dot">.</span></h2>
+    <p class="lead">Zsumuj wszystkie zaznaczenia z mapy. Ranga pokazuje, jak daleko jesteś. Mistrz A2 może iść dalej, do świata B1.</p>
+  </div>
+
+  <div class="hall">
+    <div class="card ledger">
+      <div class="lbl" style="margin-bottom:4px">Księga punktów</div>
+      <div class="lrow"><span>Słówka ze skrzyń<small>strony 3–4, maks. 100</small></span><span class="tf" style="width:46px" data-f="txt" data-n="ile_slow"></span><span class="mult">× 5 XP</span><span class="eq">=</span><span class="tf" style="width:60px" data-f="txt" data-n="xp_slowa"></span></div>
+      <div class="lrow"><span>Gwiazdki umiejętności<small>strona 2, maks. 36</small></span><span class="tf" style="width:46px" data-f="txt" data-n="ile_gwiazdek"></span><span class="mult">× 10 XP</span><span class="eq">=</span><span class="tf" style="width:60px" data-f="txt" data-n="xp_gwiazdki"></span></div>
+      <div class="lrow"><span>Pokonani bossowie<small>strona 5, maks. 8</small></span><span class="tf" style="width:46px" data-f="txt" data-n="ile_bossow"></span><span class="mult">× 50 XP</span><span class="eq">=</span><span class="tf" style="width:60px" data-f="txt" data-n="xp_bossy"></span></div>
+      <div class="lrow sum"><span>Razem XP</span><span class="tf" style="width:60px" data-f="txt" data-n="xp_suma"></span><span class="of">/ 1260</span></div>
+    </div>
+    <div class="card ranks">
+      <div class="lbl" style="margin-bottom:6px">Twoja ranga</div>
+      <div class="rank"><div class="rm" style="background:#9BA2B1">I</div><div><b>Nowicjusz</b><span>Rookie: pierwsze kroki na mapie</span></div><span class="need">0+</span><span class="cb" data-f="cb"></span></div>
+      <div class="rank"><div class="rm" style="background:#047857">II</div><div><b>Odkrywca</b><span>Explorer: znasz już połowę krain</span></div><span class="need">250+</span><span class="cb" data-f="cb"></span></div>
+      <div class="rank"><div class="rm" style="background:#2663EB">III</div><div><b>Rycerz</b><span>Knight: pierwsi bossowie pokonani</span></div><span class="need">550+</span><span class="cb" data-f="cb"></span></div>
+      <div class="rank"><div class="rm" style="background:#9D2257">IV</div><div><b>Bohater</b><span>Hero: brakuje Ci niewiele</span></div><span class="need">900+</span><span class="cb" data-f="cb"></span></div>
+      <div class="rank"><div class="rm" style="background:#B45309">V</div><div><b>Mistrz A2</b><span>A2 Master: brama do B1 otwarta</span></div><span class="need">1200+</span><span class="cb" data-f="cb"></span></div>
+    </div>
+  </div>
+
+  <div class="card cert">
+    <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true">
+      <g transform="translate(75,72)">
+        <path d="M-26,40 L-34,72 L-20,64 L-12,76 L-6,44" fill="#9D2257" stroke="#20242D" stroke-width="1.4" stroke-linejoin="round"/>
+        <path d="M26,40 L34,72 L20,64 L12,76 L6,44" fill="#2663EB" stroke="#20242D" stroke-width="1.4" stroke-linejoin="round"/>
+        <g id="rosette"></g>
+        <circle r="46" fill="#E9B949" stroke="#20242D" stroke-width="1.6"/>
+        <circle r="38" fill="#fff" stroke="#20242D" stroke-width="1"/>
+        <circle r="33" fill="none" stroke="#B45309" stroke-width=".8" stroke-dasharray="1.5 2.5"/>
+        <text y="-10" text-anchor="middle" font-size="6.2" font-weight="700" letter-spacing=".8" fill="#5C5850">LEVEL CLEARED</text>
+        <text y="16" text-anchor="middle" font-size="26" font-weight="800" fill="#20242D" letter-spacing="-1">A2</text>
+      </g>
+    </svg>
+    <div>
+      <div class="kicker" style="margin-bottom:4px">Certyfikat ukończenia mapy</div>
+      <h3>Poziom A2 ukończony<span class="dot">.</span></h3>
+      <div class="who" style="margin-top:10px"><span>Bohater:</span><span class="tf" style="flex:1" data-f="txt" data-n="cert_imie"></span></div>
+      <p>ma za sobą całą mapę A2: słówka ze wszystkich krain, gwiazdki z Twierdzy Gramatyki i zwycięstwa nad bossami.</p>
+      <div class="sig">
+        <div><span class="tf" style="width:100%" data-f="txt" data-n="cert_data"></span>data</div>
+        <div><span class="tf" style="width:100%" data-f="txt" data-n="cert_lektor"></span>podpis lektora</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card saves">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Punkty zapisu gry</span><span style="font-size:8.8px;color:var(--ink2)">Co tydzień wpisz, ile masz XP. Zobaczysz, jak rośnie Twój wynik.</span></div>
+    <div class="row"><div class="slot">TYDZIEŃ 1<span class="tf" data-f="txt" data-n="tydzien1"></span><small>XP</small></div><div class="slot">TYDZIEŃ 2<span class="tf" data-f="txt" data-n="tydzien2"></span><small>XP</small></div><div class="slot">TYDZIEŃ 3<span class="tf" data-f="txt" data-n="tydzien3"></span><small>XP</small></div><div class="slot">TYDZIEŃ 4<span class="tf" data-f="txt" data-n="tydzien4"></span><small>XP</small></div><div class="slot">TYDZIEŃ 5<span class="tf" data-f="txt" data-n="tydzien5"></span><small>XP</small></div><div class="slot">TYDZIEŃ 6<span class="tf" data-f="txt" data-n="tydzien6"></span><small>XP</small></div><div class="slot">TYDZIEŃ 7<span class="tf" data-f="txt" data-n="tydzien7"></span><small>XP</small></div><div class="slot">TYDZIEŃ 8<span class="tf" data-f="txt" data-n="tydzien8"></span><small>XP</small></div></div>
+  </div>
+
+  <div class="next">
+    <div class="card gate">
+      <div class="lockbub"><svg class="ic"><use href="#i-lock"/></svg></div>
+      <div><h3>Następny świat: B1</h3><p>Dłuższe rozmowy, wyrażanie opinii, Present Perfect Continuous, drugi okres warunkowy i dużo nowego słownictwa. Brama otwiera się przy randze Mistrz A2.</p></div>
+    </div>
+    <div class="card cta">
+      <h3>Chcesz przejść mapę z przewodnikiem<span class="dot">?</span></h3>
+      <p>Na zajęciach z lektorem bossów pokonuje się szybciej, bo masz z kim rozmawiać i ktoś poprawia Twoje błędy na bieżąco.</p>
+      <span class="btn">szkolajezykowa.gettinenglish.com</span>
+    </div>
+  </div>
+  <div class="ft"><span>A2 Quest · Sala Chwały</span><span class="pg">6 / 6</span><span>© gettinenglish</span></div>
+</section>
+
+<script type="application/json" id="fieldsjson"></script>
+<script>
+const LANDS = [
+  {n:1, name:"Domowe Ognisko", topic:"Dom i rodzina", c:"#2663EB", ic:"i-house", w:[
+    ["cousin","kuzyn, kuzynka"],["grandparents","dziadkowie"],["neighbour","sąsiad"],["flat","mieszkanie"],["balcony","balkon"],
+    ["upstairs","na górze, na piętrze"],["furniture","meble"],["cupboard","szafka"],["washing machine","pralka"],["garden","ogród"]]},
+  {n:2, name:"Targowisko", topic:"Jedzenie i zakupy", c:"#B45309", ic:"i-basket", w:[
+    ["vegetables","warzywa"],["a bottle of","butelka (czegoś)"],["a piece of","kawałek"],["menu","karta dań"],["order","zamawiać"],
+    ["bill","rachunek"],["cash","gotówka"],["price","cena"],["cheap","tani"],["expensive","drogi"]]},
+  {n:3, name:"Port Podróżników", topic:"Podróże i transport", c:"#312E81", ic:"i-anchor", w:[
+    ["ticket","bilet"],["single / return","w jedną stronę / powrotny"],["platform","peron"],["passport","paszport"],["suitcase","walizka"],
+    ["journey","podróż"],["airport","lotnisko"],["map","mapa"],["get on / get off","wsiadać / wysiadać"],["miss the bus","spóźnić się na autobus"]]},
+  {n:4, name:"Miasto Gildii", topic:"Miasto i kierunki", c:"#047857", ic:"i-tower", w:[
+    ["post office","poczta"],["chemist's","apteka"],["library","biblioteka"],["bridge","most"],["corner","róg ulicy"],
+    ["traffic lights","światła"],["turn left","skręć w lewo"],["straight on","prosto"],["opposite","naprzeciwko"],["next to","obok"]]},
+  {n:5, name:"Akademia Magów", topic:"Szkoła i praca", c:"#9D2257", ic:"i-book", w:[
+    ["subject","przedmiot"],["exam","egzamin"],["homework","praca domowa"],["timetable","plan zajęć, rozkład"],["break","przerwa"],
+    ["job","praca, posada"],["office","biuro"],["manager","kierownik"],["factory","fabryka"],["uniform","mundurek"]]},
+  {n:6, name:"Świątynia Zdrowia", topic:"Zdrowie i ciało", c:"#047857", ic:"i-potion", w:[
+    ["headache","ból głowy"],["stomach ache","ból brzucha"],["a cold","przeziębienie"],["temperature","gorączka"],["medicine","lekarstwo"],
+    ["dentist","dentysta"],["ill","chory"],["hurt","boleć"],["rest","odpoczywać"],["healthy","zdrowy"]]},
+  {n:7, name:"Arena Zabaw", topic:"Czas wolny i sport", c:"#B45309", ic:"i-trophy", w:[
+    ["hobby","hobby"],["team","drużyna"],["match","mecz"],["concert","koncert"],["museum","muzeum"],
+    ["gym","siłownia"],["camping","biwakowanie"],["collect","kolekcjonować"],["chess","szachy"],["go swimming","iść popływać"]]},
+  {n:8, name:"Dzikie Krainy", topic:"Pogoda i natura", c:"#312E81", ic:"i-mountain", w:[
+    ["sunny","słonecznie"],["cloudy","pochmurno"],["windy","wietrznie"],["foggy","mgliście"],["storm","burza"],
+    ["degrees","stopnie"],["forest","las"],["river","rzeka"],["mountain","góra"],["island","wyspa"]]},
+  {n:9, name:"Dolina Serc", topic:"Ludzie i uczucia", c:"#9D2257", ic:"i-heart", w:[
+    ["friendly","przyjazny"],["kind","miły, życzliwy"],["funny","zabawny"],["bored","znudzony"],["worried","zmartwiony"],
+    ["angry","zły, rozgniewany"],["tired","zmęczony"],["excited","podekscytowany"],["surprised","zaskoczony"],["afraid","przestraszony"]]},
+  {n:10, name:"Kuźnia Technologii", topic:"Technologia i internet", c:"#2663EB", ic:"i-gear", w:[
+    ["laptop","laptop"],["screen","ekran"],["keyboard","klawiatura"],["printer","drukarka"],["website","strona internetowa"],
+    ["password","hasło"],["download","pobierać"],["message","wiadomość"],["online","w sieci"],["app","aplikacja"]]}
+];
+const BOSSES = [
+  {name:"Kawiarniany Smok", c:"#B45309", ic:"i-cup", mis:"Zamówisz jedzenie i napój, zapytasz o cenę i zapłacisz.", sp:"Could I have a large coffee, please? How much is that?"},
+  {name:"Labirynt Ulic", c:"#047857", ic:"i-compass", mis:"Zapytasz o drogę i <b>zrozumiesz odpowiedź</b>, nawet gdy ktoś mówi szybko.", sp:"Excuse me, how do I get to the station?"},
+  {name:"Strażnik Bram", c:"#312E81", ic:"i-shield", mis:"Przedstawisz się: praca albo szkoła, rodzina, zainteresowania.", sp:"I'm Anna. I work in an office and I love cooking."},
+  {name:"Kronikarz", c:"#2663EB", ic:"i-scroll", mis:"Opowiesz w 5–6 zdaniach, co działo się u Ciebie w weekend.", sp:"Last Saturday I went to the cinema with my sister."},
+  {name:"Wróżbitka", c:"#9D2257", ic:"i-orb", mis:"Opowiesz o planach na wakacje i najbliższe tygodnie.", sp:"Next summer I'm going to visit Spain with my friends."},
+  {name:"Sowa Pocztowa", c:"#B45309", ic:"i-mail", mis:"Napiszesz krótką wiadomość z zaproszeniem i odpowiesz na podobną.", sp:"Would you like to come to my party on Saturday?"},
+  {name:"Uzdrowiciel", c:"#047857", ic:"i-plus", mis:"Powiesz u lekarza albo w aptece, co Ci dolega i od kiedy.", sp:"I've got a headache and a temperature. It started yesterday."},
+  {name:"Kupiec z Gór", c:"#312E81", ic:"i-scales", mis:"Porównasz dwie rzeczy i uzasadnisz, którą wybierasz.", sp:"This one is cheaper, but that one looks better."}
+];
+
+function landHTML(L){
+  const words = L.w.map(([en,pl])=>`<div class="w"><span class="cb" data-f="cb"></span><b>${en}</b><span>${pl}</span></div>`).join("");
+  return `<div class="card land">
+    <div class="side">
+      <div class="top"><div class="medal" style="background:${L.c};color:${L.c}"><svg class="ic"><use href="#${L.ic}"/></svg></div>
+      <div><small>Kraina ${L.n}</small><h3>${L.name}</h3></div></div>
+      <div class="topic">${L.topic}</div>
+      <div class="score">Zebrane: <span class="tf" style="width:30px" data-f="txt" data-n="kraina${L.n}"></span>/ 10</div>
+    </div>
+    <div class="loot">${words}</div>
+  </div>`;
+}
+document.querySelectorAll("[data-lands]").forEach(el=>{
+  const [a,b] = el.dataset.lands.split("-").map(Number);
+  el.innerHTML = LANDS.filter(L=>L.n>=a && L.n<=b).map(landHTML).join("");
+});
+document.getElementById("bosses").innerHTML = BOSSES.map((B,i)=>`<div class="card boss">
+  <div class="top"><div class="medal" style="background:${B.c};color:${B.c};width:40px;height:40px"><svg class="ic"><use href="#${B.ic}"/></svg></div>
+  <div style="flex:1"><small>Boss ${i+1}</small><h3>${B.name}</h3></div>
+  <div class="hp">HP <i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="mis"><b>Misja:</b> ${B.mis}</div>
+  <div class="spell"><em>Zaklęcie</em>${B.sp}</div>
+  <div class="mine">Twoja wersja:<span class="tf" style="flex:1" data-f="txt" data-n="boss${i+1}_wersja"></span></div>
+  <div class="bot"><span class="cb lg" data-f="cb"></span><span>Pokonany</span><span class="sp"></span><span style="font-weight:600;color:#5C5850">data</span><span class="tf" style="width:62px" data-f="txt" data-n="boss${i+1}_data"></span><span class="xp">+50 XP</span></div>
+</div>`).join("");
+
+/* mapa: znaczniki i ścieżka */
+const PTS = [[70,362],[120,318],[205,350],[300,372],[370,310],[275,262],[165,222],[105,160],[210,124],[330,150],[455,215],[545,290],[560,150],[640,74]];
+const LBL = {1:[0,-19],2:[0,24],3:[0,24],4:[30,4,"start"],5:[0,-19],6:[0,24],7:[0,-19],8:[0,-19],9:[0,24],10:[0,-19]};
+const SVGNS="http://www.w3.org/2000/svg";
+const mk = document.getElementById("markers");
+LANDS.forEach(L=>{
+  const [x,y]=PTS[L.n];
+  const g=document.createElementNS(SVGNS,"g");
+  const [dx,dy,anchor]=LBL[L.n];
+  g.innerHTML = `<circle cx="${x}" cy="${y}" r="14" fill="#fff" stroke="${L.c}" stroke-width="3"/>
+    <text x="${x}" y="${y+4.5}" text-anchor="middle" font-size="12.5" font-weight="800" fill="${L.c}">${L.n}</text>
+    <text class="ml" x="${x+dx}" y="${y+dy}" text-anchor="${anchor||'middle'}">${L.name}</text>`;
+  mk.appendChild(g);
+});
+const extra=[[545,290,"Twierdza Gramatyki",0,40],[560,150,"Leże Bossów",0,36],[640,74,"Sala Chwały",-44,6]];
+extra.forEach(([x,y,t,dx,dy])=>{const s=document.createElementNS(SVGNS,"text");s.setAttribute("class","ml big");s.setAttribute("x",x+dx);s.setAttribute("y",y+dy);s.setAttribute("text-anchor",dx<0?"end":"middle");s.textContent=t;mk.appendChild(s);});
+function catmull(p){let d=`M${p[0][0]},${p[0][1]}`;for(let i=0;i<p.length-1;i++){const p0=p[i-1]||p[i],p1=p[i],p2=p[i+1],p3=p[i+2]||p2;
+  const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6],c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+  d+=` C${c1[0]},${c1[1]} ${c2[0]},${c2[1]} ${p2[0]},${p2[1]}`;}return d;}
+document.getElementById("route").setAttribute("d",catmull(PTS));
+const st=document.createElement("style");
+st.textContent=`.ml{font-family:Onest,sans-serif;font-size:11.5px;font-weight:700;fill:#20242D;paint-order:stroke;stroke:#F6EEDC;stroke-width:4px;stroke-linejoin:round}.ml.big{font-size:12.5px;font-weight:800}`;
+document.head.appendChild(st);
+
+/* drzewko: połączenia + eksport pól */
+document.fonts.ready.then(()=>{
+  const tree=document.getElementById("tree"), svg=document.getElementById("links"), tr=tree.getBoundingClientRect();
+  let paths="";
+  tree.querySelectorAll(".node[data-to]").forEach(n=>{
+    const a=n.getBoundingClientRect();
+    n.dataset.to.split(" ").forEach(id=>{
+      const b=document.getElementById(id).getBoundingClientRect();
+      const x1=a.left+a.width/2-tr.left, y1=a.top-tr.top, x2=b.left+b.width/2-tr.left, y2=b.bottom-tr.top, my=(y1+y2)/2;
+      paths+=`<path d="M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}" fill="none" stroke="#C9C0B0" stroke-width="2.2" stroke-dasharray="5 4" stroke-linecap="round"/>`;
+      paths+=`<circle cx="${x2}" cy="${y2}" r="3.2" fill="#C9C0B0"/>`;
+    });
+  });
+  svg.innerHTML=paths;
+
+  const pages=[...document.querySelectorAll(".page")], out=[]; let k=0;
+  pages.forEach((p,pi)=>{
+    const pr=p.getBoundingClientRect(), s=595.2756/pr.width;
+    p.querySelectorAll("[data-f]").forEach(el=>{
+      const r=el.getBoundingClientRect();
+      out.push({page:pi,type:el.dataset.f,name:el.dataset.n||`${el.dataset.f}_${++k}`,
+        x:(r.left-pr.left)*s,y:(r.top-pr.top)*s,w:r.width*s,h:r.height*s});
+    });
+  });
+  document.getElementById("fieldsjson").textContent=JSON.stringify(out);
+  document.body.dataset.ready="1";
+});
+</script>
+</body>
+</html>
