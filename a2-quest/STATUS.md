@@ -16,9 +16,9 @@
 0. **Najpierw rozmiar PDF:** `A2-Quest.pdf` ma ~28 MB, bo Chrome rastruje wzory kreskowania (`<pattern>` z `patternTransform`)
    do 790 bitmap. Zamień kreskowanie (`ddPatterns`/`ddShade`, wzory `fhL`/`fhD` lasu) na wektorowe linie przycięte `clipPath`
    i sprawdź rozmiar (cel: poniżej 1–2 MB) oraz identyczny wygląd renderu. PDF jest w `.gitignore` do czasu naprawy.
-Lekcja 4 „Miasto Gildii” (there is/are, przyimki miejsca, tryb rozkazujący; miasto i drogi): dopisać obiekt do `STAGE_DATA`
-w [a2-quest.html](a2-quest.html) wg wzoru lekcji 1–3 (4 gramatyka, 2 umiejętności, wyzwanie bez pola, 10+10+10 słownictwa)
-i 2 nowe ilustracje do `DD` (hero = ikona „city” z mapy, skrzynia przy bramie bez zmian). Plan lekcji 5–12: [ETAPY.md](ETAPY.md).
+1. Lekcja 4 „Miasto Gildii” (there is/are, przyimki miejsca, tryb rozkazujący; miasto i drogi): dopisać obiekt do `STAGE_DATA`
+   w [a2-quest.html](a2-quest.html) wg wzoru lekcji 1–3 (4 gramatyka, 2 umiejętności, wyzwanie bez pola, 10+10+10 słownictwa)
+   i 2 nowe ilustracje do `DD` (hero = ikona „city” z mapy, skrzynia przy bramie bez zmian). Plan lekcji 5–12: [ETAPY.md](ETAPY.md).
 
 ## Blokery / do decyzji właściciela
 - 6 pozycji słownictwa na granicy A2/B1 (bargain, have a lie-in, run out of, be into, What are you up to?, Count me in!) — zostają, chyba że właściciel zechce bezpieczniej.
