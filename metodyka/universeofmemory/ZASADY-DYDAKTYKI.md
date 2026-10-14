@@ -12,12 +12,12 @@
 - **Kodowanie głębokie** (łączenie z tym, co uczeń już wie, własne zdania, użycie) bije **płytkie** (powtarzanie, podkreślanie, ponowne czytanie, absurdalne obrazki).
 - **Zasada specyfiki kodowania:** ćwicz w takiej formie, w jakiej będziesz używać. Słowo nauczone na fiszce bez kontekstu trudno przywołać w rozmowie. Słowo trzeba ćwiczyć w rozmowie.
 - Pasywność jest wspólną cechą najgorszych strategii (podkreślanie, streszczanie, wielokrotne czytanie, „style uczenia się”). Test dla każdego ćwiczenia: *czy uczeń aktywnie koduje i produkuje, czy tylko rozpoznaje?*
-- **Iluzja kompetencji:** powtórne czytanie daje poczucie znajomości, a odtwarzanie z pamięci daje trwałość, tylko że „czuje się” trudniej. Uczniowie systematycznie wybierają gorszą metodę. Mówimy im to wprost: *wysiłek przy przypominaniu to znak, że działa*.
+- **Iluzja kompetencji:** powtórne czytanie daje poczucie znajomości, a odtwarzanie z pamięci daje trwałość, tylko że „czuje się” trudniej. Uczniowie systematycznie wybierają gorszą metodę. (Krzywa Ebbinghausa i jej replikacja Murre i Dros 2015 dotyczą sylab bezsensownych, nie materiału sensownego; „trudniej = lepiej” tylko dla trudności pożądanej, Bjork.) Mówimy im to wprost: *wysiłek przy przypominaniu to znak, że działa*.
 - **Zapominanie to informacja zwrotna,** nie porażka. „Nie pamiętam” znaczy zwykle: za mało powtórek, za mało powiązań albo za mała osobista istotność. Lekcja ma uczyć, co z tym zrobić (dodaj kontekst, własne zdanie, drugą kartę).
 
 ## 2. Pojemność: pamięć krótkotrwała jest wąskim gardłem
 
-- Pojemność pamięci roboczej to ok. **3–5 „kawałków”**, nie „7±2”. Kawałek to największa sensowna jednostka, którą uczeń już rozpoznaje. To zależy od jego wiedzy: *the information* to jeden kawałek dla Polaka (kognat), a nieznane słowo bez skojarzeń to kilka sylab.
+- Pojemność pamięci roboczej to ok. **3–5 „kawałków”**, nie „7±2” (Cowan 2001; wartość zależy od zadania i wiedzy ucznia; zweryfikowane). Kawałek to największa sensowna jednostka, którą uczeń już rozpoznaje. To zależy od jego wiedzy: *the information* to jeden kawałek dla Polaka (kognat), a nieznane słowo bez skojarzeń to kilka sylab.
 - **Nigdy nie wprowadzaj więcej niż 3–5 nowych elementów w jednym bloku.** Przeciążenie daje ból głowy, awersję do nauki i fałszywe wrażenie „nie mam głowy do języków”.
 - **Jedno nowe słowo na zdanie.** Zdanie przykładowe z dwoma nieznanymi słowami to 7+ kawałków i powtarzanie nic nie da.
 - Długą regułę lub frazę tnij na części i uczysz kolejno, dopiero potem łączysz.
@@ -30,7 +30,7 @@
 ## 3. Powtarzanie: system > algorytm
 
 - Powtórki rozłożone w czasie wygrywają z kumulowanymi (tu dane są solidne). Jaki dokładnie rozkład (rosnące vs równe odstępy) ma znaczenie drugorzędne.
-- Kurs powinien mieć **wbudowany mechanizm powrotów**: ćwiczenia ze starych lekcji w nowych, mini-quiz „co pamiętasz po tygodniu”, spirala. Orientacyjnie: powrót po 1, 3, 7, 14, 30 dniach.
+- Kurs powinien mieć **wbudowany mechanizm powrotów**: ćwiczenia ze starych lekcji w nowych, mini-quiz „co pamiętasz po tygodniu”, spirala. Orientacyjnie: powrót po 1, 3, 7, 14, 30 dniach (to heurystyka bez poparcia w badaniach; metaanaliza Latimier i in. 2021 nie widzi różnicy między rosnącymi a równymi odstępami, g = 0,034, liczy się samo rozłożenie).
 - Nie czytamy „jeszcze raz”. Zamiast: zamknij materiał i powiedz/napisz z pamięci.
 - **Habituacja:** to samo zadanie w tym samym formacie, powtarzane serią, przestaje działać (nuda, wyłączenie uwagi). Przy każdym powrocie do słowa zmieniaj formę: raz fiszka, raz dialog, raz własne zdanie, raz nagranie, raz błąd do poprawy.
 - Gotowe, cudze fiszki działają gorzej niż własne (mniej kodowania, mniej emocji). Daj uczniowi narzędzie do robienia własnych.
@@ -41,14 +41,14 @@
 
 - **Trzy kryteria doboru** (w tej kolejności ważności dla rozmowy): (1) **częstotliwość** (listy frekwencyjne, nie rozdziały tematyczne typu „warzywa”), (2) **osobista użyteczność** (zawód, hobby, rodzina ucznia już od A1), (3) **satysfakcja** (jedno „ulubione słowo tygodnia”).
 - Podręcznikowe słownictwo tematyczne (hydraulik, bakłażan, dynia na A1) wprowadzamy dopiero na życzenie ucznia.
-- **Skala liczby słów** (reguła ×2, ±20%): A1 ≈ 500, A2 ≈ 1000, B1 ≈ 2000, B2 ≈ 4000, C1 ≈ 8000, C2 ≈ 16 000. Używać jako mapy „ile jeszcze brakuje”, nie jako obietnicy.
+- **Skala liczby słów** (reguła ×2, ±20%): A1 ≈ 500, A2 ≈ 1000, B1 ≈ 2000, B2 ≈ 4000, C1 ≈ 8000, C2 ≈ 16 000. Używać jako mapy „ile jeszcze brakuje”, nie jako obietnicy. **Weryfikacja: niepotwierdzone.** To heurystyka autora; CEFR nie ma progów słownikowych, a Milton i Alexiou (2009) dają B2 ≈ 3250–3750 lematów, wyraźnie mniej niż ×2. Nie podawać uczniom bez wskazania jednostki (lemat/rodzina) i najlepiej jako widełki.
 - Realne tempo przy porządnym systemie: **10–20 nowych słów dziennie** (przykłady autora: ok. 20/dzień przez 6 miesięcy ≈ B1). 40 dziennie bez planu kończy się poddaniem się.
 - **Znajomość słowa to skala, nie 0/1:** nie znam → widziałem → rozumiem z kontekstu → znam główne znaczenie → umiem użyć → znaczenia poboczne → podstawowe kolokacje → większość kolokacji. Pierwsze spotkanie: szybko znaczenie główne + jeden dobry kontekst. Kolokacje i znaczenia poboczne wracają w kolejnych spotkaniach (szczególnie *have, get, take, make*).
 - **Słowotwórstwo od A1–A2:** kilkanaście reguł (un-, re-, -er/-or, -able, -ness, -ment, konwersja *a run / to run*, -ing) mnoży słownictwo bardzo tanio. Podręczniki to chowają.
 - **Świadomość językowa:** nazwy marek, zespołów, aplikacji to zwykłe angielskie słowa (*Pizza Hut, Red Hot Chili Peppers, Starbucks, Snapchat*). Szybka lekcja „angielski już masz w głowie” daje dorosłemu zniechęconemu pierwszy sukces. Uwaga: skojarzenia bywają etymologicznie fałszywe, więc uczymy ich jako haczyka pamięciowego, nie faktu językowego.
 - **Frazy, nie pojedyncze słowa** (kolokacje, phrasal verbs): listy frekwencyjne pojedynczych słów tego nie obejmują, więc potrzebna jest osobna lista fraz.
 - **Rejestr** zaznaczamy przy każdym zwrocie (formalne/potoczne). Błędy rejestru należą do najczęstszych.
-- Mnemotechniki (słowa kluczowe, pałace pamięci, absurdalne obrazki): płytkie kodowanie, brak kontekstu, krótka trwałość (spadek po ok. 4 tygodniach). Ewentualnie jako doraźny „haczyk” na pierwszy kontakt ze słowem, zawsze z natychmiastowym osadzeniem w zdaniu.
+- Mnemotechniki (słowa kluczowe, pałace pamięci, absurdalne obrazki): płytkie kodowanie i brak kontekstu. Weryfikacja nie potwierdziła tezy autora o „spadku po 4 tygodniach”; wyniki zależą od jakości skojarzeń i nie ma przekonujących dowodów na gorszą trwałość niż przy wkuwaniu. Używać jako pomocy przy trudnych słowach, zawsze z natychmiastowym osadzeniem w zdaniu.
 
 ## 5. Gramatyka: funkcjonalna, w parach, z automatyzacją
 
@@ -63,7 +63,7 @@
 
 - **Mów od lekcji 1–2** (ok. 20 min rozmowy na drugiej lekcji, 30 na trzeciej), z listą potrzebnych słów podaną przed pytaniem. „Przełamanie się” (uczeń zaczyna dużo mówić) to wczesny wskaźnik postępu, mierz go.
 - Zajęcia na żywo = produkcja i informacja zwrotna. Czytanki, słuchanie, ćwiczenia pisemne = praca własna (model odwrócony). Im wyższy poziom, tym mniejszy udział zajęć w całości nauki.
-- **Polityka korekty:** najwyżej jedna korekta na 1–2 zdania, najpierw błędy zaburzające zrozumienie, od ogółu do szczegółu, **po** wypowiedzi, taktownie. Nadmierne poprawianie zabija pewność siebie. Korekta ma być pomocą, nie oceną.
+- **Polityka korekty:** najwyżej jedna korekta na 1–2 zdania, najpierw błędy zaburzające zrozumienie, od ogółu do szczegółu, **po** wypowiedzi, taktownie. Nadmierne poprawianie zabija pewność siebie. Korekta ma być pomocą, nie oceną. Weryfikacja: metaanalizy (Li 2010, d = 0,64; Lyster i Saito 2010) potwierdzają skuteczność korekty, a podpowiedź do samokorekty (prompts) wypada lepiej niż samo powtórzenie poprawnej formy (recast). Limit „1 korekta na 1–2 zdania” to zasada pedagogiczna i afektywna, nie wynik badań.
 - Ale praktyka bez korekty utrwala błędy („praktyka nie czyni mistrza, praktyka utrwala”). Do każdego ćwiczenia produkcyjnego: wzorzec, klucz i mechanizm informacji zwrotnej. **Dziennik błędów** (np. *I am agree*, *depends from*).
 - Pokazuj poprawny wzorzec **przed** samodzielną produkcją.
 - **Protokół mówienia do siebie** (praca domowa, min. 10 min dziennie): (1) wybierz pytania z listy na poziom, (2) odpowiedz, (3) zapisz słowa, których zabrakło, (4) zapisz konstrukcje, których nie umiałeś użyć, (5) po sesji uzupełnij braki. To tanie, bez stresu oceny, od razu pokazuje luki.
@@ -111,10 +111,10 @@
 
 Zgodnie z założeniem „krytyczne podejście”: poniższe oznaczamy jako **heurystyki, nie ustalone fakty**.
 
-- **Liczby z drugiej ręki.** „1000 słów = 80% mowy”, „3000 = 95%”, „5000 = 98%” to dane o pokryciu **tekstu** (rodziny wyrazów), nie swobodnej rozmowy, i nie obejmują kolokacji ani phrasal verbs. Sam autor w tekstach nie zawsze podaje źródło pierwotne. Skala ×2 (A1 500 … C2 16 000) to jego szacunek ±20%.
+- **Liczby z drugiej ręki.** „1000 słów = 80% mowy”, „3000 = 95%”, „5000 = 98%” to dane o pokryciu **tekstu pisanego** (rodziny wyrazów), nie swobodnej rozmowy, i nie obejmują kolokacji ani phrasal verbs. Dla mowy 95% daje ok. 2000–3000 rodzin (Adolphs i Schmitt 2003), a 98% ok. 6000–7000 (Nation 2006). Uwaga na różnicę rodzina / lemat / forma. Sam autor w tekstach nie zawsze podaje źródło pierwotne. Skala ×2 (A1 500 … C2 16 000) to jego szacunek ±20%.
 - **Case study = n=1 lub n=2.** Dawid (niemiecki B1 w 6 mies.), Ola i Łukasz (szwedzki; absolwenci medycyny z angielskim B2–C1, bardzo wysoka motywacja). Wyniki ≈ 360 godzin całkowitej pracy. Nie wolno obiecywać tego przeciętnemu uczniowi bez tej pracy i bazy.
-- **Dzieci vs dorośli.** Porównanie „3–4 słowa dziennie dziecka” pomija godziny kontaktu, wymowę i gramatykę nabywane bezwysiłkowo. Używać jako zachęty, nie dowodu naukowego.
-- **Krashen.** Autor uznaje hipotezę wkładu za obaloną. To stanowisko, nie konsensus. Rozsądniej: sama ekspozycja nie wystarcza na niskich poziomach, ale zrozumiały input ma swoją rolę (od B2 wręcz kluczową, co autor sam przyznaje).
+- **Dzieci vs dorośli.** Porównanie „3–4 słowa dziennie dziecka” pomija godziny kontaktu, wymowę i gramatykę nabywane bezwysiłkowo. Weryfikacja: dorośli faktycznie są szybsi na początku (Snow i Hoefnagel-Höhle 1978), a przewaga dzieci dotyczy osiągnięcia końcowego i wymowy (Hartshorne 2018). Używać jako zachęty, nie dowodu naukowego.
+- **Krashen.** Autor uznaje hipotezę wkładu za obaloną. Weryfikacja: nie obalona, ale niewystarczająca; konsens jest taki, że input jest konieczny, a output i zauważanie (Swain 1985, Schmidt 1990) go uzupełniają. Stanowisko autora to opinia.
 - **SRS/Anki jako „jedyna rozsądna opcja”.** Silna teza, częściowo poparta dobrymi metaanalizami (rozłożenie w czasie), częściowo preferencją i interesem (sprzedaje kursy i fiszki). Przy tym sam pisze, że algorytm to „białe płótno” i liczy się jakość kodowania.
 - **Mnemotechniki** oceniane surowo; wyniki badań krótkoterminowych są tam rzeczywiście słabe, ale w komentarzach autor przyznaje, że mają zastosowanie doraźne.
 - **Selektywność i interes.** Autor bywa cherry-pickerem, sprzedaje własne kursy (Vocabulary Labs, fiszki do każdego artykułu), a mocne absoluty („99,9% osób”) to retoryka.
@@ -138,4 +138,12 @@ Przed uznaniem lekcji/ćwiczenia za gotowe odpowiedz TAK/NIE:
 9. Czy uczeń widzi **mapę/postęp** (co już umie, co jeszcze przed nim) mierzony opanowanymi jednostkami?
 10. Czy jest **zadanie wpięte w życie ucznia** („gdzie w tym tygodniu użyjesz tego?”)?
 11. Czy komunikacja jest **uczciwa** (zakres, warunki, bez „angielski w 30 dni”) i bezpieczna dla błędów?
-12. Czy powołujemy się na liczby/badania tylko wtedy, gdy znamy źródło pierwotne?
+12. Czy powołujemy się na liczby/badania tylko wtedy, gdy znamy źródło pierwotne (albo oznaczamy twierdzenie jako heurystykę)?
+
+---
+
+## 12. Status weryfikacji (2026-10-14)
+
+Raport: `wnioski-agentow/agent-research-weryfikacja.md`. Potwierdzone: pamięć robocza ≈ 4, retrieval > ponowne czytanie, mit stylów uczenia się, drugorzędny kształt odstępów powtórek. Poprawione w tekście wyżej: pokrycie słownictwa, mnemotechniki, skala ×2, Krashen, dzieci vs dorośli, korekta. Nadal „z pamięci agenta”, do ręcznego sprawdzenia przed cytowaniem w materiałach dla uczniów: Kang 2014, Cepeda 2006, Brown 2016, Campos, Shapiro i Waters, progi Miltona dla A1–C2.
+
+Wnioski ról (kolejność czytania: weryfikacja → angielski → copywriter/SEO → social media), w `wnioski-agentow/`: `agent-english.md`, `agent-content-seo.md`, `agent-social-media.md`. Agent-english zgłasza też, że część materiałów w `materialy-pdf` i `a2-quest` kłóci się z zasadami (luki, po 30 słów na lekcję) i że nie zgadza się z blogiem w 7 punktach; decyzje czekają na właściciela.
