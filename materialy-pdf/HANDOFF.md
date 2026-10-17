@@ -2,6 +2,10 @@
 
 Ten plik opisuje stan prac i zasady, żeby kolejna sesja (np. lokalna) mogła od razu kontynuować.
 
+## Następny krok (2026-10-17)
+
+Trzy e-booki zamknięte (Holidays — wersja 7 na `main`). Następny: nowy temat od autora — skopiuj `topics/holidays-a2-b1.mjs`, `node build.mjs <slug>`.
+
 ## Uruchomienie lokalnie
 
 ```bash
@@ -40,6 +44,7 @@ zakreślanie liter w wykreślance, zakreślanie obrazków; bez automatycznego sp
 - Zdania opieramy na słownikach (Cambridge, Oxford, Longman, Collins), tłumaczenia sprawdzamy w diki.pl i PONS.
   Bezpośrednie pobieranie stron słowników bywa blokowane — działa WebSearch z `allowed_domains`.
 - Zmiany autora wprowadzamy dosłownie; nie dopowiadamy niedokończonych wypowiedzi.
+- Dialogi: oszczędnie z wykrzyknikami (zostają głównie w życzeniach), bez potocznego „Loads!” — autor woli spokojniejszy, naturalny ton.
 - Ostatnia strona: „Klucz odpowiedzi.” + link do słowniczka.
 - Wykreślanka (interaktywna): zaznaczenie = zaokrąglone kafelki z równymi przerwami.
 - Kontrole w `build.mjs`: treść ≥ 8 mm nad stopką, ilustracje okładki ≥ 4 mm od tytułu (`coverSkip`).
